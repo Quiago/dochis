@@ -10,8 +10,8 @@ export const metadata: Metadata = { title: 'Mi cuenta', robots: { index: false }
 export const dynamic = 'force-dynamic'
 
 const STATUS_NOTES: Record<string, { variant: 'default' | 'warning' | 'success'; text: string }> = {
-  verified: { variant: 'success', text: 'Tu perfil es público. Guardar también confirma que tus datos siguen al día.' },
-  stale: { variant: 'warning', text: 'Tu perfil aparece como pendiente. Revisa tus datos y guarda para confirmarlos.' },
+  verified: { variant: 'success', text: 'Tu perfil es público. Guardar también confirma tus datos de este mes (se confirman una vez al mes).' },
+  stale: { variant: 'warning', text: 'Tu perfil aparece como pendiente porque pasó más de un mes sin confirmar. Revisa tus datos y guarda para confirmarlos.' },
   pending_verification: { variant: 'default', text: 'Tu perfil está en revisión. Un embajador verificará tu licencia; puedes seguir editándolo.' },
   unclaimed: { variant: 'default', text: 'Encontramos tu perfil de la lista anterior del grupo. Complétalo para reclamarlo.' },
   hidden: { variant: 'warning', text: 'Tu perfil está oculto. Revisa tus datos y guarda para enviarlo de nuevo a revisión.' },

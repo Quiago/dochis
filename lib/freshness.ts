@@ -1,14 +1,12 @@
-// Phase 4: automatic freshness, community reports and the admin views that support the quarterly round.
+// Phase 4: automatic freshness, community reports and the admin views that support the monthly round.
 import type postgres from 'postgres'
 import type { Reviewer } from './onboarding'
-import { roundStart } from './directory'
+import { HIDDEN_DAYS, roundStart, STALE_DAYS } from './directory'
 import { REPORT_REASONS } from './report-reasons'
 
 export { roundStart }
 
 const DAY = 86_400_000
-const STALE_DAYS = 90
-const HIDDEN_DAYS = 180
 const REPORT_WINDOW_DAYS = 30
 const REPORTS_TO_STALE = 2
 const REPORTS_PER_DAY = 10
@@ -17,7 +15,7 @@ const daysAgo = (now: Date, days: number) => new Date(now.getTime() - days * DAY
 const scopeOf = (r: Reviewer) => (r.role === 'admin' ? null : r.scope)
 
 
-// Daily cron: >90 days without confirming → stale ("pendiente"), >180 → hidden.
+// Daily cron: >STALE_DAYS without confirming → stale ("pendiente"), >HIDDEN_DAYS → hidden.
 export async function runFreshness(sql: postgres.Sql, now = new Date()) {
   const hidden = await sql`
     update doctors set status = 'hidden'
@@ -59,7 +57,7 @@ export async function listReports(sql: postgres.Sql, reviewer: Reviewer, now = n
     group by d.id order by count desc, last_at desc`
 }
 
-// Admin decides the reports were wrong: delete them and, if still within 90 days, back to verified.
+// Admin decides the reports were wrong: delete them and, if still within STALE_DAYS, back to verified.
 export async function dismissReports(sql: postgres.Sql, doctorId: string, reviewer: Reviewer, now = new Date()) {
   const scope = scopeOf(reviewer)
   await sql.begin(async (tx) => {

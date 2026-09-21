@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title: { default: 'Médicos en español · Emiratos', template: '%s · Médicos en español' },
   description:
-    'Directorio gratuito y comunitario de médicos que atienden en español en los Emiratos Árabes Unidos. Cada médico mantiene su perfil y confirma sus datos cada tres meses.',
+    'Directorio gratuito y comunitario de médicos que atienden en español en los Emiratos Árabes Unidos. Cada médico mantiene su perfil y confirma sus datos una vez al mes.',
   openGraph: { locale: 'es_ES', type: 'website', siteName: 'Médicos en español · Emiratos' },
 }
 

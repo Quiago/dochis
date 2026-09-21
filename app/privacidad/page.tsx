@@ -22,7 +22,7 @@ export default function Privacidad() {
       <h2>Para qué usamos los datos</h2>
       <ul>
         <li>Identificar al médico al entrar (le enviamos un código de un solo uso).</li>
-        <li>Pedirle que confirme sus datos cada tres meses.</li>
+        <li>Pedirle que confirme sus datos una vez al mes.</li>
         <li>Evitar abusos: los reportes &quot;Ya no está aquí&quot; se guardan con una huella anónima, sin la dirección IP.</li>
       </ul>
       <p>No hay anuncios, no vendemos ni compartimos datos y no usamos cookies de seguimiento. Solo una cookie técnica para mantener la sesión.</p>

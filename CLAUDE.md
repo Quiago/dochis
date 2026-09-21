@@ -14,7 +14,7 @@ Directorio web gratuito y comunitario de médicos que atienden en español en lo
 2. **Cada médico es dueño de su perfil.** Ningún voluntario mantiene datos a mano.
 3. **Cero trabajo extra para los médicos.** Entrar = escribir su número y enviar el mensaje prellenado por WhatsApp. Confirmar datos = tocar un enlace y enviar un mensaje de WhatsApp.
 4. **Justicia en la visibilidad.** Orden aleatorio por defecto. Nada de rankings por popularidad.
-5. **Frescura visible.** Cada perfil muestra cuándo se confirmó. Sin confirmación en 90 días pasa a "pendiente".
+5. **Frescura visible.** Cada médico confirma sus datos **una vez al mes** y su perfil muestra cuándo lo hizo. Con más de 35 días sin confirmar (un mes y margen) pasa a "pendiente"; a los 90 días se oculta. La web lo dice explícitamente.
 6. **Privacidad primero (PDPL de EAU).** El teléfono de login no se publica salvo consentimiento explícito para usarlo como contacto. Perfiles importados del Excel muestran solo nombre, especialidad y centro hasta que el médico los reclame.
 7. **Filtrar por idioma, no por nacionalidad.**
 8. **Gratis para los usuarios; infraestructura con créditos de AWS.** La operación se financia con los créditos del plan gratuito de AWS (hasta 200 USD, 6 meses). Todo recurso debe caber en ese presupuesto, con alertas de AWS Budgets activas. Al agotarse, se decide: pagar la cuenta, buscar financiación o deprecar. Nunca se cobra a médicos ni a pacientes.
@@ -35,9 +35,9 @@ Seguridad: códigos de un solo uso; 5 códigos erróneos invalidan el challenge;
 **El bot nunca inicia conversaciones** (sin plantillas). Nunca usar librerías no oficiales de WhatsApp (Baileys, whatsapp-web.js, etc.).
 
 ## Confirmación periódica
-- **Cada 3 meses:** el admin pega en el grupo de WhatsApp un mensaje con `wa.me/<BOT_NUMBER>?text=CONFIRMAR`. El bot identifica al médico por su número, le muestra sus datos y ofrece: 1 = siguen igual, 2 = recibir enlace para editar. Son respuestas de servicio: 1.000 gratis al mes por número desde el 1 de octubre de 2026; a partir de ahí, tarifa de utilidad de EAU.
+- **Cada mes:** el admin pega en el grupo de WhatsApp un mensaje con `wa.me/<BOT_NUMBER>?text=CONFIRMAR`. El bot identifica al médico por su número, le muestra sus datos y ofrece: 1 = siguen igual, 2 = recibir enlace para editar. Son respuestas de servicio: 1.000 gratis al mes por número desde el 1 de octubre de 2026; a partir de ahí, tarifa de utilidad de EAU.
 - **A las 2 semanas:** el panel de admin exporta la lista de quienes no confirmaron. Se les recuerda con una lista de difusión desde un WhatsApp normal (app personal, no Business; máx. 256 contactos por lista; el médico debe tener guardado el número del directorio, que recibe como contacto al darse de alta).
-- **A los 90 días sin confirmar:** estado `stale` ("pendiente"). **A los 180:** oculto.
+- **A los 35 días sin confirmar:** estado `stale` ("pendiente"). **A los 90:** oculto. Constantes `STALE_DAYS` y `HIDDEN_DAYS` en `lib/directory.ts`, compartidas por la web y el cron.
 - **Reportes comunitarios:** botón "Ya no está aquí". Con 2 reportes de usuarios distintos, el perfil pasa a `stale` hasta que el médico confirme.
 
 ## Stack
@@ -82,11 +82,11 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 `prototype.html` es el prototipo aprobado para **flujos, contenido y textos** (búsqueda, filtros, orden aleatorio, estado de frescura, login por WhatsApp, reportes y alta). **No copiar su estilo visual**: la interfaz sigue el estilo de GitHub con Primer. 
 
 ## Diseño (traducción de GitHub al directorio)
-- Home = dashboard de GitHub: menú lateral (hamburguesa) en la cabecera; columna izquierda con especialidades y emiratos (con conteo, orden alfabético); centro con buscador, filtros (ActionMenu) y la lista estilo repositorios; columna derecha con "¿Eres médico?" (botón del canal activo), "Cómo funciona" y cifras. Nunca "destacados" ni "recién confirmados" (principio 4). Textos sin canal fijo: "confirma sus datos cada tres meses".
+- Home = dashboard de GitHub: menú lateral (hamburguesa) en la cabecera; columna izquierda con especialidades y emiratos (con conteo, orden alfabético); centro con buscador, filtros (ActionMenu) y la lista estilo repositorios; columna derecha con "¿Eres médico?" (botón del canal activo), "Cómo funciona" y cifras. Nunca "destacados" ni "recién confirmados" (principio 4). Textos sin canal fijo: "confirma sus datos una vez al mes".
 - Filtros: especialidad, emirato, seguro **e idioma** (principio 7). Viven en la URL (`?q=&esp=&emirato=&seguro=&idioma=`) para render en servidor y enlaces compartibles.
 - Especialidad, idiomas y seguros = Labels tipo "topics".
 - Estado = Label: verde "Confirmado", amarillo "Pendiente", gris "Sin confirmar"; Octicon de verificado junto al regulador.
-- Estado efectivo: un perfil `verified` con más de 90 días sin confirmar se muestra como "Pendiente" aunque el cron aún no lo haya cambiado.
+- Estado efectivo: un perfil `verified` con más de 35 días sin confirmar se muestra como "Pendiente" aunque el cron aún no lo haya cambiado.
 - `/medico/[slug]`: layout de perfil de usuario (izquierda avatar de iniciales, datos y "Escribir por WhatsApp"; derecha detalles, seguros y gráfico de confirmaciones, una celda por mes).
 - `/admin`: como Issues/PRs, pestañas "Pendientes de verificar" / "Sin confirmar esta ronda" / "Reportes".
 - Login por WhatsApp: flujo de pasos estilo pantalla de sign-in (número → enviar código por WhatsApp → listo).
@@ -105,6 +105,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **2026-09-21:** Onboarding mínimo: un solo formulario para alta, reclamo y edición. Los reclamos guardan los datos propuestos en `verification_requests.payload` y no tocan el perfil hasta que un embajador aprueba. `admins.identity` acepta teléfono o correo.
 - **Descartado (por ahora):** foto de perfil (almacenamiento, moderación y privacidad; el avatar de iniciales basta) y redes sociales (señal comercial, contra el principio 1; moderación).
 - **2026-09-22:** Dirección pública gratis con Cloudflare Pages (`edge/`): una función reenvía todo a CloudFront y manda la IP real en `x-client-ip` con `PROXY_SECRET`. Redirecciones siempre relativas (la app responde bajo varios hosts).
+- **2026-09-22:** Confirmación **mensual** en lugar de trimestral (pendiente a los 35 días, oculto a los 90; la ronda es el mes calendario).
 - **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).
 
 <!-- BEGIN:nextjs-agent-rules -->

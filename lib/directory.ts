@@ -22,7 +22,9 @@ export type PublicDoctor = {
 
 export type Filters = { q?: string; esp?: string; emirato?: string; seguro?: string; idioma?: string }
 
-export const STALE_DAYS = 90
+// Monthly confirmation: "pendiente" after a month plus a few days of grace, hidden after three months.
+export const STALE_DAYS = 35
+export const HIDDEN_DAYS = 90
 const DAY = 86_400_000
 
 export const normalize = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -62,7 +64,7 @@ export type Freshness = {
   text: string
 }
 
-// Effective status: a verified profile past 90 days reads as pending even before the cron flips it.
+// Effective status: a verified profile past STALE_DAYS reads as pending even before the cron flips it.
 export function freshness(d: PublicDoctor, now = new Date()): Freshness {
   if (d.status === 'unclaimed' || !d.last_confirmed_at) {
     return { kind: 'unclaimed', label: 'Sin confirmar', text: 'Perfil sin confirmar. Datos tomados de la lista anterior del grupo.' }
@@ -110,8 +112,8 @@ export function facetCounts(docs: PublicDoctor[]) {
   return { esp: count(docs.map((d) => d.specialty)), emirato: count(docs.map((d) => d.emirate)) }
 }
 
-// First day of the current quarter (UTC): each confirmation round starts there.
-export const roundStart = (now: Date) => new Date(Date.UTC(now.getUTCFullYear(), Math.floor(now.getUTCMonth() / 3) * 3, 1))
+// First day of the current month (UTC): each monthly confirmation round starts there.
+export const roundStart = (now: Date) => new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
 
 export function directoryStats(docs: PublicDoctor[], now = new Date()) {
   const start = roundStart(now).getTime()

@@ -49,7 +49,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
 
       <main className="dash-main">
         <Heading as="h1" className="hero-title">Médicos que te atienden en español</Heading>
-        <p className="muted">Cada médico mantiene su propio perfil y confirma sus datos cada tres meses. Si no lo confirma, se marca como pendiente.</p>
+        <p className="muted">Cada médico mantiene su propio perfil y confirma sus datos una vez al mes. Si pasa más de un mes sin confirmar, aparece como pendiente; a los tres meses se oculta.</p>
 
         <div className="searchbar">
           <SearchForm q={filters.q} hidden={MENUS.flatMap(({ key }) => (filters[key] ? [[key, filters[key]] as [string, string]] : []))} />
@@ -104,14 +104,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
           <ol className="steps small">
             <li><strong>Buscas</strong> por especialidad, emirato, seguro o idioma.</li>
             <li><strong>Escribes</strong> al médico por WhatsApp o contactas su clínica.</li>
-            <li><strong>Cada médico confirma</strong> sus datos cada tres meses; si no, se marca como pendiente.</li>
+            <li><strong>Cada médico confirma</strong> sus datos una vez al mes; si no, se marca como pendiente.</li>
           </ol>
         </section>
 
         <section className="box stats">
           <div><strong>{stats.doctors}</strong><span className="muted small">médicos</span></div>
           <div><strong>{stats.specialties}</strong><span className="muted small">especialidades</span></div>
-          <div><strong>{stats.confirmedThisRound}</strong><span className="muted small">confirmados este trimestre</span></div>
+          <div><strong>{stats.confirmedThisRound}</strong><span className="muted small">confirmados este mes</span></div>
         </section>
 
         <p className="muted small">Proyecto comunitario, gratuito y de código abierto. Sin anuncios ni perfiles pagados. <Link href="/sobre">Sobre el proyecto</Link></p>

@@ -18,20 +18,20 @@ beforeAll(() => { if (db) sql = postgres(db.writerUrl, { max: 2, onnotice: () =>
 beforeEach(async () => { if (db) await sql`delete from reports` })
 afterAll(async () => { await sql?.end() })
 
-describe('ronda trimestral', () => {
-  it('empieza el primer día del trimestre (UTC)', () => {
-    expect(roundStart(new Date('2026-09-21T12:00:00Z')).toISOString()).toBe('2026-07-01T00:00:00.000Z')
+describe('ronda mensual', () => {
+  it('empieza el primer día del mes (UTC)', () => {
+    expect(roundStart(new Date('2026-09-21T12:00:00Z')).toISOString()).toBe('2026-09-01T00:00:00.000Z')
     expect(roundStart(new Date('2026-01-01T00:00:00Z')).toISOString()).toBe('2026-01-01T00:00:00.000Z')
-    expect(roundStart(new Date('2026-12-31T23:59:00Z')).toISOString()).toBe('2026-10-01T00:00:00.000Z')
+    expect(roundStart(new Date('2026-12-31T23:59:00Z')).toISOString()).toBe('2026-12-01T00:00:00.000Z')
   })
 })
 
 describe.skipIf(!db)('cron de frescura', () => {
-  it('pasa a pendiente a los 90 días y oculta a los 180', async () => {
+  it('pasa a pendiente a los 35 días y oculta a los 90', async () => {
     await setConfirmed('dra-lucia-marquez-ortega', 10)
-    await setConfirmed('dr-tomas-aguirre', 95)
-    await setConfirmed('dr-andres-villalba', 185)
-    await setConfirmed('dr-mateo-guzman', 181, 'stale')
+    await setConfirmed('dr-tomas-aguirre', 40)
+    await setConfirmed('dr-andres-villalba', 95)
+    await setConfirmed('dr-mateo-guzman', 91, 'stale')
     const r = await runFreshness(sql, NOW)
     expect(await status('dra-lucia-marquez-ortega')).toBe('verified')
     expect(await status('dr-tomas-aguirre')).toBe('stale')
@@ -97,8 +97,8 @@ describe.skipIf(!db)('reportes "Ya no está aquí"', () => {
 })
 
 describe.skipIf(!db)('sin confirmar esta ronda', () => {
-  it('lista con teléfono y correo a quienes no confirmaron desde el inicio del trimestre, según el ámbito', async () => {
-    await setConfirmed('dra-nadia-farouk', 100)      // antes del 1 de julio
+  it('lista con teléfono y correo a quienes no confirmaron desde el inicio del mes, según el ámbito', async () => {
+    await setConfirmed('dra-nadia-farouk', 25)       // 27 de agosto: antes del 1 de septiembre
     await setConfirmed('dr-sebastian-rojas', 10)     // dentro de la ronda
     const all = await unconfirmedThisRound(sql, ADMIN, NOW)
     const slugs = all.map((r) => r.slug)

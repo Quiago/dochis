@@ -67,9 +67,9 @@ Búsqueda, filtros por especialidad, emirato, seguro e idioma, orden aleatorio, 
 ---
 
 ## Fase 4: Frescura automática y reportes ✅ (hecho, salvo los comandos del bot)
-- Cron diario: Lambda `dochis-cron` (fuera de la VPC, Function URL con IAM) + EventBridge Scheduler `dochis-freshness` a las 03:00 de Dubái → `POST /api/cron/freshness` con `CRON_SECRET`. Pendiente a los 90 días, oculto a los 180.
+- Cron diario: Lambda `dochis-cron` (fuera de la VPC, Function URL con IAM) + EventBridge Scheduler `dochis-freshness` a las 03:00 de Dubái → `POST /api/cron/freshness` con `CRON_SECRET`. Pendiente a los 35 días, oculto a los 90 (confirmación mensual).
 - "Ya no está aquí" en filas y perfil: 2 personas distintas en 30 días → pendiente; huella anónima; 10 reportes/día por persona.
-- `/admin`: "Sin confirmar esta ronda" (desde el inicio del trimestre, con botones para copiar teléfonos y correos) y "Reportes" (descartar).
+- `/admin`: "Sin confirmar este mes" (desde el día 1 del mes, con botones para copiar teléfonos y correos) y "Reportes" (descartar).
 - Mientras WhatsApp no esté activo, confirmar = entrar y pulsar "Guardar perfil".
 - **Pendiente hasta tener WhatsApp:** comandos CONFIRMAR / 1 / 2 del bot con `bot_sessions` y enlace de edición de un solo uso.
 
@@ -81,7 +81,7 @@ La portada vendía "Entrar con WhatsApp" aunque WhatsApp no está activo, y los 
 - **Columna izquierda** (como "Top repositories"): especialidades y emiratos con su número de médicos, en orden alfabético (nada de rankings, principio 4). Enlazan al filtro.
 - **Centro**: buscador grande, filtros y la lista de médicos.
 - **Columna derecha** (como el changelog): tarjeta "¿Eres médico?" con el botón del canal que esté activo (correo o WhatsApp), "Cómo funciona" en 3 pasos y cifras del directorio. Sin "recién confirmados": daría más visibilidad a unos que a otros.
-- **Textos sin canal fijo**: "Confirmado hace N días", "confirma sus datos cada tres meses".
+- **Textos sin canal fijo**: "Confirmado hace N días", "confirma sus datos una vez al mes".
 - Páginas **Sobre el proyecto** y **Privacidad** (se adelantan de la Fase 5 porque el menú las enlaza).
 - Móvil: las columnas laterales pasan al menú y debajo de la lista.
 
@@ -105,9 +105,9 @@ La portada vendía "Entrar con WhatsApp" aunque WhatsApp no está activo, y los 
 
 ---
 
-## Rutina de mantenimiento (15 minutos cada 3 meses)
-1. El admin pega el mensaje de confirmación trimestral en el grupo.
-2. Dos semanas después, copia desde `/admin` los que no confirmaron y les envía la lista de difusión.
+## Rutina de mantenimiento (10 minutos al mes)
+1. El día 1, el admin pega el mensaje de confirmación mensual en el grupo.
+2. Hacia el día 15, copia desde `/admin` los que no confirmaron y les envía la lista de difusión.
 3. El cron hace el resto.
 4. Revisar en AWS Budgets cuántos créditos quedan.
 

@@ -49,10 +49,10 @@ describe('shuffle', () => {
 })
 
 describe('freshness', () => {
-  it('confirmado dentro de 90 días, pendiente después, sin confirmar si unclaimed', () => {
+  it('confirmado hasta 35 días (un mes y margen), pendiente después, sin confirmar si unclaimed', () => {
     expect(freshness(doc({ last_confirmed_at: daysAgo(0) }), NOW)).toMatchObject({ kind: 'confirmed', label: 'Confirmado' })
-    expect(freshness(doc({ last_confirmed_at: daysAgo(89) }), NOW).kind).toBe('confirmed')
-    expect(freshness(doc({ last_confirmed_at: daysAgo(91) }), NOW)).toMatchObject({ kind: 'pending', label: 'Pendiente' })
+    expect(freshness(doc({ last_confirmed_at: daysAgo(35) }), NOW).kind).toBe('confirmed')
+    expect(freshness(doc({ last_confirmed_at: daysAgo(36) }), NOW)).toMatchObject({ kind: 'pending', label: 'Pendiente' })
     expect(freshness(doc({ status: 'stale', last_confirmed_at: daysAgo(10) }), NOW).kind).toBe('pending')
     expect(freshness(doc({ status: 'unclaimed', last_confirmed_at: null }), NOW)).toMatchObject({ kind: 'unclaimed', label: 'Sin confirmar' })
   })
@@ -126,10 +126,10 @@ describe('columna lateral y cifras', () => {
     expect(c.emirato.map((e) => e.value)).toEqual(['Abu Dabi', 'Dubái', 'Sharjah'])
   })
 
-  it('cifras del directorio: total, especialidades y confirmados en el trimestre', () => {
+  it('cifras del directorio: total, especialidades y confirmados este mes', () => {
     const docs = [
       doc({ id: '1', last_confirmed_at: daysAgo(10) }),
-      doc({ id: '2', specialty: 'Cardiología', last_confirmed_at: daysAgo(100) }),
+      doc({ id: '2', specialty: 'Cardiología', last_confirmed_at: daysAgo(25) }),
       doc({ id: '3', status: 'unclaimed', last_confirmed_at: null }),
     ]
     expect(directoryStats(docs, NOW)).toEqual({ doctors: 3, specialties: 2, confirmedThisRound: 1 })

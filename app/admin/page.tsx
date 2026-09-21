@@ -45,7 +45,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         current={tab}
         tabs={[
           { key: 'pendientes', label: 'Pendientes de verificar', count: requests.length },
-          { key: 'sin-confirmar', label: 'Sin confirmar esta ronda', count: unconfirmed.length },
+          { key: 'sin-confirmar', label: 'Sin confirmar este mes', count: unconfirmed.length },
           { key: 'reportes', label: 'Reportes', count: reports.length },
         ]}
       />

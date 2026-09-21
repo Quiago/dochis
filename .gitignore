@@ -10,3 +10,8 @@ next-env.d.ts
 supabase/.branches
 supabase/.temp
 .vitest/
+
+# Datos reales de médicos: nunca al repo público
+*.csv
+*.xlsx
+data/

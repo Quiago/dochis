@@ -11,7 +11,7 @@ export default function Sobre() {
       <h2>Cómo funciona</h2>
       <ul>
         <li><strong>Cada médico es dueño de su perfil.</strong> Nadie mantiene los datos a mano.</li>
-        <li><strong>Frescura visible.</strong> Cada perfil muestra cuándo se confirmó. Sin confirmación en 90 días pasa a &quot;pendiente&quot;.</li>
+        <li><strong>Frescura visible.</strong> Cada médico confirma sus datos una vez al mes y su perfil muestra cuándo lo hizo. Si pasa más de un mes sin confirmar, aparece como &quot;pendiente&quot;; a los tres meses se oculta.</li>
         <li><strong>Justicia en la visibilidad.</strong> El orden es aleatorio en cada visita. No hay rankings ni perfiles destacados.</li>
         <li><strong>Filtramos por idioma, no por nacionalidad.</strong></li>
         <li><strong>Licencias verificadas.</strong> Embajadores voluntarios comprueban cada licencia en el registro oficial de la DHA, DOH o MOHAP.</li>
