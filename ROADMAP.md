@@ -29,7 +29,7 @@ Proyecto comunitario, gratuito y de código abierto. Cada fase termina con algo 
 ## Fase 0: Proyecto base ✅ (hecho)
 Next.js + Primer, `.env.example`, tests con Vitest.
 
-## Fase 0b: Cuenta y red en AWS (1 día)
+## Fase 0b: Cuenta y red en AWS (1 día) — código ✅ hecho; falta la parte de consola
 
 **Tú haces (en este orden):**
 1. **AWS Budgets:** presupuesto de créditos con alertas al 50 % y 80 %, y un presupuesto de gasto real de 1 USD.
@@ -48,7 +48,7 @@ Next.js + Primer, `.env.example`, tests con Vitest.
 
 ---
 
-## Fase 1: Directorio de solo lectura ✅ (hecho sobre Supabase; se migra en la Fase 0b)
+## Fase 1: Directorio de solo lectura ✅ (hecho; ya sobre PostgreSQL)
 Búsqueda, filtros por especialidad, emirato, seguro e idioma, orden aleatorio, frescura, perfil `/medico/[slug]` con gráfico de confirmaciones, SEO en español.
 
 ---

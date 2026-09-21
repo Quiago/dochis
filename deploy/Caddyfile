@@ -1,0 +1,5 @@
+# Reemplaza el dominio. Caddy obtiene y renueva el certificado HTTPS solo.
+medicos.example.com {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3000
+}
