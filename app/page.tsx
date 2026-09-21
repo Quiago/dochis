@@ -2,6 +2,7 @@ import { Button, Flash, Heading, Link } from '@primer/react'
 import { SyncIcon, XIcon } from '@primer/octicons-react'
 import DoctorRow from '@/components/DoctorRow'
 import FilterMenus from '@/components/FilterMenus'
+import InviteColleague, { VISITOR_MESSAGE } from '@/components/InviteColleague'
 import SearchForm from '@/components/SearchForm'
 import { getPublicDoctors } from '@/lib/doctors'
 import {
@@ -96,6 +97,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             ) : (
               <p className="muted small">El acceso está en mantenimiento.</p>
             )}
+            <div className="invite-home">
+              <p className="muted small">¿Conoces a un médico que atienda en español?</p>
+              <InviteColleague url={`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/entrar`} message={VISITOR_MESSAGE} />
+            </div>
           </div>
         </section>
 
