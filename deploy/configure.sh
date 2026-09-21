@@ -4,7 +4,7 @@ set -euo pipefail
 REGION=${REGION:-eu-north-1}
 export HOME=${HOME:-/root}  # SSM Run Command has no HOME; the snap aws CLI then prints nothing
 umask 027
-aws ssm get-parameter --region "$REGION" --name /dochis/env --with-decryption --query Parameter.Value --output text > /etc/dochis.env
+aws ssm get-parameter --region "$REGION" --name /dochis/env --with-decryption --query Parameter.Value --output text | cat > /etc/dochis.env  # snap aws writes nothing when stdout is a file
 [ -s /etc/dochis.env ] || { echo "No se pudo leer /dochis/env de SSM" >&2; exit 1; }
 chown root:dochis /etc/dochis.env && chmod 640 /etc/dochis.env
 # Caddy reads ORIGIN_SECRET from the same file (systemd loads it as root).
