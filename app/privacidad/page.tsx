@@ -10,19 +10,19 @@ export default function Privacidad() {
       <p>Tratamos los datos siguiendo la ley de protección de datos de los Emiratos (PDPL) y un principio simple: guardar lo mínimo y publicar solo lo que el médico acepta.</p>
       <h2>Qué es público</h2>
       <ul>
-        <li>Nombre, especialidad, clínica, zona, emirato, idiomas, seguros aceptados, autoridad que emitió la licencia y fecha de la última confirmación.</li>
+        <li>Nombre, especialidad, clínica, zona, emirato, idiomas, seguros aceptados, autoridad y número de licencia (para poder comprobarla en el registro oficial) y fecha de la última confirmación.</li>
         <li>El WhatsApp del médico, <strong>solo</strong> si marcó la casilla para mostrarlo a los pacientes.</li>
         <li>Los perfiles importados de la lista anterior del grupo muestran solo nombre, especialidad y centro hasta que el médico los reclama.</li>
       </ul>
       <h2>Qué no se publica nunca</h2>
       <ul>
         <li>El teléfono o correo con el que el médico entra.</li>
-        <li>El número de licencia (solo lo ven los embajadores para verificarla).</li>
-      </ul>
+              </ul>
       <h2>Para qué usamos los datos</h2>
       <ul>
         <li>Identificar al médico al entrar (le enviamos un código de un solo uso).</li>
         <li>Pedirle que confirme sus datos una vez al mes.</li>
+        <li>Revisar automáticamente cada perfil nuevo (licencias repetidas, spam). Esa revisión puede usar un modelo de IA de Amazon Bedrock que solo recibe los datos profesionales del formulario, nunca el teléfono ni el correo.</li>
         <li>Evitar abusos: los reportes &quot;Ya no está aquí&quot; se guardan con una huella anónima, sin la dirección IP.</li>
       </ul>
       <p>No hay anuncios, no vendemos ni compartimos datos y no usamos cookies de seguimiento. Solo una cookie técnica para mantener la sesión.</p>

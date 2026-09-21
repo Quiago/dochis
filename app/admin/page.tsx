@@ -22,7 +22,7 @@ const REGISTRY: Record<string, string> = {
 const DATE = new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short', timeZone: 'Asia/Dubai' })
 const fmt = (d: Date | string) => DATE.format(new Date(d))
 
-const KIND: Record<string, string> = { signup: 'Alta nueva', claim: 'Reclamo de perfil', license: 'Cambio de licencia' }
+const KIND: Record<string, string> = { signup: 'Alta marcada', license: 'Edición marcada', claim: 'Reclamo' }
 
 export default async function Admin({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const session = await getSession()
@@ -44,7 +44,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
       <AdminTabs
         current={tab}
         tabs={[
-          { key: 'pendientes', label: 'Pendientes de verificar', count: requests.length },
+          { key: 'pendientes', label: 'Marcados para revisar', count: requests.length },
           { key: 'sin-confirmar', label: 'Sin confirmar este mes', count: unconfirmed.length },
           { key: 'reportes', label: 'Reportes', count: reports.length },
         ]}
@@ -97,7 +97,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
           </ul>
         )
       ) : requests.length === 0 ? (
-        <div className="list empty muted">No hay solicitudes pendientes.</div>
+        <div className="list empty muted">Nada que revisar: la revisión automática publicó todo lo demás.</div>
       ) : (
         <ul className="list">
           {requests.map((r) => (
@@ -106,15 +106,18 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
               <div className="issue-body">
                 <div className="row-head">
                   <strong>{r.doctor_name}</strong>
-                  <Label variant={r.kind === 'claim' ? 'attention' : 'accent'}>{KIND[r.kind]}</Label>
+                  <Label variant="attention">{KIND[r.kind] ?? r.kind}</Label>
                 </div>
+                {r.payload?.issues?.length > 0 && (
+                  <ul className="issues small">{r.payload.issues.map((i: string) => <li key={i}>{i}</li>)}</ul>
+                )}
                 <p className="muted small">
                   {r.doctor_specialty} · licencia <strong>{r.regulator} {r.license_number}</strong> ·{' '}
                   <Link href={REGISTRY[r.regulator]} target="_blank" rel="noopener">buscar en el registro <LinkExternalIcon size={12} /></Link>
                 </p>
                 <p className="muted small">
                   Pedido por {r.identity} el {fmt(r.created_at)}
-                  {r.kind === 'claim' && <> · perfil <Link href={`/medico/${r.doctor_slug}`}>/{r.doctor_slug}</Link></>}
+
                 </p>
               </div>
               <div className="issue-actions">

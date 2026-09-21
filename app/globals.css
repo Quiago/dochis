@@ -158,3 +158,4 @@ p { margin: 0 0 var(--base-size-8); }
 .invite { display: flex; flex-wrap: wrap; gap: var(--base-size-8); }
 .invite > * { flex: 1 1 140px; }
 .invite-home { margin-top: var(--base-size-16); padding-top: var(--base-size-12); border-top: var(--borderWidth-thin) solid var(--borderColor-muted); }
+.issues { margin: var(--base-size-4) 0; padding-left: var(--base-size-20); color: var(--fgColor-attention); }

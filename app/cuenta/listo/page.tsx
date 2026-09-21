@@ -8,8 +8,8 @@ export const metadata: Metadata = { title: 'Perfil guardado', robots: { index: f
 
 const MESSAGES: Record<string, { title: string; text: string }> = {
   saved: { title: 'Perfil guardado', text: 'Tus datos quedaron confirmados por este mes. Gracias por mantener la lista al día.' },
-  pending: { title: 'Perfil enviado', text: 'Un embajador revisará tu licencia en el registro oficial. Verás el estado la próxima vez que entres.' },
-  claim: { title: 'Solicitud enviada', text: 'Un embajador revisará tu licencia antes de pasarte el perfil. Verás el estado la próxima vez que entres.' },
+  published: { title: 'Perfil publicado', text: 'Ya apareces en el directorio. Cada mes te pediremos confirmar tus datos.' },
+  pending: { title: 'Perfil en revisión', text: 'La revisión automática encontró algo que conviene mirar (por ejemplo, una licencia que ya está en otro perfil). Te avisaremos cuando esté publicado.' },
 }
 
 export default async function Listo({ searchParams }: { searchParams: Promise<{ estado?: string }> }) {

@@ -1,9 +1,8 @@
 import { Button, Link } from '@primer/react'
-import { VerifiedIcon } from '@primer/octicons-react'
 import ReportButton from './ReportButton'
 import StatusLabel from './StatusLabel'
 import Topics from './Topics'
-import { freshness, waLink, type PublicDoctor } from '@/lib/directory'
+import { freshness, REGISTRY, waLink, type PublicDoctor } from '@/lib/directory'
 
 export function WhatsAppButton({ d, block }: { d: PublicDoctor; block?: boolean }) {
   const href = waLink(d)
@@ -35,7 +34,7 @@ export default function DoctorRow({ d, now }: { d: PublicDoctor; now: Date }) {
       <p className="muted small status">
         {f.text}
         {d.regulator && (
-          <span className="license"> · <VerifiedIcon size={14} /> Licencia {d.regulator}</span>
+          <span> · Licencia {d.regulator} {d.license_number} · <Link href={REGISTRY[d.regulator]} target="_blank" rel="noopener">Comprobar</Link></span>
         )}
       </p>
       <div className="actions">

@@ -12,7 +12,7 @@ const NOW = new Date('2026-09-21T12:00:00Z')
 const base: PublicDoctor = {
   id: '1', slug: 'dra-lucia', full_name: 'Dra. Lucía', specialty: 'Pediatría', clinic: 'Palmera Kids', area: 'Jumeirah',
   emirate: 'Dubái', languages: ['Español'], insurances: ['Daman'], regulator: 'DHA', public_whatsapp: '+971500000001',
-  status: 'verified', last_confirmed_at: '2026-09-09T12:00:00Z',
+  status: 'verified', last_confirmed_at: '2026-09-09T12:00:00Z', license_number: '12345678',
 }
 const row = (d: Partial<PublicDoctor>) =>
   render(<Providers><ul><DoctorRow d={{ ...base, ...d }} now={NOW} /></ul></Providers>)

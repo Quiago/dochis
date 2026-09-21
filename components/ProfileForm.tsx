@@ -73,7 +73,7 @@ export default function ProfileForm({ initial, medico, loginPhone, submitLabel }
         </Select>
         {err.regulator && <FormControl.Validation variant="error">{err.regulator}</FormControl.Validation>}
       </FormControl>
-      {field('license_number', 'Número de licencia', { required: true, caption: 'Un embajador la verifica en el registro oficial. No se publica.' })}
+      {field('license_number', 'Número de licencia', { required: true, caption: 'Se publica junto a un enlace al registro oficial, para que cualquiera pueda comprobarla.' })}
 
       <FormControl>
         <Checkbox name="show_whatsapp" defaultChecked={!!initial.public_whatsapp} />
@@ -88,7 +88,7 @@ export default function ProfileForm({ initial, medico, loginPhone, submitLabel }
 
       <FormControl required>
         <Checkbox name="consent" />
-        <FormControl.Label>Acepto que se publiquen mis datos profesionales en el directorio.</FormControl.Label>
+        <FormControl.Label>Acepto que se publiquen mis datos profesionales, incluido mi número de licencia, en el directorio.</FormControl.Label>
         {err.consent && <FormControl.Validation variant="error">{err.consent}</FormControl.Validation>}
       </FormControl>
 

@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Button, Heading, Link } from '@primer/react'
-import { ArrowLeftIcon, LocationIcon, OrganizationIcon, VerifiedIcon } from '@primer/octicons-react'
+import { ArrowLeftIcon, LocationIcon, OrganizationIcon } from '@primer/octicons-react'
 import ReportButton from '@/components/ReportButton'
 import StatusLabel from '@/components/StatusLabel'
 import Topics from '@/components/Topics'
 import { WhatsAppButton, Where } from '@/components/DoctorRow'
 import { getDoctorBySlug } from '@/lib/doctors'
-import { confirmationMonths, freshness, initials } from '@/lib/directory'
+import { confirmationMonths, freshness, initials, REGISTRY } from '@/lib/directory'
 
 export const dynamic = 'force-dynamic'
 
@@ -65,7 +65,10 @@ export default async function DoctorPage({ params }: Props) {
             <div className="box-body">
               <p><StatusLabel f={f} /> <span className="muted small">{f.text}</span></p>
               {d.regulator && (
-                <p className="license"><VerifiedIcon /> Licencia verificada con la {d.regulator}</p>
+                <>
+                  <p>Licencia <strong>{d.regulator} {d.license_number}</strong> <span className="muted small">(declarada por el médico)</span></p>
+                  <p><Button as="a" href={REGISTRY[d.regulator]} target="_blank" rel="noopener" size="small">Comprobar en el registro oficial</Button></p>
+                </>
               )}
               <p className="muted small"><Where d={d} /></p>
               {f.kind !== 'unclaimed' && <p><ReportButton slug={d.slug} name={d.full_name} /></p>}

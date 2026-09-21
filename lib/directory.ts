@@ -18,6 +18,14 @@ export type PublicDoctor = {
   public_whatsapp: string | null
   status: PublicStatus
   last_confirmed_at: string | null
+  license_number: string | null
+}
+
+// Official public search per regulator: patients check the declared licence themselves (the registries use CAPTCHAs).
+export const REGISTRY: Record<Regulator, string> = {
+  DHA: 'https://services.dha.gov.ae/sheryan/wps/portal/home/services-professional/professional-registrationstatus',
+  DOH: 'https://www.tamm.abudhabi/',
+  MOHAP: 'https://smartforms.moh.gov.ae:83/ServicesProd/Pages/LicensedMedicalProfessionals.aspx?lang=en',
 }
 
 export type Filters = { q?: string; esp?: string; emirato?: string; seguro?: string; idioma?: string }

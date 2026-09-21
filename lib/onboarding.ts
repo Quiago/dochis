@@ -1,15 +1,15 @@
-// Sign-up, claim, self-edit and ambassador review. Every function takes the sql client (tests use a throwaway DB).
+// Sign-up, self-edit and review of flagged profiles. Every function takes the sql client (tests use a throwaway DB).
 // Identity = the login phone (E.164) or email of the session.
 import type postgres from 'postgres'
-import { slugify } from './directory.ts'
+import { normalize, slugify } from './directory.ts'
 import type { ProfileData } from './profile'
+import type { Review } from './review.ts'
 
 export type Reviewer = { identity: string; role: 'admin' | 'ambassador'; scope: string | null }
 type Sql = postgres.Sql | postgres.TransactionSql
 
 const isEmail = (identity: string) => identity.includes('@')
 const norm = (identity: string) => (isEmail(identity) ? identity.toLowerCase() : identity)
-const PROFILE_COLUMNS = ['full_name', 'specialty', 'clinic', 'area', 'emirate', 'languages', 'insurances', 'regulator', 'license_number', 'public_whatsapp'] as const
 
 export async function findDoctorByIdentity(sql: Sql, identity: string) {
   const id = norm(identity)
@@ -33,22 +33,50 @@ export async function uniqueSlug(sql: Sql, name: string) {
   for (let i = 2; ; i++) if (!taken.has(`${base}-${i}`)) return `${base}-${i}`
 }
 
-// New doctor: private until an ambassador verifies the license.
-export async function signUp(sql: postgres.Sql, identity: string, data: ProfileData) {
+// Imported profile with the same name as a newly published one: it is the same person, hide the old card.
+async function hideUnclaimedDuplicates(tx: postgres.TransactionSql, keepId: string, fullName: string) {
+  const key = normalize(fullName).replace(/\s+/g, ' ').trim()
+  const candidates = await tx`select id, full_name from doctors where status = 'unclaimed' and id <> ${keepId}`
+  const ids = candidates.filter((d) => normalize(d.full_name).replace(/\s+/g, ' ').trim() === key).map((d) => d.id)
+  if (ids.length) await tx`update doctors set status = 'hidden' where id in ${tx(ids)}`
+}
+
+async function flag(tx: postgres.TransactionSql, doctorId: string, identity: string, kind: 'signup' | 'license', data: ProfileData, issues: string[]) {
+  const payload = tx.json({ issues } as postgres.JSONValue)
+  const updated = await tx`
+    update verification_requests set payload = ${payload}, license_number = ${data.license_number}, regulator = ${data.regulator}
+    where doctor_id = ${doctorId} and status = 'pending' returning id`
+  if (!updated.length) {
+    await tx`insert into verification_requests (doctor_id, kind, identity, license_number, regulator, payload)
+             values (${doctorId}, ${kind}, ${identity}, ${data.license_number}, ${data.regulator}, ${payload})`
+  }
+}
+
+// New doctor: published at once when the automatic review is clean; otherwise waits in "Marcados para revisar".
+export async function signUp(sql: postgres.Sql, identity: string, data: ProfileData, review: Review, now = new Date()) {
   const id = norm(identity)
   return sql.begin(async (tx) => {
     const slug = await uniqueSlug(tx, data.full_name)
     const [d] = await tx`
-      insert into doctors ${tx({ ...data, slug, status: 'pending_verification', consent_at: new Date(), phone_e164: isEmail(id) ? null : id, email: isEmail(id) ? id : null })}
+      insert into doctors ${tx({
+        ...data, slug, status: review.ok ? 'verified' : 'pending_verification', consent_at: now,
+        last_confirmed_at: review.ok ? now : null, phone_e164: isEmail(id) ? null : id, email: isEmail(id) ? id : null,
+      })}
       returning id, slug`
-    await tx`insert into verification_requests ${tx({ doctor_id: d.id, kind: 'signup', identity: id, license_number: data.license_number, regulator: data.regulator })}`
-    return { id: d.id as string, slug: d.slug as string }
+    if (review.ok) {
+      await tx`insert into confirmations (doctor_id, confirmed_at) values (${d.id}, ${now})`
+      await hideUnclaimedDuplicates(tx, d.id, data.full_name)
+    } else {
+      await flag(tx, d.id, id, 'signup', data, review.issues)
+    }
+    return { id: d.id as string, slug: d.slug as string, published: review.ok }
   })
 }
 
-// Owner edits their own profile. Same license on a live profile = saved and counted as a confirmation;
-// a new license (or a profile not yet verified) goes to review.
-export async function saveOwnProfile(sql: postgres.Sql, identity: string, data: ProfileData, now = new Date()): Promise<'saved' | 'pending'> {
+// Owner edits their profile (including an imported one matched by phone/email). A clean review publishes and counts
+// as this month's confirmation. A flagged review never unpublishes a live doctor over a false positive: it only
+// blocks when the profile was not public yet or the licence changed.
+export async function saveOwnProfile(sql: postgres.Sql, identity: string, data: ProfileData, review: Review, now = new Date()): Promise<'saved' | 'pending'> {
   const id = norm(identity)
   return sql.begin(async (tx) => {
     const d = await findDoctorByIdentity(tx, id)
@@ -57,37 +85,17 @@ export async function saveOwnProfile(sql: postgres.Sql, identity: string, data: 
     const licenseChanged = d.license_number !== data.license_number || d.regulator !== data.regulator
     const fields = { ...data, consent_at: d.consent_at ?? now }
 
-    if (live && !licenseChanged) {
+    if (review.ok || (live && !licenseChanged)) {
       await tx`update doctors set ${tx({ ...fields, status: 'verified', last_confirmed_at: now })} where id = ${d.id}`
       await tx`insert into confirmations (doctor_id, confirmed_at) values (${d.id}, ${now})`
+      if (review.ok) await tx`update verification_requests set status = 'approved', reviewed_by = 'revisión automática', reviewed_at = ${now} where doctor_id = ${d.id} and status = 'pending'`
+      else await flag(tx, d.id, id, 'license', data, review.issues)
       return 'saved'
     }
-
-    // An imported (unclaimed) profile keeps showing its minimal public card until approved.
-    const status = d.status === 'unclaimed' ? 'unclaimed' : 'pending_verification'
-    const kind = d.status === 'unclaimed' ? 'claim' : live ? 'license' : 'signup'
-    await tx`update doctors set ${tx({ ...fields, status })} where id = ${d.id}`
-    const updated = await tx`
-      update verification_requests set license_number = ${data.license_number}, regulator = ${data.regulator}
-      where doctor_id = ${d.id} and identity = ${id} and status = 'pending' returning id`
-    if (!updated.length) {
-      await tx`insert into verification_requests ${tx({ doctor_id: d.id, kind, identity: id, license_number: data.license_number, regulator: data.regulator })}`
-    }
+    await tx`update doctors set ${tx({ ...fields, status: 'pending_verification' })} where id = ${d.id}`
+    await flag(tx, d.id, id, live ? 'license' : 'signup', data, review.issues)
     return 'pending'
   })
-}
-
-// "¿Eres tú?" on a profile not linked to this identity: nothing changes until approved.
-export async function submitClaim(sql: postgres.Sql, identity: string, doctorId: string, data: ProfileData) {
-  const id = norm(identity)
-  const payload = sql.json(data as unknown as postgres.JSONValue)
-  const updated = await sql`
-    update verification_requests set payload = ${payload}, license_number = ${data.license_number}, regulator = ${data.regulator}
-    where doctor_id = ${doctorId} and identity = ${id} and kind = 'claim' and status = 'pending' returning id`
-  if (updated.length) return
-  await sql`
-    insert into verification_requests (doctor_id, kind, identity, license_number, regulator, payload)
-    values (${doctorId}, 'claim', ${id}, ${data.license_number}, ${data.regulator}, ${payload})`
 }
 
 export async function getReviewer(sql: Sql, identity: string): Promise<Reviewer | null> {
@@ -122,18 +130,9 @@ async function lockRequest(tx: postgres.TransactionSql, id: string, reviewer: Re
 export async function approveRequest(sql: postgres.Sql, id: string, reviewer: Reviewer, now = new Date()) {
   await sql.begin(async (tx) => {
     const req = await lockRequest(tx, id, reviewer)
-    if (req.kind === 'claim' && Object.keys(req.payload).length) {
-      const fields = Object.fromEntries(PROFILE_COLUMNS.map((c) => [c, req.payload[c] ?? null]))
-      const link = isEmail(req.identity) ? { email: req.identity } : { phone_e164: req.identity }
-      await tx`update doctors set ${tx({ ...fields, ...link, consent_at: now })} where id = ${req.doctor_id}`
-    }
     await tx`update doctors set status = 'verified', last_confirmed_at = ${now} where id = ${req.doctor_id}`
     await tx`insert into confirmations (doctor_id, confirmed_at) values (${req.doctor_id}, ${now})`
     await tx`update verification_requests set status = 'approved', reviewed_by = ${reviewer.identity}, reviewed_at = ${now} where id = ${id}`
-    // Competing claims for the same profile lose.
-    await tx`
-      update verification_requests set status = 'rejected', reviewed_by = ${reviewer.identity}, reviewed_at = ${now}
-      where doctor_id = ${req.doctor_id} and status = 'pending' and kind = 'claim'`
   })
 }
 
@@ -141,7 +140,7 @@ export async function rejectRequest(sql: postgres.Sql, id: string, reviewer: Rev
   await sql.begin(async (tx) => {
     const req = await lockRequest(tx, id, reviewer)
     await tx`update verification_requests set status = 'rejected', reviewed_by = ${reviewer.identity}, reviewed_at = ${now} where id = ${id}`
-    // A rejected sign-up or license change hides the profile; a rejected claim changes nothing.
-    if (req.kind !== 'claim') await tx`update doctors set status = 'hidden' where id = ${req.doctor_id}`
+    // A rejected flagged profile is hidden.
+    await tx`update doctors set status = 'hidden' where id = ${req.doctor_id}`
   })
 }

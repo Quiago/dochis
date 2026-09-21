@@ -1,23 +1,25 @@
-// Alta, reclamo, edición y revisión contra Postgres real (rol app_writer). Requiere `npm run db:up`.
+// Alta y edición con revisión automática, y revisión de los marcados. Postgres real (rol app_writer).
 import postgres from 'postgres'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import {
-  approveRequest, findDoctorByIdentity, getReviewer, listPendingRequests, pendingRequestFor, rejectRequest,
-  saveOwnProfile, signUp, submitClaim,
+  approveRequest, findDoctorByIdentity, getReviewer, listPendingRequests, pendingRequestFor, rejectRequest, saveOwnProfile, signUp,
 } from '@/lib/onboarding'
 import type { ProfileData } from '@/lib/profile'
+import type { Review } from '@/lib/review'
 import { freshDatabase } from './pg'
 
 const db = await freshDatabase('dochis_test_onboarding', { seed: true })
 let sql: postgres.Sql
 let reader: postgres.Sql
 
+const OK: Review = { ok: true, issues: [] }
+const FLAG: Review = { ok: false, issues: ['Esa licencia ya está en otro perfil del directorio.'] }
 const data = (over: Partial<ProfileData> = {}): ProfileData => ({
   full_name: 'Dra. Nueva Pérez', specialty: 'Pediatría', clinic: 'Clínica Nueva', area: 'Al Barsha', emirate: 'Dubái',
-  languages: ['Español'], insurances: ['Daman'], regulator: 'DHA', license_number: 'DHA-77777', public_whatsapp: null, ...over,
+  languages: ['Español'], insurances: ['Daman'], regulator: 'DHA', license_number: '77777777', public_whatsapp: null, ...over,
 })
 const doctorBySlug = async (slug: string) => (await sql`select * from doctors where slug = ${slug}`)[0]
-const isPublic = async (slug: string) => (await reader`select 1 from public_doctors where slug = ${slug}`).length === 1
+const publicRow = async (slug: string) => (await reader`select * from public_doctors where slug = ${slug}`)[0]
 
 beforeAll(async () => {
   if (!db) return
@@ -27,87 +29,90 @@ beforeAll(async () => {
 })
 afterAll(async () => { await sql?.end(); await reader?.end() })
 
-describe.skipIf(!db)('onboarding de médicos', () => {
-  it('alta nueva: queda pendiente, no es pública y genera solicitud', async () => {
-    const r = await signUp(sql, 'nueva@example.com', data())
-    const d = await doctorBySlug(r.slug)
-    expect(d).toMatchObject({ status: 'pending_verification', email: 'nueva@example.com', phone_e164: null })
-    expect(d.consent_at).not.toBeNull()
-    expect(await isPublic(r.slug)).toBe(false)
-    expect(await pendingRequestFor(sql, 'nueva@example.com')).toMatchObject({ kind: 'signup' })
+describe.skipIf(!db)('alta con revisión automática', () => {
+  it('revisión limpia: se publica al instante, con licencia visible y confirmada hoy', async () => {
+    const r = await signUp(sql, 'nueva@example.com', data(), OK)
+    expect(r.published).toBe(true)
+    expect(await publicRow(r.slug)).toMatchObject({ status: 'verified', license_number: '77777777', regulator: 'DHA' })
+    expect((await doctorBySlug(r.slug)).last_confirmed_at).not.toBeNull()
+    expect(await pendingRequestFor(sql, 'nueva@example.com')).toBeNull()
     expect((await findDoctorByIdentity(sql, 'NUEVA@example.com'))?.slug).toBe(r.slug)
   })
 
-  it('el slug es único aunque se repita el nombre', async () => {
-    const a = await signUp(sql, '+971501110001', data({ full_name: 'Dr. Repetido' }))
-    const b = await signUp(sql, '+971501110002', data({ full_name: 'Dr. Repetido' }))
-    expect(a.slug).toBe('dr-repetido')
-    expect(b.slug).toBe('dr-repetido-2')
+  it('revisión marcada: no se publica y aparece con los motivos para el admin', async () => {
+    const r = await signUp(sql, 'marcada@example.com', data({ full_name: 'Dr. Marcado' }), FLAG)
+    expect(r.published).toBe(false)
+    expect(await publicRow(r.slug)).toBeUndefined()
+    const admin = (await getReviewer(sql, 'admin@example.com'))!
+    const req = (await listPendingRequests(sql, admin)).find((x) => x.doctor_slug === r.slug)!
+    expect(req.payload.issues).toEqual(FLAG.issues)
   })
 
-  it('médico verificado edita sin tocar la licencia: se aplica y cuenta como confirmación', async () => {
+  it('al publicarse, oculta el perfil importado sin reclamar con el mismo nombre', async () => {
+    expect((await doctorBySlug('dr-rafael-montoya')).status).toBe('unclaimed')
+    const r = await signUp(sql, 'rafael@example.com', data({ full_name: 'Dr. Rafael Montoya', specialty: 'Urología' }), OK)
+    expect((await doctorBySlug('dr-rafael-montoya')).status).toBe('hidden')
+    expect((await publicRow(r.slug)).status).toBe('verified')
+  })
+
+  it('el slug es único aunque se repita el nombre', async () => {
+    const a = await signUp(sql, '+971501110001', data({ full_name: 'Dr. Repetido' }), OK)
+    const b = await signUp(sql, '+971501110002', data({ full_name: 'Dr. Repetido' }), FLAG)
+    expect([a.slug, b.slug]).toEqual(['dr-repetido', 'dr-repetido-2'])
+  })
+})
+
+describe.skipIf(!db)('edición del propio perfil', () => {
+  it('limpia: se guarda y cuenta como confirmación del mes', async () => {
     const lucia = await doctorBySlug('dra-lucia-marquez-ortega')
     const before = (await sql`select count(*)::int as n from confirmations where doctor_id = ${lucia.id}`)[0].n
-    const r = await saveOwnProfile(sql, lucia.phone_e164, data({ full_name: lucia.full_name, clinic: 'Clínica Nueva Sede', regulator: 'DHA', license_number: lucia.license_number }))
-    expect(r).toBe('saved')
-    const after = await doctorBySlug('dra-lucia-marquez-ortega')
-    expect(after).toMatchObject({ status: 'verified', clinic: 'Clínica Nueva Sede' })
-    expect(Date.now() - after.last_confirmed_at.getTime()).toBeLessThan(60_000)
+    expect(await saveOwnProfile(sql, lucia.phone_e164, data({ full_name: lucia.full_name, license_number: lucia.license_number, clinic: 'Nueva Sede' }), OK)).toBe('saved')
+    expect(await doctorBySlug('dra-lucia-marquez-ortega')).toMatchObject({ status: 'verified', clinic: 'Nueva Sede' })
     expect((await sql`select count(*)::int as n from confirmations where doctor_id = ${lucia.id}`)[0].n).toBe(before + 1)
   })
 
-  it('perfil pendiente (stale) que confirma vuelve a verificado', async () => {
-    const javier = await doctorBySlug('dr-javier-soler-pons')
-    await saveOwnProfile(sql, javier.phone_e164, data({ full_name: javier.full_name, license_number: javier.license_number, regulator: 'DHA' }))
-    expect((await doctorBySlug('dr-javier-soler-pons')).status).toBe('verified')
+  it('marcada sin cambiar la licencia: sigue publicado (un falso positivo no oculta a nadie) y queda para revisar', async () => {
+    const omar = await doctorBySlug('dr-omar-haddad')
+    expect(await saveOwnProfile(sql, omar.phone_e164, data({ full_name: omar.full_name, license_number: omar.license_number, regulator: 'MOHAP' }), FLAG)).toBe('saved')
+    expect((await doctorBySlug('dr-omar-haddad')).status).toBe('verified')
+    expect(await pendingRequestFor(sql, omar.phone_e164)).toMatchObject({ kind: 'license' })
   })
 
-  it('cambiar la licencia vuelve a revisión', async () => {
+  it('marcada con licencia nueva: deja de ser público hasta revisarse', async () => {
     const andres = await doctorBySlug('dr-andres-villalba')
-    expect(await saveOwnProfile(sql, andres.phone_e164, data({ full_name: andres.full_name, license_number: 'DHA-NUEVA' }))).toBe('pending')
-    expect((await doctorBySlug('dr-andres-villalba')).status).toBe('pending_verification')
-    expect(await pendingRequestFor(sql, andres.phone_e164)).toMatchObject({ kind: 'license' })
+    expect(await saveOwnProfile(sql, andres.phone_e164, data({ full_name: andres.full_name, license_number: '99999999' }), FLAG)).toBe('pending')
+    expect(await publicRow('dr-andres-villalba')).toBeUndefined()
   })
 
-  it('reclamo de un perfil ajeno: no cambia nada hasta que se aprueba', async () => {
-    const rafael = await doctorBySlug('dr-rafael-montoya')
-    await submitClaim(sql, 'rafael@example.com', rafael.id, data({ full_name: 'Dr. Rafael Montoya', specialty: 'Urología', license_number: 'DOH-555', regulator: 'DOH', emirate: 'Abu Dabi' }))
-    await submitClaim(sql, 'impostor@example.com', rafael.id, data({ full_name: 'Dr. Impostor', specialty: 'Urología' }))
-    expect(await doctorBySlug('dr-rafael-montoya')).toMatchObject({ status: 'unclaimed', full_name: 'Dr. Rafael Montoya', email: null })
-    expect(await findDoctorByIdentity(sql, 'rafael@example.com')).toBeNull()
+  it('perfil importado reclamado con su teléfono: revisión limpia lo publica', async () => {
+    const paula = await doctorBySlug('dra-paula-echeverri')
+    expect(paula.status).toBe('unclaimed')
+    expect(await saveOwnProfile(sql, paula.phone_e164, data({ full_name: paula.full_name, specialty: 'Neurología', license_number: '55555555' }), OK)).toBe('saved')
+    expect((await publicRow('dra-paula-echeverri')).status).toBe('verified')
+  })
+})
 
+describe.skipIf(!db)('revisión de marcados', () => {
+  it('aprobar publica; rechazar oculta', async () => {
     const admin = (await getReviewer(sql, 'admin@example.com'))!
-    const claims = (await listPendingRequests(sql, admin)).filter((r) => r.doctor_id === rafael.id)
-    expect(claims).toHaveLength(2)
-    const real = claims.find((c) => c.identity === 'rafael@example.com')!
-    await approveRequest(sql, real.id, admin)
-
-    expect(await doctorBySlug('dr-rafael-montoya')).toMatchObject({ status: 'verified', email: 'rafael@example.com', license_number: 'DOH-555', emirate: 'Abu Dabi' })
-    expect(await isPublic('dr-rafael-montoya')).toBe(true)
-    const others = await sql`select status from verification_requests where doctor_id = ${rafael.id} and identity = 'impostor@example.com'`
-    expect(others[0].status).toBe('rejected')
+    const a = await signUp(sql, 'a@example.com', data({ full_name: 'Dra. Aprobable' }), FLAG)
+    const b = await signUp(sql, 'b@example.com', data({ full_name: 'Dr. Rechazable' }), FLAG)
+    const reqs = await listPendingRequests(sql, admin)
+    await approveRequest(sql, reqs.find((r) => r.doctor_slug === a.slug)!.id, admin)
+    await rejectRequest(sql, reqs.find((r) => r.doctor_slug === b.slug)!.id, admin)
+    expect((await publicRow(a.slug)).status).toBe('verified')
+    expect((await doctorBySlug(b.slug)).status).toBe('hidden')
   })
 
-  it('rechazar un alta la oculta', async () => {
-    const r = await signUp(sql, 'falsa@example.com', data({ full_name: 'Dr. Falso' }))
-    const admin = (await getReviewer(sql, 'admin@example.com'))!
-    const req = (await listPendingRequests(sql, admin)).find((x) => x.doctor_slug === r.slug)!
-    await rejectRequest(sql, req.id, admin)
-    expect((await doctorBySlug(r.slug)).status).toBe('hidden')
-    expect(await pendingRequestFor(sql, 'falsa@example.com')).toBeNull()
-  })
-
-  it('el embajador solo ve y aprueba solicitudes de su especialidad', async () => {
+  it('el embajador solo ve y resuelve su especialidad', async () => {
     const amb = (await getReviewer(sql, '+971500000077'))!
-    const card = await signUp(sql, 'cardio@example.com', data({ full_name: 'Dr. Corazón', specialty: 'Cardiología' }))
-    const pedi = await signUp(sql, 'pedi@example.com', data({ full_name: 'Dra. Niños', specialty: 'Pediatría' }))
-    const visible = await listPendingRequests(sql, amb)
-    expect(visible.every((r) => r.doctor_specialty === 'Cardiología')).toBe(true)
     const admin = (await getReviewer(sql, 'admin@example.com'))!
+    const card = await signUp(sql, 'cardio@example.com', data({ full_name: 'Dr. Corazón', specialty: 'Cardiología' }), FLAG)
+    const pedi = await signUp(sql, 'pedi@example.com', data({ full_name: 'Dra. Niños' }), FLAG)
+    expect((await listPendingRequests(sql, amb)).every((r) => r.doctor_specialty === 'Cardiología')).toBe(true)
     const pediReq = (await listPendingRequests(sql, admin)).find((r) => r.doctor_slug === pedi.slug)!
     await expect(approveRequest(sql, pediReq.id, amb)).rejects.toThrow(/ámbito/)
-    const cardReq = visible.find((r) => r.doctor_slug === card.slug)!
-    await approveRequest(sql, cardReq.id, amb)
+    await approveRequest(sql, (await listPendingRequests(sql, amb)).find((r) => r.doctor_slug === card.slug)!.id, amb)
     expect((await doctorBySlug(card.slug)).status).toBe('verified')
   })
 

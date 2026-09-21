@@ -1,4 +1,4 @@
-// Criterio de "listo": con el rol web_reader no se puede leer teléfono, correo ni licencia.
+// Con el rol web_reader nunca se lee teléfono ni correo; la licencia solo de perfiles reclamados y publicados.
 // Requiere Postgres local: `npm run db:up`.
 import postgres from 'postgres'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -28,7 +28,7 @@ describe.skipIf(!db)('permisos de base de datos', () => {
   })
 
   it('web_reader no puede pedir columnas privadas a la vista', async () => {
-    for (const col of ['phone_e164', 'email', 'license_number']) {
+    for (const col of ['phone_e164', 'email', 'consent_at']) {
       expect(await code(reader`select ${reader(col)} from public_doctors`), col).toBe('42703')
     }
   })
@@ -36,18 +36,22 @@ describe.skipIf(!db)('permisos de base de datos', () => {
   it('la vista no expone datos privados ni perfiles ocultos o pendientes', async () => {
     const rows = await reader`select * from public_doctors`
     expect(rows).toHaveLength(14)
-    for (const r of rows) for (const col of ['phone_e164', 'email', 'license_number', 'consent_at']) expect(r).not.toHaveProperty(col)
+    for (const r of rows) for (const col of ['phone_e164', 'email', 'consent_at']) expect(r).not.toHaveProperty(col)
     const slugs = rows.map((r) => r.slug)
     expect(slugs).not.toContain('dr-oculto-pendiente')
     expect(slugs).not.toContain('dra-oculta-hidden')
-    expect(JSON.stringify(rows)).not.toMatch(/example\.com|DHA-|DOH-|MOH-/)
+    const json = JSON.stringify(rows)
+    expect(json).not.toMatch(/example\.com/)  // login emails never leak (public WhatsApp numbers are consented)
+    // Licences are public (for checking in the official registry) only on claimed, published profiles.
+    expect(json).not.toMatch(/DHA-9999[89]/)
+    expect(rows.find((r) => r.slug === 'dra-lucia-marquez-ortega')?.license_number).toBe('DHA-10001')
   })
 
   it('perfiles sin reclamar solo muestran nombre, especialidad, clínica, zona y emirato', async () => {
     const rows = await reader`select * from public_doctors where status = 'unclaimed'`
     expect(rows).toHaveLength(2)
     for (const r of rows) {
-      expect(r).toMatchObject({ languages: [], insurances: [], regulator: null, public_whatsapp: null, last_confirmed_at: null })
+      expect(r).toMatchObject({ languages: [], insurances: [], regulator: null, public_whatsapp: null, last_confirmed_at: null, license_number: null })
     }
   })
 
