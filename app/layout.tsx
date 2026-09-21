@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Button } from '@primer/react'
 import Providers from './providers'
+import { getSession } from '@/lib/session'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -13,7 +14,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover' }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await getSession()
   return (
     <html lang="es" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" suppressHydrationWarning>
       <body>
@@ -21,7 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <header className="site-header">
             <div className="site-header-inner">
               <a href="/" className="brand">Médicos en español · Emiratos</a>
-              <Button as="a" href="/entrar" size="small">Soy médico: entrar</Button>
+              {session
+                ? <Button as="a" href="/cuenta" size="small">Mi cuenta</Button>
+                : <Button as="a" href="/entrar" size="small">Soy médico: entrar</Button>}
             </div>
           </header>
           {children}

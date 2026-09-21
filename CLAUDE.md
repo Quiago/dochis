@@ -101,4 +101,6 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **2026-09-21:** Sin dominio propio (costo). URL de CloudFront; `sslip.io` descartado porque su cuota de Let's Encrypt se agota.
 - **2026-09-21:** Se vuelve al "OTP inverso" con la Cloud API de Meta directa: End User Messaging Social no estaba activo en la cuenta, y Meta da un número de prueba al instante. Sin plantillas: el bot solo responde.
 - **2026-09-21:** Login también por código de correo vía SMTP (Gmail). Resend descartado por ahora: sin dominio verificado solo envía a la dirección del dueño de la cuenta.
+- **2026-09-21:** Onboarding mínimo: un solo formulario para alta, reclamo y edición. Los reclamos guardan los datos propuestos en `verification_requests.payload` y no tocan el perfil hasta que un embajador aprueba. `admins.identity` acepta teléfono o correo.
+- **Descartado (por ahora):** foto de perfil (almacenamiento, moderación y privacidad; el avatar de iniciales basta) y redes sociales (señal comercial, contra el principio 1; moderación).
 - **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).

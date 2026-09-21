@@ -57,11 +57,12 @@ Búsqueda, filtros por especialidad, emirato, seguro e idioma, orden aleatorio, 
 
 ---
 
-## Fase 3: Reclamar perfil, alta y embajadores (2 días)
-
-**Prompt:**
-> Después del login, si el número coincide con un médico existente, muestra su perfil para editar; si no, un formulario de alta. En ambos casos pide regulador y número de licencia, una casilla de consentimiento para publicar datos, y otra opcional para mostrar su WhatsApp como contacto. Crea `verification_request` y deja el perfil en `pending_verification`. Crea un panel `/admin` donde admins y embajadores (según su ámbito) ven solicitudes con enlace al buscador oficial del regulador y pueden aprobar o rechazar. El médico ve el estado la próxima vez que entra.
-> Al terminar el alta, muestra un botón para descargar el contacto del directorio (.vcf) con el mensaje "Guárdalo para recibir los recordatorios".
+## Fase 3: Reclamar perfil, alta y embajadores ✅ (hecho)
+- `/cuenta`: si el teléfono o correo de la sesión coincide con un médico, edita su perfil (sin cambiar la licencia = confirmación); si viene de "¿Eres tú?", reclamo (el perfil no cambia hasta aprobarse); si no, alta (privada hasta verificarse).
+- `/cuenta/listo` con el contacto del directorio (`/contacto.vcf`).
+- `/admin` estilo Issues: solicitudes con enlace al registro oficial, Aprobar/Rechazar; embajadores limitados a su especialidad.
+- Alta de admins/embajadores: `node scripts/add-admin.ts <teléfono-o-correo> [admin|ambassador] [especialidad]`.
+- Sin foto ni redes sociales (ver decisiones en CLAUDE.md).
 
 ---
 
