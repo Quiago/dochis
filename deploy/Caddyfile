@@ -1,5 +1,9 @@
-# Reemplaza el dominio. Caddy obtiene y renueva el certificado HTTPS solo.
-medicos.example.com {
-	encode zstd gzip
-	reverse_proxy 127.0.0.1:3000
+# Origin behind CloudFront: plain HTTP (no domain), only requests carrying CloudFront's secret header.
+# ponytail: CloudFront→EC2 hop is unencrypted; with a domain, switch to `<domain> { reverse_proxy ... }` for end-to-end HTTPS.
+:80 {
+	@cloudfront header X-Origin-Verify {$ORIGIN_SECRET}
+	handle @cloudfront {
+		reverse_proxy 127.0.0.1:3000
+	}
+	respond 403
 }
