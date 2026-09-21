@@ -1,5 +1,6 @@
 import { Button, Link } from '@primer/react'
 import { VerifiedIcon } from '@primer/octicons-react'
+import ReportButton from './ReportButton'
 import StatusLabel from './StatusLabel'
 import Topics from './Topics'
 import { freshness, waLink, type PublicDoctor } from '@/lib/directory'
@@ -44,6 +45,7 @@ export default function DoctorRow({ d, now }: { d: PublicDoctor; now: Date }) {
           <>
             {waLink(d) ? <WhatsAppButton d={d} /> : <span className="muted small">Contacto a través de su clínica</span>}
             <Link href={`/entrar?medico=${d.slug}`} className="small">¿Eres tú?</Link>
+            <ReportButton slug={d.slug} name={d.full_name} />
           </>
         )}
       </div>

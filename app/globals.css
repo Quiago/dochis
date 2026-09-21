@@ -122,3 +122,8 @@ p { margin: 0 0 var(--base-size-8); }
   .issue { grid-template-columns: auto 1fr auto; align-items: start; }
   .issue-actions { grid-column: 3; }
 }
+
+.muted-link { color: var(--fgColor-muted); text-decoration: underline; }
+.issue-icon-muted { color: var(--fgColor-muted); margin-top: var(--base-size-4); }
+.issue-icon-attention { color: var(--fgColor-attention); margin-top: var(--base-size-4); }
+.admin-toolbar { display: flex; flex-wrap: wrap; gap: var(--base-size-8); justify-content: space-between; align-items: center; margin-top: var(--base-size-16); }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Button, Heading, Link } from '@primer/react'
 import { ArrowLeftIcon, LocationIcon, OrganizationIcon, VerifiedIcon } from '@primer/octicons-react'
+import ReportButton from '@/components/ReportButton'
 import StatusLabel from '@/components/StatusLabel'
 import Topics from '@/components/Topics'
 import { WhatsAppButton, Where } from '@/components/DoctorRow'
@@ -67,6 +68,7 @@ export default async function DoctorPage({ params }: Props) {
                 <p className="license"><VerifiedIcon /> Licencia verificada con la {d.regulator}</p>
               )}
               <p className="muted small"><Where d={d} /></p>
+              {f.kind !== 'unclaimed' && <p><ReportButton slug={d.slug} name={d.full_name} /></p>}
             </div>
           </div>
 

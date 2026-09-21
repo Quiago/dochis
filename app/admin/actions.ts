@@ -2,6 +2,7 @@
 import { revalidatePath } from 'next/cache'
 import { notFound } from 'next/navigation'
 import { writer } from '@/lib/db'
+import { dismissReports } from '@/lib/freshness'
 import { approveRequest, getReviewer, rejectRequest } from '@/lib/onboarding'
 import { getSession } from '@/lib/session'
 
@@ -19,5 +20,10 @@ export async function approve(fd: FormData) {
 
 export async function reject(fd: FormData) {
   await rejectRequest(writer(), String(fd.get('id')), await reviewer())
+  revalidatePath('/admin')
+}
+
+export async function dismiss(fd: FormData) {
+  await dismissReports(writer(), String(fd.get('doctor_id')), await reviewer())
   revalidatePath('/admin')
 }
