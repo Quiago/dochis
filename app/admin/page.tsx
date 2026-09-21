@@ -4,6 +4,7 @@ import { Button, Heading, Label, Link } from '@primer/react'
 import { AlertIcon, CheckIcon, ClockIcon, IssueOpenedIcon, LinkExternalIcon, XIcon } from '@primer/octicons-react'
 import AdminTabs from '@/components/AdminTabs'
 import CopyButton from '@/components/CopyButton'
+import { REGISTRY, type Regulator } from '@/lib/directory'
 import { listReports, roundStart, unconfirmedThisRound } from '@/lib/freshness'
 import { writer } from '@/lib/db'
 import { getReviewer, listPendingRequests } from '@/lib/onboarding'
@@ -13,12 +14,6 @@ import { approve, dismiss, reject } from './actions'
 export const metadata: Metadata = { title: 'Panel de revisión', robots: { index: false } }
 export const dynamic = 'force-dynamic'
 
-// Official license search per regulator (DOH has no public search page: its e-services portal).
-const REGISTRY: Record<string, string> = {
-  DHA: 'https://services.dha.gov.ae/sheryan/wps/portal/home/medical-directory',
-  DOH: 'https://www.doh.gov.ae/en/eservices',
-  MOHAP: 'https://smartforms.moh.gov.ae:83/ServicesProd/Pages/LicensedMedicalProfessionals.aspx?lang=en',
-}
 const DATE = new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short', timeZone: 'Asia/Dubai' })
 const fmt = (d: Date | string) => DATE.format(new Date(d))
 
@@ -113,7 +108,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
                 )}
                 <p className="muted small">
                   {r.doctor_specialty} · licencia <strong>{r.regulator} {r.license_number}</strong> ·{' '}
-                  <Link href={REGISTRY[r.regulator]} target="_blank" rel="noopener">buscar en el registro <LinkExternalIcon size={12} /></Link>
+                  <Link href={REGISTRY[r.regulator as Regulator]} target="_blank" rel="noopener">buscar en el registro <LinkExternalIcon size={12} /></Link>
                 </p>
                 <p className="muted small">
                   Pedido por {r.identity} el {fmt(r.created_at)}
