@@ -87,7 +87,7 @@ La portada vendía "Entrar con WhatsApp" aunque WhatsApp no está activo, y los 
 
 ---
 
-## Fase 5: Importar la lista y lanzar (en curso)
+## Fase 5: Importar la lista y lanzar (pospuesta: primero la demo con el médico encargado)
 - `node --env-file=.env.local scripts/import-csv.ts "<archivo.csv>" [--dry-run]` → perfiles `unclaimed` (público: nombre, especialidad y centro) + informe en `data/import-report.md`. Idempotente.
 - Normalización con reglas deterministas y revisables (`lib/import.ts`): 97 variantes de especialidad → 46; emiratos con erratas; webs quitadas del centro.
 - Teléfono de acceso: **solo móviles de EAU** (las centralitas y fijos no se guardan, y cada número tiene un solo dueño). Correo: privado, sirve para reclamar el perfil entrando con él.

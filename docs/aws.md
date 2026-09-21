@@ -32,8 +32,8 @@ Navegador ──HTTPS──▶ Cloudflare Pages (dochis.pages.dev) ──HTTPS�
 | Script | Cuándo | Qué hace |
 |---|---|---|
 | `deploy/bootstrap.sh` | User data de la EC2, una vez | Swap, Node 24, Caddy, AWS CLI, usuario `dochis`, clona el repo, instala `dochis.service` |
-| `deploy/configure.sh` | Como root, tras el arranque o si cambia `/dochis/env` | Escribe `/etc/dochis.env` desde SSM, configura Caddy (sin `--environ`, para no volcar secretos al journal) |
-| `scripts/deploy.sh` | Como `dochis`, en cada versión | `git pull`, `npm ci`, build con el entorno de producción, migraciones, reinicio |
+| `deploy/configure.sh` | Como root, tras el arranque o si cambia `/dochis/env` | Escribe `/etc/dochis.env` desde SSM, instala `dochis.service`, configura Caddy (sin `--environ`, para no volcar secretos al journal) |
+| `scripts/deploy.sh` | Como `dochis`, en cada versión | `git pull`, `npm ci`, build con el entorno de producción, migraciones; copia la versión nueva a `/opt/dochis/run` (de donde corre el servicio) y reinicia. Compilar nunca toca la copia en ejecución. |
 
 ## Operación diaria
 Entrar al servidor: consola → EC2 → `dochis-web` → Connect → **Session Manager**.
