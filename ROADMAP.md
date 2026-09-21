@@ -2,49 +2,40 @@
 
 Proyecto comunitario, gratuito y de código abierto. Cada fase termina con algo desplegado. Los prompts están pensados para Claude Code con `CLAUDE.md` y `prototype.html` en la raíz del repo.
 
-**Presupuesto:** créditos del plan gratuito de AWS (100 USD al registrarse + 100 USD por 5 actividades), válidos 6 meses. Aparte se paga el dominio (~15 USD/año, Route 53 no acepta créditos para el registro) y el número del bot.
+**Presupuesto:** créditos del plan gratuito de AWS (100 USD al registrarse + 100 USD por 5 actividades), válidos 6 meses. Aparte solo se paga la SIM del bot. Sin dominio propio: la URL es la de CloudFront.
 
 ### Actividades de AWS (20 USD cada una) y dónde se cumplen
 | Actividad | Se cumple en |
 |---|---|
-| Set up a cost budget using AWS Budgets | Fase 0b (lo primero) |
-| Create an Aurora or RDS database | Fase 0b (RDS PostgreSQL) |
-| Launch an instance using EC2 | Fase 0b (servidor de la app) |
+| Set up a cost budget using AWS Budgets | ✅ Fase 0b |
+| Create an Aurora or RDS database | ✅ Fase 0b |
+| Launch an instance using EC2 | Fase 0b (requiere lanzar y terminar una instancia: se hizo con una t4g.micro desechable) |
 | Create a web app using AWS Lambda | Fase 4 (cron de frescura) |
 | Use a foundation model in the Amazon Bedrock playground | Fase 5 (probar el prompt de limpieza del Excel) |
 
 ### Costo mensual estimado (se descuenta de los créditos)
 | Recurso | USD/mes |
 |---|---|
-| EC2 t4g.small | 0 hasta el 31/12/2026 (prueba gratuita), luego ~12 |
-| Disco EBS 20 GB + IPv4 pública | ~5 |
-| RDS db.t4g.micro + 20 GB | ~14 |
-| Route 53 (zona) | 0,50 |
+| EC2 t4g.small (eu-north-1, 0,0172/h) | 0 hasta el 31/12/2026 (prueba gratuita), luego ~12,6 |
+| Disco EBS 20 GB + IPv4 elástica | ~5,4 |
+| RDS db.t4g.micro (0,016/h) + 20 GB | ~14 |
+| CloudFront | 0 (capa gratuita permanente) |
 | WhatsApp (logins a ~0,021 + respuestas del bot) | ~5 a 15 |
 | Lambda, EventBridge, SNS, Bedrock | < 1 |
-| **Total** | **~25 a 35** → los 200 USD alcanzan para los 6 meses |
+| **Total** | **~20 hasta diciembre, ~32 desde enero** (+ WhatsApp) → los 200 USD alcanzan para los 6 meses |
 
 ---
 
 ## Fase 0: Proyecto base ✅ (hecho)
 Next.js + Primer, `.env.example`, tests con Vitest.
 
-## Fase 0b: Cuenta y red en AWS (1 día) — código ✅ hecho; falta la parte de consola
+## Fase 0b: Infraestructura en AWS ✅ (hecho)
+PostgreSQL con roles `web_reader`/`app_writer`, Docker para desarrollo, EC2 + RDS en `eu-north-1`, CloudFront sin dominio, entorno en SSM, scripts de arranque y despliegue. Detalle en `docs/aws.md`. En producción: `https://duk8oc8ifzaf.cloudfront.net`.
 
-**Tú haces (en este orden):**
-1. **AWS Budgets:** presupuesto de créditos con alertas al 50 % y 80 %, y un presupuesto de gasto real de 1 USD.
-2. Elegir región: `me-central-1` (EAU) si End User Messaging Social aparece disponible en la consola; si no, `eu-central-1`.
-3. **Número del bot:** una SIM prepago de EAU que **no** esté registrada en la app de WhatsApp.
-4. **End User Messaging Social:** conectar una cuenta de WhatsApp Business (el asistente crea o enlaza la cuenta de Meta), registrar el número del bot y crear un tema SNS como destino de eventos.
-5. En WhatsApp Manager, crear la **plantilla de autenticación** en español (con botón "copiar código") y esperar su aprobación.
-6. Registrar o transferir el dominio y crear la zona en Route 53.
-
-**Prompt:**
-> Migra el acceso a datos de Supabase a PostgreSQL: reemplaza `@supabase/supabase-js` por `postgres`, crea los roles `web_reader` (solo SELECT sobre las vistas públicas) y `app_writer`, adapta la migración y el seed, agrega un `docker-compose.yml` con Postgres para desarrollo y un script `npm run db:migrate`. Reescribe los tests de permisos para que se conecten como `web_reader`. Configura `output: 'standalone'`. Escribe `docs/aws.md` con los pasos exactos de consola para crear la EC2 t4g.small (rol IAM con permisos para `social-messaging:SendWhatsAppMessage` y SSM, security group 80/443), la RDS db.t4g.micro no pública (solo desde el security group de la EC2), Caddy con HTTPS y un servicio systemd, y un `scripts/deploy.sh` que actualice y reinicie la app.
-
-**Tú haces:** crear la EC2 y la RDS siguiendo `docs/aws.md`, apuntar el dominio a la IP elástica y verificar el deploy.
-
-**Listo cuando:** el directorio de la Fase 1 funciona en el dominio con HTTPS, y con las credenciales de `web_reader` no se puede leer teléfono, correo ni licencia.
+**Tú haces antes de la Fase 2:**
+1. **Número del bot:** una SIM prepago de EAU que **no** esté registrada en la app de WhatsApp.
+2. **End User Messaging Social** en `me-central-1`: conectar la cuenta de WhatsApp Business (el asistente abre el login de Meta), registrar el número del bot y crear un tema SNS como destino de eventos.
+3. En WhatsApp Manager, crear la **plantilla de autenticación** en español (con botón "copiar código") y esperar su aprobación.
 
 ---
 

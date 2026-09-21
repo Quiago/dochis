@@ -45,14 +45,15 @@ El bot **solo inicia conversación para enviar el código de login**. Nada de ma
 - Next.js (App Router, TypeScript 5.9), salida `standalone`. **Sin Tailwind.**
 - UI con el sistema de diseño Primer: `@primer/react` (componentes), `@primer/primitives` (tokens CSS y temas claro/oscuro automáticos vía `data-color-mode="auto"` en `<html>`) y `@primer/octicons-react` (íconos). Sin logos, nombre ni marca de GitHub. Estilos con variables de Primer (`var(--fgColor-muted)`, `var(--base-size-16)`…), nunca valores sueltos.
 - Server Components por defecto; los componentes de Primer que lo necesiten van en componentes pequeños `"use client"`. Los componentes compuestos (`ActionMenu.Button`…) no se pueden usar con punto desde un Server Component: van en un componente cliente que recibe datos serializables.
-- **AWS (una sola cuenta, plan gratuito con créditos), región `me-central-1` (EAU, activada; End User Messaging Social tiene endpoint ahí: `social-messaging.me-central-1.amazonaws.com`):**
-  - **EC2** `t4g.small` (Graviton, prueba gratuita de 750 h/mes hasta el 31/12/2026): Next.js con Node 24 detrás de Caddy (HTTPS automático con Let's Encrypt). Acceso por SSM Session Manager, sin puerto 22 abierto. Rol de instancia IAM para llamar a AWS: sin claves de acceso en el servidor.
-  - **RDS PostgreSQL** `db.t4g.micro`, 20 GB, cifrado, **no público**; solo acepta conexiones desde el security group de la EC2.
-  - **End User Messaging Social**: WhatsApp. Envío con `SendWhatsAppMessage`; los mensajes entrantes llegan a un tema **SNS** con suscripción HTTPS a `/api/whatsapp/sns` (se valida la firma de SNS).
+- **AWS (una sola cuenta, plan gratuito con créditos).** App y base de datos en **`eu-north-1` (Estocolmo)**: `me-central-1` (EAU) no ofrece instancias EC2 del free tier. WhatsApp en `me-central-1`. Sin dominio propio.
+  - **CloudFront** (capa gratuita permanente): URL pública `https://duk8oc8ifzaf.cloudfront.net`, HTTPS con certificado de AWS. Sin caché para páginas y API; caché para `/_next/static/*`.
+  - **EC2** `t4g.small` (Graviton, prueba gratuita de 750 h/mes hasta el 31/12/2026), Ubuntu 24.04, IP elástica. Next.js `standalone` con Node 24 detrás de Caddy en el puerto 80. El security group solo acepta la lista de IPs de CloudFront y Caddy exige el encabezado `X-Origin-Verify` con `ORIGIN_SECRET`. El tramo CloudFront→EC2 va por HTTP (sin dominio no hay certificado para el origen). Acceso por SSM Session Manager, sin SSH. Rol de instancia IAM `dochis-ec2`: sin claves de acceso en el servidor.
+  - **RDS PostgreSQL 17** `db.t4g.micro`, 20 GB, cifrado, SSL obligatorio, **no público**; solo acepta conexiones desde el security group de la EC2.
+  - **SSM Parameter Store**: `/dochis/env` (SecureString) con todo el entorno de producción; `deploy/configure.sh` lo escribe en `/etc/dochis.env`.
+  - **End User Messaging Social** (`me-central-1`): WhatsApp. Envío con `SendWhatsAppMessage`; los mensajes entrantes llegan a un tema **SNS** con suscripción HTTPS a `/api/whatsapp/sns` (se valida la firma de SNS).
   - **Lambda + EventBridge Scheduler**: tareas programadas (cron diario de frescura), fuera de la VPC; llaman a la app por HTTPS con `CRON_SECRET`. Ninguna Lambda se conecta a RDS (evita el NAT Gateway, ~32 USD/mes).
   - **Bedrock**: limpieza del Excel en la importación (script de un solo uso) y, opcionalmente, búsqueda en lenguaje natural. Siempre prescindible: si no está, la app sigue funcionando.
-  - **Route 53**: zona DNS del dominio. El registro del dominio **no** se paga con créditos (~15 USD/año aparte).
-  - **AWS Budgets**: alertas al 50 % y al 80 % de los créditos, y alerta de 1 USD de gasto real.
+  - **AWS Budgets**: `dochis-gasto-real` (gasto fuera de créditos) y `dochis-creditos-mensual` (40 USD/mes, alertas al 50 %, 80 % y previsión 100 %).
 - Acceso a datos con `postgres` (driver de Node) desde el servidor. **Dos roles de base de datos:** `web_reader` (solo `SELECT` sobre las vistas públicas; lo usan las páginas públicas) y `app_writer` (escrituras desde rutas de servidor). El usuario administrador de RDS nunca lo usa la app.
 - Desarrollo local: PostgreSQL en Docker con las mismas migraciones y roles.
 - Tests con Vitest (`npm test`); integración de permisos contra el Postgres local.
@@ -96,5 +97,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **2026-09-21:** Se agregan `confirmations` y `slug`; `public_doctors` incluye unclaimed con datos mínimos; filtro por idioma.
 - **2026-09-21:** Infraestructura en AWS con créditos del plan gratuito (EC2 + RDS + End User Messaging Social + Lambda + Bedrock + Route 53 + Budgets) en lugar de Vercel + Supabase. Se acepta el horizonte de 6 meses.
 - **2026-09-21:** El login pasa de "OTP inverso" (el médico escribe al bot) a código enviado por el bot con plantilla de autenticación. Costo aproximado en EAU: ~0,016 USD de Meta + 0,005 USD de AWS por login.
-- **2026-09-21:** Licencia GPL-3.0 (elegida al crear el repo) en lugar de MIT. Región AWS `me-central-1` (EAU).
+- **2026-09-21:** Licencia GPL-3.0 (elegida al crear el repo) en lugar de MIT.
+- **2026-09-21:** App y RDS en `eu-north-1` (EAU no tiene EC2 del free tier); WhatsApp en `me-central-1`.
+- **2026-09-21:** Sin dominio propio (costo). URL de CloudFront; `sslip.io` descartado porque su cuota de Let's Encrypt se agota.
 - **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).
