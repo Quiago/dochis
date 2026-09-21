@@ -1,46 +1,26 @@
 // Criterio de "listo": con el rol web_reader no se puede leer teléfono, correo ni licencia.
-// Requiere Postgres local: `npm run db:up`. Usa una base aparte (dochis_test) que recrea. Los roles son
-// del clúster: se usan las mismas contraseñas locales que .env.example para no romper la base de desarrollo.
+// Requiere Postgres local: `npm run db:up`.
 import postgres from 'postgres'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { migrate } from '@/scripts/migrate'
+import { freshDatabase } from './pg'
 
-const HOST = process.env.TEST_PG_HOST ?? 'localhost:5433'
-const url = (user: string, pass: string, db = 'dochis_test') => `postgres://${user}:${pass}@${HOST}/${db}`
-const ADMIN = url('postgres', 'postgres')
-const READER = url('web_reader', 'reader_local')
-const WRITER = url('app_writer', 'writer_local')
-
-async function available() {
-  const sql = postgres(url('postgres', 'postgres', 'postgres'), { max: 1, connect_timeout: 2, onnotice: () => {} })
-  try {
-    await sql`drop database if exists dochis_test with (force)`
-    await sql`create database dochis_test`
-    return true
-  } catch {
-    return false
-  } finally {
-    await sql.end()
-  }
-}
-
-const up = await available()
+const db = await freshDatabase('dochis_test_permissions')
 let reader: postgres.Sql
 let writer: postgres.Sql
 
-beforeAll(async () => {
-  if (!up) return
-  await migrate({ adminUrl: ADMIN, readerUrl: READER, writerUrl: WRITER, seed: true })
-  reader = postgres(READER, { max: 1, onnotice: () => {} })
-  writer = postgres(WRITER, { max: 1, onnotice: () => {} })
+beforeAll(() => {
+  if (!db) return
+  reader = postgres(db.readerUrl, { max: 1, onnotice: () => {} })
+  writer = postgres(db.writerUrl, { max: 1, onnotice: () => {} })
 })
 afterAll(async () => { await reader?.end(); await writer?.end() })
 
 const code = (p: Promise<unknown>) => p.then(() => 'ok', (e) => e.code as string)
 
-describe.skipIf(!up)('permisos de base de datos', () => {
+describe.skipIf(!db)('permisos de base de datos', () => {
   it('las migraciones son idempotentes (segunda pasada sin errores)', async () => {
-    await expect(migrate({ adminUrl: ADMIN, readerUrl: READER, writerUrl: WRITER })).resolves.toEqual([])
+    await expect(migrate(db!)).resolves.toEqual([])
   })
 
   it('web_reader no puede leer la tabla doctors', async () => {
