@@ -15,3 +15,6 @@ supabase/.temp
 *.csv
 *.xlsx
 data/
+run/
+run.new/
+run.old/

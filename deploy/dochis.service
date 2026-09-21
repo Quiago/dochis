@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 User=dochis
-WorkingDirectory=/opt/dochis/.next/standalone
+WorkingDirectory=/opt/dochis/run
 EnvironmentFile=/etc/dochis.env
 Environment=NODE_ENV=production PORT=3000 HOSTNAME=127.0.0.1
 ExecStart=/usr/bin/node server.js

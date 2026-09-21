@@ -12,5 +12,6 @@ chown root:dochis /etc/dochis.env && chmod 640 /etc/dochis.env
 mkdir -p /etc/systemd/system/caddy.service.d
 printf '[Service]\nEnvironmentFile=/etc/dochis.env\nExecStart=\nExecStart=/usr/bin/caddy run --config /etc/caddy/Caddyfile\n' > /etc/systemd/system/caddy.service.d/dochis.conf
 cp /opt/dochis/deploy/Caddyfile /etc/caddy/Caddyfile
+cp /opt/dochis/deploy/dochis.service /etc/systemd/system/dochis.service
 systemctl daemon-reload && systemctl restart caddy
 echo "Configurado"

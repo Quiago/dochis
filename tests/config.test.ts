@@ -53,6 +53,12 @@ describe('configuración', () => {
     expect(deps['@primer/react']).toBeDefined()
   })
 
+  it('permite Server Actions desde el dominio público (detrás del proxy el Host es otro)', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://dochis.pages.dev')
+    const { default: config } = await import('../next.config')
+    expect(config.experimental?.serverActions?.allowedOrigins).toEqual(['dochis.pages.dev'])
+  })
+
   it('Next.js genera salida standalone para la EC2', () => {
     expect(readFileSync('next.config.ts', 'utf8')).toMatch(/output:\s*'standalone'/)
   })
