@@ -46,6 +46,7 @@ create table login_challenges (
   attempts int not null default 0,
   expires_at timestamptz not null default now() + interval '10 minutes',
   verified_at timestamptz,
+  ip inet,
   created_at timestamptz not null default now()
 );
 create index on login_challenges (phone_e164, created_at);
@@ -81,19 +82,22 @@ create table admins (
   scope text
 );
 
--- RLS activado sin políticas: anon/authenticated no leen ni escriben ninguna tabla.
--- Las escrituras pasan por rutas de servidor con service role (salta RLS).
-alter table doctors enable row level security;
-alter table confirmations enable row level security;
-alter table login_challenges enable row level security;
-alter table bot_sessions enable row level security;
-alter table reports enable row level security;
-alter table verification_requests enable row level security;
-alter table admins enable row level security;
+-- Roles de la app (a nivel de clúster; las contraseñas las fija scripts/migrate.ts desde las URLs).
+do $$
+begin
+  if not exists (select from pg_roles where rolname = 'web_reader') then create role web_reader login; end if;
+  if not exists (select from pg_roles where rolname = 'app_writer') then create role app_writer login; end if;
+end $$;
 
--- Defensa en profundidad: sin privilegios aunque alguien desactive RLS.
-revoke all on doctors, confirmations, login_challenges, bot_sessions, reports, verification_requests, admins
-  from anon, authenticated;
+-- Nadie crea objetos en el esquema salvo el dueño (el admin que migra).
+revoke create on schema public from public;
+
+-- app_writer: datos sí, esquema no (no es dueño de nada).
+grant select, insert, update, delete on all tables in schema public to app_writer;
+grant usage on all sequences in schema public to app_writer;
+-- Tablas de futuras migraciones (creadas por el mismo admin) heredan estos permisos.
+alter default privileges in schema public grant select, insert, update, delete on tables to app_writer;
+alter default privileges in schema public grant usage on sequences to app_writer;
 
 -- Única superficie pública. Corre con permisos del dueño (no security_invoker) a propósito:
 -- expone solo columnas seguras. unclaimed: solo nombre, especialidad, clínica, zona y emirato.
@@ -115,5 +119,5 @@ from confirmations c
 join doctors d on d.id = c.doctor_id
 where d.status in ('verified', 'stale');
 
-revoke all on public_doctors, public_confirmations from anon, authenticated;
-grant select on public_doctors, public_confirmations to anon, authenticated;
+-- web_reader: solo las vistas, ninguna tabla.
+grant select on public_doctors, public_confirmations to web_reader, app_writer;
