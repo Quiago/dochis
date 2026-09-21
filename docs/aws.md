@@ -14,6 +14,8 @@ Cuenta de AWS con el plan gratuito (créditos). App y base de datos en **`eu-nor
 | IAM | rol e instance profile `dochis-ec2` | `AmazonSSMManagedInstanceCore` + `dochis-whatsapp` |
 | Entorno | SSM Parameter Store `/dochis/env` (SecureString) | Todas las variables de producción |
 | Budgets | `dochis-gasto-real`, `dochis-creditos-mensual` | Alertas por correo |
+| Lambda | `dochis-cron` (código en `deploy/lambda/cron.mjs`) | Rol `dochis-cron-lambda`; Function URL con `AWS_IAM` |
+| Scheduler | `dochis-freshness`, `cron(0 3 * * ? *)` Asia/Dubai | Rol `dochis-scheduler` (solo invoca `dochis-cron`) |
 
 Los secretos generados (contraseñas de RDS y de los roles, `OTP_PEPPER`, `SESSION_SECRET`, `CRON_SECRET`, `ORIGIN_SECRET`) están en `/dochis/env` y, en la máquina de quien montó la infraestructura, en `~/.config/dochis/secrets.env` (permisos 600, fuera del repo).
 
@@ -65,4 +67,14 @@ No cargues `db/seed.sql` en producción: son médicos ficticios. El directorio a
 
 ## Pendiente de otras fases
 - **Fase 2:** WhatsApp va por la Cloud API de Meta (no AWS): cargar `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_APP_SECRET`, `WHATSAPP_VERIFY_TOKEN` y `NEXT_PUBLIC_BOT_NUMBER` en `/dochis/env` y desplegar. La política `dochis-whatsapp` del rol queda sin uso hasta que se use End User Messaging Social.
-- **Fase 4:** Lambda + EventBridge Scheduler para el cron diario.
+
+## Proxy gratis en Cloudflare Pages
+`edge/functions/[[path]].js` reenvía todo a CloudFront. Una vez, con `npx wrangler login`:
+```bash
+cd edge
+npx wrangler@4 pages project create medicos-en-espanol --production-branch main
+npx wrangler@4 pages secret put PROXY_SECRET --project-name medicos-en-espanol   # mismo valor que en /dochis/env
+npx wrangler@4 pages secret put ORIGIN --project-name medicos-en-espanol         # https://duk8oc8ifzaf.cloudfront.net
+cd .. && npm run edge:deploy
+```
+Después, `NEXT_PUBLIC_SITE_URL=https://medicos-en-espanol.pages.dev` en `/dochis/env` y desplegar.

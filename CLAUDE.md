@@ -50,7 +50,7 @@ Seguridad: códigos de un solo uso; 5 códigos erróneos invalidan el challenge;
   - **RDS PostgreSQL 17** `db.t4g.micro`, 20 GB, cifrado, SSL obligatorio, **no público**; solo acepta conexiones desde el security group de la EC2.
   - **SSM Parameter Store**: `/dochis/env` (SecureString) con todo el entorno de producción; `deploy/configure.sh` lo escribe en `/etc/dochis.env`.
   - **WhatsApp**: Cloud API de Meta directa (no AWS). Webhook `https://duk8oc8ifzaf.cloudfront.net/api/whatsapp/webhook`. End User Messaging Social queda como alternativa futura.
-  - **Lambda + EventBridge Scheduler**: tareas programadas (cron diario de frescura), fuera de la VPC; llaman a la app por HTTPS con `CRON_SECRET`. Ninguna Lambda se conecta a RDS (evita el NAT Gateway, ~32 USD/mes).
+  - **Lambda + EventBridge Scheduler**: `dochis-cron` (Node 22, arm64, Function URL con IAM) ejecutado a diario por `dochis-freshness`; llama a `/api/cron/freshness` con `CRON_SECRET`. Ninguna Lambda se conecta a RDS (evita el NAT Gateway, ~32 USD/mes).
   - **Bedrock**: limpieza del Excel en la importación (script de un solo uso) y, opcionalmente, búsqueda en lenguaje natural. Siempre prescindible: si no está, la app sigue funcionando.
   - **AWS Budgets**: `dochis-gasto-real` (gasto fuera de créditos) y `dochis-creditos-mensual` (40 USD/mes, alertas al 50 %, 80 % y previsión 100 %).
 - Acceso a datos con `postgres` (driver de Node) desde el servidor. **Dos roles de base de datos:** `web_reader` (solo `SELECT` sobre las vistas públicas; lo usan las páginas públicas) y `app_writer` (escrituras desde rutas de servidor). El usuario administrador de RDS nunca lo usa la app.
@@ -103,4 +103,5 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **2026-09-21:** Login también por código de correo vía SMTP (Gmail). Resend descartado por ahora: sin dominio verificado solo envía a la dirección del dueño de la cuenta.
 - **2026-09-21:** Onboarding mínimo: un solo formulario para alta, reclamo y edición. Los reclamos guardan los datos propuestos en `verification_requests.payload` y no tocan el perfil hasta que un embajador aprueba. `admins.identity` acepta teléfono o correo.
 - **Descartado (por ahora):** foto de perfil (almacenamiento, moderación y privacidad; el avatar de iniciales basta) y redes sociales (señal comercial, contra el principio 1; moderación).
+- **2026-09-22:** Dirección pública gratis con Cloudflare Pages (`edge/`): una función reenvía todo a CloudFront y manda la IP real en `x-client-ip` con `PROXY_SECRET`. Redirecciones siempre relativas (la app responde bajo varios hosts).
 - **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).

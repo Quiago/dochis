@@ -10,7 +10,7 @@ Proyecto comunitario, gratuito y de código abierto. Cada fase termina con algo 
 | Set up a cost budget using AWS Budgets | ✅ Fase 0b |
 | Create an Aurora or RDS database | ✅ Fase 0b |
 | Launch an instance using EC2 | Fase 0b (requiere lanzar y terminar una instancia: se hizo con una t4g.micro desechable) |
-| Create a web app using AWS Lambda | Fase 4 (cron de frescura) |
+| Create a web app using AWS Lambda | ✅ Fase 4 (cron de frescura) |
 | Use a foundation model in the Amazon Bedrock playground | Fase 5 (probar el prompt de limpieza del Excel) |
 
 ### Costo mensual estimado (se descuenta de los créditos)
@@ -66,13 +66,12 @@ Búsqueda, filtros por especialidad, emirato, seguro e idioma, orden aleatorio, 
 
 ---
 
-## Fase 4: Frescura automática y reportes (1 a 2 días)
-
-**Prompt:**
-> Completa los comandos del bot: CONFIRMAR muestra los datos del médico según su número y pide 1 (siguen igual) o 2 (editar); 1 actualiza `last_confirmed_at` y agrega una fila en `confirmations`; 2 responde con un enlace de un solo uso que abre la edición con sesión iniciada. Usa `bot_sessions` para recordar el estado de la conversación.
-> Crea `POST /api/cron/freshness` (protegido con `CRON_SECRET`) que pase a `stale` los perfiles con más de 90 días sin confirmar y a `hidden` los de más de 180. Crea una Lambda (fuera de la VPC) que lo llame, programada a diario con EventBridge Scheduler, y documenta su creación en `docs/aws.md`.
-> Agrega el botón "Ya no está aquí" en cada fila; con 2 reportes distintos en 30 días el perfil pasa a `stale`.
-> En `/admin`, una vista "Sin confirmar en esta ronda" con botón para copiar los números, para cargarlos en las listas de difusión.
+## Fase 4: Frescura automática y reportes ✅ (hecho, salvo los comandos del bot)
+- Cron diario: Lambda `dochis-cron` (fuera de la VPC, Function URL con IAM) + EventBridge Scheduler `dochis-freshness` a las 03:00 de Dubái → `POST /api/cron/freshness` con `CRON_SECRET`. Pendiente a los 90 días, oculto a los 180.
+- "Ya no está aquí" en filas y perfil: 2 personas distintas en 30 días → pendiente; huella anónima; 10 reportes/día por persona.
+- `/admin`: "Sin confirmar esta ronda" (desde el inicio del trimestre, con botones para copiar teléfonos y correos) y "Reportes" (descartar).
+- Mientras WhatsApp no esté activo, confirmar = entrar y pulsar "Guardar perfil".
+- **Pendiente hasta tener WhatsApp:** comandos CONFIRMAR / 1 / 2 del bot con `bot_sessions` y enlace de edición de un solo uso.
 
 ---
 
