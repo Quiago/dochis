@@ -44,7 +44,9 @@ Búsqueda, filtros por especialidad, emirato, seguro e idioma, orden aleatorio, 
 ## Fase 2: Login con "OTP inverso" por WhatsApp ✅ (código hecho)
 `POST/GET /api/auth/challenge`, webhook `GET/POST /api/whatsapp/webhook` (verificación de Meta, firma, router de comandos AYUDA/CONFIRMAR/1/2), sesión con jose, pantallas `/entrar` y `/cuenta`. Tests de normalización, prefijos, expiración, intentos, límites, firma y deduplicación.
 
-**Tú haces (Meta for Developers, gratis):**
+**Correo (activo ya):** código de 6 dígitos por SMTP. **Tú haces:** crear una cuenta de Gmail para el proyecto, activar la verificación en dos pasos y generar una **contraseña de aplicación** (myaccount.google.com → Seguridad → Contraseñas de aplicaciones). Con eso se arma `SMTP_URL=smtps://cuenta%40gmail.com:contraseña-de-aplicacion@smtp.gmail.com:465`.
+
+**WhatsApp (cuando se pueda), Meta for Developers, gratis:**
 1. developers.facebook.com → Create app → tipo **Business** → agregar el producto **WhatsApp**.
 2. WhatsApp → API Setup: Meta te da un **número de prueba** y un token temporal. Agrega tu propio WhatsApp como destinatario de prueba (hasta 5).
 3. Anota: **Phone number ID**, el número de prueba (sin "+") y, en App settings → Basic, el **App Secret**.

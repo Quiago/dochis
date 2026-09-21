@@ -14,7 +14,7 @@ export default async function Cuenta() {
     <main className="container auth">
       <Heading as="h1" className="auth-heading">Mi cuenta</Heading>
       <div className="auth-box">
-        <p>Entraste con el número <strong>{session.phone}</strong>.</p>
+        <p>Entraste con {session.phone ? 'el número' : 'el correo'} <strong>{session.phone ?? session.email}</strong>.</p>
         <p className="muted">Muy pronto podrás reclamar tu perfil o crearlo desde aquí.</p>
         <form action="/api/auth/logout" method="post">
           <Button type="submit" block>Cerrar sesión</Button>

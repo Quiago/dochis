@@ -96,6 +96,8 @@ p { margin: 0 0 var(--base-size-8); }
   border: var(--borderWidth-thin) solid var(--borderColor-muted); border-radius: var(--borderRadius-medium); }
 .auth-title { font-size: var(--text-title-size-small); margin-bottom: var(--base-size-8); }
 .auth-flash { margin-bottom: var(--base-size-12); }
+.auth-switch { margin-bottom: var(--base-size-16); }
+.otp-input input { font-family: var(--fontStack-monospace); letter-spacing: 0.3em; text-align: center; }
 .auth-submit { margin-top: var(--base-size-16); }
 .otp-code { font-family: var(--fontStack-monospace); font-size: var(--text-title-size-large); letter-spacing: 0.2em;
   text-align: center; margin: var(--base-size-16) 0; font-weight: var(--base-text-weight-semibold); }

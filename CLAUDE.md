@@ -30,7 +30,7 @@ El médico le escribe al bot; los mensajes entrantes son gratis y WhatsApp garan
 
 Seguridad: códigos de un solo uso; 5 códigos erróneos invalidan el challenge; un challenge nuevo invalida los pendientes del mismo número; máximo 5 por número por hora, 20 por IP por hora (`CloudFront-Viewer-Address`) y `OTP_DAILY_CAP` por día; reintentos de Meta deduplicados por id de mensaje.
 
-Fallback: correo con magic link solo para quien no pueda usar WhatsApp.
+**Canal por correo** (activo mientras WhatsApp no esté configurado, y como alternativa después): `POST /api/auth/challenge` con `{ email }` envía un código de 6 dígitos por SMTP; el médico lo teclea en la web y `POST /api/auth/verify` lo comprueba (mismos límites, 5 intentos, un solo uso). `/entrar` muestra solo los canales configurados (`loginChannels()`): WhatsApp si hay `WHATSAPP_TOKEN` y `NEXT_PUBLIC_BOT_NUMBER`; correo si hay `SMTP_URL`. La sesión se identifica por teléfono o por correo.
 
 **El bot nunca inicia conversaciones** (sin plantillas). Nunca usar librerías no oficiales de WhatsApp (Baileys, whatsapp-web.js, etc.).
 
@@ -57,7 +57,7 @@ Fallback: correo con magic link solo para quien no pueda usar WhatsApp.
 - Desarrollo local: PostgreSQL en Docker con las mismas migraciones y roles.
 - Tests con Vitest (`npm test`); integración de permisos contra el Postgres local.
 - Sesiones propias: cookie httpOnly firmada con `jose`.
-- Resend solo para el fallback de correo.
+- Correo por **SMTP genérico** (`nodemailer`, `SMTP_URL`): hoy Gmail con contraseña de aplicación (sin dominio; 500 destinatarios/día); con dominio, Resend o SES por SMTP sin cambiar código. En desarrollo, Mailpit en Docker.
 
 ## Modelo de datos
 - `doctors`: id, slug (único, para `/medico/[slug]`), full_name, specialty, clinic, area, emirate, languages text[], insurances text[], regulator (DHA|DOH|MOHAP), license_number, phone_e164 (único, login), public_whatsapp (nullable, solo con consentimiento), email (nullable), status (unclaimed|pending_verification|verified|stale|hidden), consent_at, last_confirmed_at, created_at
@@ -100,4 +100,5 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **2026-09-21:** App y RDS en `eu-north-1` (EAU no tiene EC2 del free tier); WhatsApp en `me-central-1`.
 - **2026-09-21:** Sin dominio propio (costo). URL de CloudFront; `sslip.io` descartado porque su cuota de Let's Encrypt se agota.
 - **2026-09-21:** Se vuelve al "OTP inverso" con la Cloud API de Meta directa: End User Messaging Social no estaba activo en la cuenta, y Meta da un número de prueba al instante. Sin plantillas: el bot solo responde.
+- **2026-09-21:** Login también por código de correo vía SMTP (Gmail). Resend descartado por ahora: sin dominio verificado solo envía a la dirección del dueño de la cuenta.
 - **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).
