@@ -87,16 +87,20 @@ La portada vendía "Entrar con WhatsApp" aunque WhatsApp no está activo, y los 
 
 ---
 
-## Fase 5: Importar la lista y lanzar (1 a 2 días)
+## Fase 5: Importar la lista y lanzar (en curso)
+- `node --env-file=.env.local scripts/import-csv.ts "<archivo.csv>" [--dry-run]` → perfiles `unclaimed` (público: nombre, especialidad y centro) + informe en `data/import-report.md`. Idempotente.
+- Normalización con reglas deterministas y revisables (`lib/import.ts`): 97 variantes de especialidad → 46; emiratos con erratas; webs quitadas del centro.
+- Teléfono de acceso: **solo móviles de EAU** (las centralitas y fijos no se guardan, y cada número tiene un solo dueño). Correo: privado, sirve para reclamar el perfil entrando con él.
+- Se omiten filas fuera de EAU, sin emirato y nombres repetidos (quedan listadas en el informe para arreglarlas a mano).
+- El CSV y el informe tienen datos reales: están en `.gitignore` y nunca se suben al repo.
+- Páginas "Sobre el proyecto" y "Privacidad": hechas en la Fase 4.5.
 
-**Tú haces primero:** enseñarle el sitio al admin del grupo, proponerle ser coadministrador y dejar claro que es gratuito y de código abierto. Que lo anuncie él.
+**Tú haces:**
+- Revisar `data/import-report.md` y confirmar la importación en producción.
+- **Bedrock (+20 USD de créditos):** consola de AWS → Amazon Bedrock → Playgrounds → Chat → elige un modelo (p. ej. Amazon Nova Micro) y pídele algo (por ejemplo, revisar la tabla de especialidades del informe). Con enviar un mensaje basta.
+- Enseñarle el sitio al admin del grupo y que lo anuncie él.
 
-**Prompt:**
-> Crea un script de importación desde CSV que cree médicos `unclaimed` mostrando públicamente solo nombre, especialidad y centro, con la etiqueta "Perfil sin confirmar" y el botón para reclamarlo. Si el CSV trae teléfono, guárdalo en `phone_e164` sin publicarlo. Antes de insertar, normaliza especialidades, idiomas, seguros y emiratos con Bedrock (modelo pequeño) y genera un informe de cambios para revisar a mano; el script funciona también sin Bedrock.
-
-**Tú haces:** probar el prompt de limpieza en el playground de Bedrock (cumple la actividad) antes de correr el script.
-
-**Lanzamiento:** mensaje del admin en el grupo con el enlace de CONFIRMAR, que sirve a la vez de invitación.
+**Lanzamiento:** mensaje del admin en el grupo con el enlace a `https://dochis.pages.dev`.
 
 ---
 

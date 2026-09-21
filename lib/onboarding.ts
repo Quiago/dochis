@@ -1,7 +1,7 @@
 // Sign-up, claim, self-edit and ambassador review. Every function takes the sql client (tests use a throwaway DB).
 // Identity = the login phone (E.164) or email of the session.
 import type postgres from 'postgres'
-import { slugify } from './directory'
+import { slugify } from './directory.ts'
 import type { ProfileData } from './profile'
 
 export type Reviewer = { identity: string; role: 'admin' | 'ambassador'; scope: string | null }
@@ -26,7 +26,7 @@ export async function pendingRequestFor(sql: Sql, identity: string) {
   return row ?? null
 }
 
-async function uniqueSlug(sql: Sql, name: string) {
+export async function uniqueSlug(sql: Sql, name: string) {
   const base = slugify(name) || 'medico'
   const taken = new Set((await sql`select slug from doctors where slug = ${base} or slug like ${base + '-%'}`).map((r) => r.slug))
   if (!taken.has(base)) return base

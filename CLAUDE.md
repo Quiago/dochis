@@ -106,6 +106,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **Descartado (por ahora):** foto de perfil (almacenamiento, moderación y privacidad; el avatar de iniciales basta) y redes sociales (señal comercial, contra el principio 1; moderación).
 - **2026-09-22:** Dirección pública gratis con Cloudflare Pages (`edge/`): una función reenvía todo a CloudFront y manda la IP real en `x-client-ip` con `PROXY_SECRET`. Redirecciones siempre relativas (la app responde bajo varios hosts).
 - **2026-09-22:** Confirmación **mensual** en lugar de trimestral (pendiente a los 35 días, oculto a los 90; la ronda es el mes calendario).
+- **2026-09-22:** Importación con reglas deterministas en lugar de Bedrock (reproducible y revisable; Bedrock queda para la actividad de créditos y la Fase 6). Del CSV solo se guardan como teléfono de acceso los móviles de EAU. Los CSV y los informes con datos reales nunca van al repo.
 - **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).
 
 <!-- BEGIN:nextjs-agent-rules -->
