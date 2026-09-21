@@ -7,7 +7,8 @@ Cuenta de AWS con el plan gratuito (créditos). App y base de datos en **`eu-nor
 ## Qué hay creado
 | Recurso | Nombre / ID | Notas |
 |---|---|---|
-| URL pública | `https://duk8oc8ifzaf.cloudfront.net` | CloudFront `E1URVJLM27QM6N`, PriceClass_200 (incluye Oriente Medio) |
+| URL pública | `https://dochis.pages.dev` | Cloudflare Pages `dochis` (proxy gratis, `edge/`) |
+| CloudFront | `https://duk8oc8ifzaf.cloudfront.net` · `E1URVJLM27QM6N` | PriceClass_200 (incluye Oriente Medio); lo usa el cron |
 | EC2 | `dochis-web` · `i-0dd6e50debd886ccb` · t4g.small | Ubuntu 24.04 arm64, IP elástica `13.50.144.172` |
 | RDS | `dochis-db` · db.t4g.micro · PostgreSQL 17 | No pública, cifrada, backups 1 día, SSL obligatorio |
 | Security groups | `dochis-web` (80 solo desde CloudFront) · `dochis-db` (5432 solo desde `dochis-web`) | Sin puerto 22 |
@@ -21,7 +22,7 @@ Los secretos generados (contraseñas de RDS y de los roles, `OTP_PEPPER`, `SESSI
 
 ## Cómo encaja
 ```
-Navegador ──HTTPS──▶ CloudFront ──HTTP + X-Origin-Verify──▶ EC2 :80 Caddy ──▶ Next.js :3000 ──SSL──▶ RDS
+Navegador ──HTTPS──▶ Cloudflare Pages (dochis.pages.dev) ──HTTPS──▶ CloudFront ──HTTP + X-Origin-Verify──▶ EC2 :80 Caddy ──▶ Next.js :3000 ──SSL──▶ RDS
 ```
 - El security group de la EC2 solo acepta la lista administrada `com.amazonaws.global.cloudfront.origin-facing`.
 - Caddy responde 403 a toda petición sin el encabezado `X-Origin-Verify` igual a `ORIGIN_SECRET`.
@@ -72,9 +73,9 @@ No cargues `db/seed.sql` en producción: son médicos ficticios. El directorio a
 `edge/functions/[[path]].js` reenvía todo a CloudFront. Una vez, con `npx wrangler login`:
 ```bash
 cd edge
-npx wrangler@4 pages project create medicos-en-espanol --production-branch main
-npx wrangler@4 pages secret put PROXY_SECRET --project-name medicos-en-espanol   # mismo valor que en /dochis/env
-npx wrangler@4 pages secret put ORIGIN --project-name medicos-en-espanol         # https://duk8oc8ifzaf.cloudfront.net
+npx wrangler@4 pages project create dochis --production-branch main
+npx wrangler@4 pages secret put PROXY_SECRET --project-name dochis   # mismo valor que en /dochis/env
+npx wrangler@4 pages secret put ORIGIN --project-name dochis         # https://duk8oc8ifzaf.cloudfront.net
 cd .. && npm run edge:deploy
 ```
-Después, `NEXT_PUBLIC_SITE_URL=https://medicos-en-espanol.pages.dev` en `/dochis/env` y desplegar.
+Después, `NEXT_PUBLIC_SITE_URL=https://dochis.pages.dev` en `/dochis/env` y desplegar.

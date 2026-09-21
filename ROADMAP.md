@@ -30,7 +30,7 @@ Proyecto comunitario, gratuito y de código abierto. Cada fase termina con algo 
 Next.js + Primer, `.env.example`, tests con Vitest.
 
 ## Fase 0b: Infraestructura en AWS ✅ (hecho)
-PostgreSQL con roles `web_reader`/`app_writer`, Docker para desarrollo, EC2 + RDS en `eu-north-1`, CloudFront sin dominio, entorno en SSM, scripts de arranque y despliegue. Detalle en `docs/aws.md`. En producción: `https://duk8oc8ifzaf.cloudfront.net`.
+PostgreSQL con roles `web_reader`/`app_writer`, Docker para desarrollo, EC2 + RDS en `eu-north-1`, CloudFront sin dominio, entorno en SSM, scripts de arranque y despliegue. Detalle en `docs/aws.md`. En producción: `https://dochis.pages.dev`.
 
 **Tú haces antes de desplegar la Fase 2:** ver la Fase 2.
 
@@ -52,7 +52,7 @@ Búsqueda, filtros por especialidad, emirato, seguro e idioma, orden aleatorio, 
 3. Anota: **Phone number ID**, el número de prueba (sin "+") y, en App settings → Basic, el **App Secret**.
 4. Inventa un **verify token** (cualquier texto largo).
 5. Pásame esos valores (o cárgalos tú en `/dochis/env`, ver `docs/aws.md`) y despliego.
-6. WhatsApp → Configuration → Webhook: URL `https://duk8oc8ifzaf.cloudfront.net/api/whatsapp/webhook`, el verify token, y suscribirte al campo **messages**.
+6. WhatsApp → Configuration → Webhook: URL `https://dochis.pages.dev/api/whatsapp/webhook`, el verify token, y suscribirte al campo **messages**.
 7. Para producción: token permanente de un **System User** y el número real del bot (SIM de EAU no registrada en la app de WhatsApp).
 
 ---
