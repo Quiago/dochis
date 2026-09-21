@@ -1,6 +1,6 @@
 # Infraestructura en AWS
 
-Cuenta de AWS con el plan gratuito (créditos). App y base de datos en **`eu-north-1` (Estocolmo)**; WhatsApp en **`me-central-1` (EAU)**.
+Cuenta de AWS con el plan gratuito (créditos). App y base de datos en **`eu-north-1` (Estocolmo)**. WhatsApp va por la Cloud API de Meta, fuera de AWS.
 
 **Reglas para no gastar créditos de más:** nunca crear NAT Gateway, Multi-AZ, Secrets Manager ni balanceadores de carga. Una sola EC2 y una sola RDS.
 
@@ -64,5 +64,5 @@ psql "$DATABASE_URL" -c 'create table hack(i int)'                       # permi
 No cargues `db/seed.sql` en producción: son médicos ficticios. El directorio arranca vacío hasta la importación de la Fase 5.
 
 ## Pendiente de otras fases
-- **Fase 2:** End User Messaging Social en `me-central-1` (número del bot, plantilla de autenticación, tema SNS con suscripción HTTPS a `https://duk8oc8ifzaf.cloudfront.net/api/whatsapp/sns`). Afinar el recurso de `dochis-whatsapp` al ARN del número.
+- **Fase 2:** WhatsApp va por la Cloud API de Meta (no AWS): cargar `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_APP_SECRET`, `WHATSAPP_VERIFY_TOKEN` y `NEXT_PUBLIC_BOT_NUMBER` en `/dochis/env` y desplegar. La política `dochis-whatsapp` del rol queda sin uso hasta que se use End User Messaging Social.
 - **Fase 4:** Lambda + EventBridge Scheduler para el cron diario.

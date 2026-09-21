@@ -20,9 +20,9 @@ Proyecto comunitario, gratuito y de código abierto. Cada fase termina con algo 
 | Disco EBS 20 GB + IPv4 elástica | ~5,4 |
 | RDS db.t4g.micro (0,016/h) + 20 GB | ~14 |
 | CloudFront | 0 (capa gratuita permanente) |
-| WhatsApp (logins a ~0,021 + respuestas del bot) | ~5 a 15 |
-| Lambda, EventBridge, SNS, Bedrock | < 1 |
-| **Total** | **~20 hasta diciembre, ~32 desde enero** (+ WhatsApp) → los 200 USD alcanzan para los 6 meses |
+| WhatsApp (Meta directo: entrantes gratis, 1.000 respuestas gratis al mes) | 0 |
+| Lambda, EventBridge, Bedrock | < 1 |
+| **Total** | **~20 hasta diciembre, ~32 desde enero** → los 200 USD alcanzan para los 6 meses |
 
 ---
 
@@ -32,10 +32,7 @@ Next.js + Primer, `.env.example`, tests con Vitest.
 ## Fase 0b: Infraestructura en AWS ✅ (hecho)
 PostgreSQL con roles `web_reader`/`app_writer`, Docker para desarrollo, EC2 + RDS en `eu-north-1`, CloudFront sin dominio, entorno en SSM, scripts de arranque y despliegue. Detalle en `docs/aws.md`. En producción: `https://duk8oc8ifzaf.cloudfront.net`.
 
-**Tú haces antes de la Fase 2:**
-1. **Número del bot:** una SIM prepago de EAU que **no** esté registrada en la app de WhatsApp.
-2. **End User Messaging Social** en `me-central-1`: conectar la cuenta de WhatsApp Business (el asistente abre el login de Meta), registrar el número del bot y crear un tema SNS como destino de eventos.
-3. En WhatsApp Manager, crear la **plantilla de autenticación** en español (con botón "copiar código") y esperar su aprobación.
+**Tú haces antes de desplegar la Fase 2:** ver la Fase 2.
 
 ---
 
@@ -44,17 +41,17 @@ Búsqueda, filtros por especialidad, emirato, seguro e idioma, orden aleatorio, 
 
 ---
 
-## Fase 2: Login con código por WhatsApp (2 a 3 días)
+## Fase 2: Login con "OTP inverso" por WhatsApp ✅ (código hecho)
+`POST/GET /api/auth/challenge`, webhook `GET/POST /api/whatsapp/webhook` (verificación de Meta, firma, router de comandos AYUDA/CONFIRMAR/1/2), sesión con jose, pantallas `/entrar` y `/cuenta`. Tests de normalización, prefijos, expiración, intentos, límites, firma y deduplicación.
 
-**Prompt:**
-> Implementa el login descrito en CLAUDE.md:
-> 1. `POST /api/auth/challenge`: normaliza el número a E.164 con libphonenumber-js, rechaza prefijos fuera de `OTP_ALLOWED_PREFIXES`, aplica límites (5 por número por hora, por IP y `OTP_DAILY_CAP` global), crea el `login_challenge` con el código guardado como hash y envía la plantilla de autenticación con `SendWhatsAppMessage` (AWS SDK, credenciales del rol de la instancia).
-> 2. `POST /api/auth/verify`: compara el código en tiempo constante, máximo 5 intentos, un solo uso; si es correcto crea la cookie de sesión httpOnly firmada con jose.
-> 3. `POST /api/whatsapp/sns`: valida la firma del mensaje SNS, confirma la suscripción y procesa los mensajes entrantes. Deja preparado un router de comandos para CONFIRMAR, 1, 2 y AYUDA (respuestas de servicio).
-> 4. En la web: pasos número → código → listo, estilo pantalla de sign-in, con reenvío tras 60 s.
-> Escribe tests para la normalización, prefijos, expiración, intentos, límites y tope diario, y la validación de firma SNS.
-
-**Tú haces:** suscribir el tema SNS a `https://<tu-dominio>/api/whatsapp/sns` y probar con tu número.
+**Tú haces (Meta for Developers, gratis):**
+1. developers.facebook.com → Create app → tipo **Business** → agregar el producto **WhatsApp**.
+2. WhatsApp → API Setup: Meta te da un **número de prueba** y un token temporal. Agrega tu propio WhatsApp como destinatario de prueba (hasta 5).
+3. Anota: **Phone number ID**, el número de prueba (sin "+") y, en App settings → Basic, el **App Secret**.
+4. Inventa un **verify token** (cualquier texto largo).
+5. Pásame esos valores (o cárgalos tú en `/dochis/env`, ver `docs/aws.md`) y despliego.
+6. WhatsApp → Configuration → Webhook: URL `https://duk8oc8ifzaf.cloudfront.net/api/whatsapp/webhook`, el verify token, y suscribirte al campo **messages**.
+7. Para producción: token permanente de un **System User** y el número real del bot (SIM de EAU no registrada en la app de WhatsApp).
 
 ---
 
@@ -108,6 +105,6 @@ Búsqueda, filtros por especialidad, emirato, seguro e idioma, orden aleatorio, 
 
 ## Límites a vigilar
 - **Créditos de AWS:** 6 meses o hasta agotarse; entonces la cuenta del plan gratuito se cierra y hay 90 días para pasar al plan de pago antes de perder los datos. Decidir antes del mes 5.
-- **WhatsApp:** cada login cuesta ~0,021 USD (plantilla de autenticación de Meta en EAU + 0,005 de AWS). Las respuestas del bot son gratis hasta 1.000 al mes por número desde el 1/10/2026. El tope diario de envíos protege el presupuesto.
+- **WhatsApp:** mensajes entrantes gratis; respuestas del bot gratis hasta 1.000 al mes por número desde el 1/10/2026, luego tarifa de utilidad de EAU. Meta exige un método de pago en la cuenta para seguir entregando respuestas de servicio.
 - **EC2 t4g.small:** la prueba gratuita termina el 31/12/2026; a partir de ahí se descuenta de los créditos.
 - **Nunca** crear un NAT Gateway ni instancias Multi-AZ: se comerían los créditos.

@@ -2,11 +2,11 @@ import { readFileSync } from 'node:fs'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const REQUIRED = [
-  'DATABASE_URL', 'DATABASE_READER_URL', 'DATABASE_ADMIN_URL', 'NEXT_PUBLIC_SITE_URL', 'AWS_REGION', 'WHATSAPP_REGION', 'ORIGIN_SECRET',
-  'WHATSAPP_PHONE_NUMBER_ID', 'WHATSAPP_OTP_TEMPLATE', 'SNS_TOPIC_ARN', 'NEXT_PUBLIC_BOT_NUMBER',
+  'DATABASE_URL', 'DATABASE_READER_URL', 'DATABASE_ADMIN_URL', 'NEXT_PUBLIC_SITE_URL', 'AWS_REGION', 'ORIGIN_SECRET',
+  'WHATSAPP_TOKEN', 'WHATSAPP_PHONE_NUMBER_ID', 'WHATSAPP_APP_SECRET', 'WHATSAPP_VERIFY_TOKEN', 'NEXT_PUBLIC_BOT_NUMBER',
   'OTP_ALLOWED_PREFIXES', 'OTP_DAILY_CAP', 'OTP_PEPPER', 'SESSION_SECRET', 'CRON_SECRET', 'RESEND_API_KEY', 'EMAIL_FROM',
 ]
-const SECRETS = ['OTP_PEPPER', 'SESSION_SECRET', 'CRON_SECRET', 'ORIGIN_SECRET', 'RESEND_API_KEY']
+const SECRETS = ['WHATSAPP_TOKEN', 'WHATSAPP_APP_SECRET', 'WHATSAPP_VERIFY_TOKEN', 'OTP_PEPPER', 'SESSION_SECRET', 'CRON_SECRET', 'ORIGIN_SECRET', 'RESEND_API_KEY']
 
 afterEach(() => { vi.unstubAllEnvs(); vi.resetModules() })
 
@@ -15,7 +15,7 @@ describe('configuración', () => {
     const env = readFileSync('.env.example', 'utf8')
     for (const k of REQUIRED) expect(env).toMatch(new RegExp(`^${k}=`, 'm'))
     for (const k of SECRETS) expect(env).toMatch(new RegExp(`^${k}=$`, 'm'))
-    expect(env).not.toMatch(/SUPABASE|WHATSAPP_TOKEN|AWS_SECRET_ACCESS_KEY/)
+    expect(env).not.toMatch(/SUPABASE|AWS_SECRET_ACCESS_KEY/)
   })
 
   it('reader() falla con mensaje claro si falta DATABASE_READER_URL', async () => {
