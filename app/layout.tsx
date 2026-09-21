@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { Button } from '@primer/react'
 import Providers from './providers'
 import './globals.css'
 
@@ -16,7 +17,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" suppressHydrationWarning>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <header className="site-header">
+            <div className="site-header-inner">
+              <a href="/" className="brand">Médicos en español · Emiratos</a>
+              <Button as="a" href="/entrar" size="small">Soy médico: entrar</Button>
+            </div>
+          </header>
+          {children}
+        </Providers>
       </body>
     </html>
   )
