@@ -37,9 +37,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <NavDrawer items={nav} />
                 <a href="/" className="brand">Médicos en español · Emiratos</a>
               </div>
-              {session
-                ? <Button as="a" href="/cuenta" size="small">Mi cuenta</Button>
-                : <Button as="a" href="/entrar" size="small">Soy médico: entrar</Button>}
+              {/* Accounts are for doctors only: visitors reach the login from the menu and the "¿Eres médico?" card. */}
+              {session && <Button as="a" href="/cuenta" size="small">Mi cuenta</Button>}
             </div>
           </header>
           {children}

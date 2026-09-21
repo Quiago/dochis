@@ -155,3 +155,5 @@ p { margin: 0 0 var(--base-size-8); }
 .prose { max-width: 720px; }
 .prose h2 { font-size: var(--text-title-size-small); margin: var(--base-size-24) 0 var(--base-size-8); }
 .prose li { margin-bottom: var(--base-size-4); }
+.invite { display: flex; flex-wrap: wrap; gap: var(--base-size-8); }
+.invite > * { flex: 1 1 140px; }

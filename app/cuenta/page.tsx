@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { Button, Flash, Heading, Link } from '@primer/react'
+import InviteColleague from '@/components/InviteColleague'
 import ProfileForm, { type Initial } from '@/components/ProfileForm'
 import { writer } from '@/lib/db'
 import { findDoctorByIdentity, getReviewer, pendingRequestFor } from '@/lib/onboarding'
@@ -54,6 +55,11 @@ export default async function Cuenta({ searchParams }: { searchParams: Promise<{
           {own?.status === 'verified' && <p className="center small"><Link href={`/medico/${own.slug}`}>Ver mi perfil público</Link></p>}
         </>
       )}
+
+      <div className="auth-box">
+        <p><strong>Invita a un colega</strong> que atienda en español.</p>
+        <InviteColleague url={`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/entrar`} />
+      </div>
 
       <form action="/api/auth/logout" method="post" className="center">
         <Button type="submit" variant="invisible" size="small">Cerrar sesión</Button>

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Button, Heading } from '@primer/react'
 import { CheckCircleIcon, DownloadIcon } from '@primer/octicons-react'
+import InviteColleague from '@/components/InviteColleague'
+import { loginChannels } from '@/lib/session'
 
 export const metadata: Metadata = { title: 'Perfil guardado', robots: { index: false } }
 
@@ -17,9 +19,16 @@ export default async function Listo({ searchParams }: { searchParams: Promise<{ 
       <CheckCircleIcon size={40} className="success-icon" />
       <Heading as="h1" className="auth-heading">{m.title}</Heading>
       <p className="muted">{m.text}</p>
+      {/* The contact card only matters for WhatsApp broadcast reminders. */}
+      {loginChannels().includes('whatsapp') && (
+        <div className="auth-box">
+          <p><strong>Guarda el contacto del directorio</strong> para recibir los recordatorios. Cada mes te pediremos confirmar tus datos: solo tendrás que responder un mensaje.</p>
+          <Button as="a" href="/contacto.vcf" download leadingVisual={<DownloadIcon />} block>Guardar contacto</Button>
+        </div>
+      )}
       <div className="auth-box">
-        <p><strong>Guarda el contacto del directorio</strong> para recibir los recordatorios. Cada mes te pediremos confirmar tus datos: solo tendrás que responder un mensaje.</p>
-        <Button as="a" href="/contacto.vcf" download leadingVisual={<DownloadIcon />} block>Guardar contacto</Button>
+        <p><strong>¿Conoces a otro médico que atienda en español?</strong> Invítalo: cuantos más estemos, más útil es el directorio.</p>
+        <InviteColleague url={`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/entrar`} />
       </div>
       <Button as="a" href="/cuenta" variant="primary" block>Listo</Button>
     </main>
