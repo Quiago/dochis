@@ -10,8 +10,7 @@ Billing and Cost Management → Budgets → Create budget:
 2. **Presupuesto de costo mensual de 40 USD** con alertas al 50 % y 80 %, **incluyendo créditos** en las opciones (así se ve cuánto crédito se consume).
 
 ## 1. Región
-Arriba a la derecha elige **Middle East (UAE) `me-central-1`**. Si no aparece, actívala en Account → AWS Regions (tarda unos minutos).
-Comprueba que **End User Messaging Social** está disponible en esa región (buscador de la consola → "End User Messaging" → Social). Si no está, usa **Europe (Frankfurt) `eu-central-1`** para todo.
+Todo va en **Middle East (UAE) `me-central-1`** (activada en Account → AWS Regions). End User Messaging Social está disponible ahí.
 
 ## 2. Rol IAM de la EC2 (`dochis-ec2`)
 IAM → Roles → Create role → AWS service → EC2:

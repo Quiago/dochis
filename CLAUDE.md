@@ -10,7 +10,7 @@ Directorio web gratuito y comunitario de médicos que atienden en español en lo
 - El correo no funciona para recordatorios: los médicos no lo leen. Viven en WhatsApp.
 
 ## Principios de producto (no romper)
-1. **Pro-bono, siempre.** Gratis para médicos y pacientes. Sin anuncios, sin perfiles destacados pagados, sin venta de datos. La comunidad rechazó un intento anterior de app de pago; cualquier señal de negocio mata el proyecto. Código abierto.
+1. **Pro-bono, siempre.** Gratis para médicos y pacientes. Sin anuncios, sin perfiles destacados pagados, sin venta de datos. La comunidad rechazó un intento anterior de app de pago; cualquier señal de negocio mata el proyecto. Código abierto (GPL-3.0).
 2. **Cada médico es dueño de su perfil.** Ningún voluntario mantiene datos a mano.
 3. **Cero trabajo extra para los médicos.** Entrar = escribir su número y el código que le llega por WhatsApp. Confirmar datos = tocar un enlace y enviar un mensaje de WhatsApp.
 4. **Justicia en la visibilidad.** Orden aleatorio por defecto. Nada de rankings por popularidad.
@@ -45,7 +45,7 @@ El bot **solo inicia conversación para enviar el código de login**. Nada de ma
 - Next.js (App Router, TypeScript 5.9), salida `standalone`. **Sin Tailwind.**
 - UI con el sistema de diseño Primer: `@primer/react` (componentes), `@primer/primitives` (tokens CSS y temas claro/oscuro automáticos vía `data-color-mode="auto"` en `<html>`) y `@primer/octicons-react` (íconos). Sin logos, nombre ni marca de GitHub. Estilos con variables de Primer (`var(--fgColor-muted)`, `var(--base-size-16)`…), nunca valores sueltos.
 - Server Components por defecto; los componentes de Primer que lo necesiten van en componentes pequeños `"use client"`. Los componentes compuestos (`ActionMenu.Button`…) no se pueden usar con punto desde un Server Component: van en un componente cliente que recibe datos serializables.
-- **AWS (una sola cuenta, plan gratuito con créditos), región `me-central-1` (EAU) si End User Messaging Social está disponible ahí; si no, `eu-central-1`:**
+- **AWS (una sola cuenta, plan gratuito con créditos), región `me-central-1` (EAU, activada; End User Messaging Social tiene endpoint ahí: `social-messaging.me-central-1.amazonaws.com`):**
   - **EC2** `t4g.small` (Graviton, prueba gratuita de 750 h/mes hasta el 31/12/2026): Next.js con Node 24 detrás de Caddy (HTTPS automático con Let's Encrypt). Acceso por SSM Session Manager, sin puerto 22 abierto. Rol de instancia IAM para llamar a AWS: sin claves de acceso en el servidor.
   - **RDS PostgreSQL** `db.t4g.micro`, 20 GB, cifrado, **no público**; solo acepta conexiones desde el security group de la EC2.
   - **End User Messaging Social**: WhatsApp. Envío con `SendWhatsAppMessage`; los mensajes entrantes llegan a un tema **SNS** con suscripción HTTPS a `/api/whatsapp/sns` (se valida la firma de SNS).
@@ -96,4 +96,5 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **2026-09-21:** Se agregan `confirmations` y `slug`; `public_doctors` incluye unclaimed con datos mínimos; filtro por idioma.
 - **2026-09-21:** Infraestructura en AWS con créditos del plan gratuito (EC2 + RDS + End User Messaging Social + Lambda + Bedrock + Route 53 + Budgets) en lugar de Vercel + Supabase. Se acepta el horizonte de 6 meses.
 - **2026-09-21:** El login pasa de "OTP inverso" (el médico escribe al bot) a código enviado por el bot con plantilla de autenticación. Costo aproximado en EAU: ~0,016 USD de Meta + 0,005 USD de AWS por login.
-- **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial; las rutas sin registrar se bloquean).
+- **2026-09-21:** Licencia GPL-3.0 (elegida al crear el repo) en lugar de MIT. Región AWS `me-central-1` (EAU).
+- **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).
