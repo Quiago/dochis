@@ -73,7 +73,7 @@ apt-get update && apt-get install -y caddy
 
 # Usuario y código
 useradd --system --create-home --shell /bin/bash dochis
-git clone https://github.com/<tu-usuario>/<tu-repo>.git /opt/dochis
+git clone https://github.com/Quiago/dochis.git /opt/dochis
 chown -R dochis:dochis /opt/dochis
 echo 'dochis ALL=(root) NOPASSWD: /usr/bin/systemctl restart dochis' > /etc/sudoers.d/dochis
 ```
