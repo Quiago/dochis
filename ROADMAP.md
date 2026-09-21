@@ -87,6 +87,20 @@ La portada vendía "Entrar con WhatsApp" aunque WhatsApp no está activo, y los 
 
 ---
 
+## Fase 4.6: Verificación automática con un agente (propuesta)
+Objetivo: que nadie tenga que aprobar a mano. El panel queda solo para excepciones (reportes y lista mensual).
+- **Fuente oficial, sin saltarse CAPTCHAs:** la DHA publica sus profesionales activos como datos abiertos en Dubai Pulse (`dha_sheryan_professional_detail`, CSV y API). La web de la DHA tiene un CAPTCHA visual: no se automatiza.
+- **Sincronización diaria** (la Lambda del cron) del dataset a una tabla `registry_dha`.
+- **Agente con Bedrock** (tool use): herramientas `buscar_licencia` y `buscar_por_nombre` sobre esa tabla; decide *verificada / no coincide / no encontrada* con una explicación guardada (nombres con tildes, orden, segundo apellido…).
+- **Publicación inmediata** con la etiqueta del resultado: "Licencia verificada con la DHA" o "Licencia declarada". El número de licencia sigue privado.
+- **DOH y MOHAP:** no publican un registro nominal abierto → "Licencia declarada" + enlace a su portal, hasta que haya datos.
+- **Reclamos:** automáticos si el correo o teléfono coincide con la lista importada. Si no, el médico crea su perfil y el agente detecta el duplicado sin reclamar y lo oculta. (El número de licencia es público, así que no prueba que el perfil sea tuyo.)
+- **Red de seguridad:** reportes de la comunidad (2 → pendiente).
+
+**Tú haces:** crear una cuenta en Dubai Pulse (data.dubai) y pedir acceso al dataset `dha_sheryan_professional_detail` (API Key y Secret). Probar un modelo en el playground de Bedrock (+20 USD).
+
+---
+
 ## Fase 5: Importar la lista y lanzar (pospuesta: primero la demo con el médico encargado)
 - `node --env-file=.env.local scripts/import-csv.ts "<archivo.csv>" [--dry-run]` → perfiles `unclaimed` (público: nombre, especialidad y centro) + informe en `data/import-report.md`. Idempotente.
 - Normalización con reglas deterministas y revisables (`lib/import.ts`): 97 variantes de especialidad → 46; emiratos con erratas; webs quitadas del centro.
