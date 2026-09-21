@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "db:up": "docker compose up -d",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.ts",
-    "db:reset": "docker compose down -v && docker compose up -d --wait && node --env-file-if-exists=.env.local scripts/migrate.ts --seed"
+    "db:reset": "docker compose down -v && docker compose up -d --wait && node --env-file-if-exists=.env.local scripts/migrate.ts --seed",
+    "edge:deploy": "cd edge && npx wrangler@4 pages deploy public --project-name medicos-en-espanol --branch main"
   },
   "dependencies": {
     "@primer/octicons-react": "^19.38.0",

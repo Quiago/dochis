@@ -76,4 +76,14 @@ describe('IP del visitante', () => {
     expect(clientIp(new Headers({ 'x-forwarded-for': '198.51.100.1, 10.0.0.1' }))).toBe('198.51.100.1')
     expect(clientIp(new Headers())).toBeNull()
   })
+
+  it('confía en x-client-ip del proxy de Cloudflare solo con el secreto correcto', () => {
+    vi.stubEnv('PROXY_SECRET', 'proxy-secret')
+    const cf = { 'cloudfront-viewer-address': '172.70.1.1:443', 'x-client-ip': '198.51.100.9' }
+    expect(clientIp(new Headers({ ...cf, 'x-proxy-secret': 'proxy-secret' }))).toBe('198.51.100.9')
+    expect(clientIp(new Headers({ ...cf, 'x-proxy-secret': 'falso' }))).toBe('172.70.1.1')
+    expect(clientIp(new Headers(cf))).toBe('172.70.1.1')
+    vi.stubEnv('PROXY_SECRET', '')
+    expect(clientIp(new Headers({ ...cf, 'x-proxy-secret': '' }))).toBe('172.70.1.1')
+  })
 })
