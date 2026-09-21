@@ -2,57 +2,58 @@ import { readFileSync } from 'node:fs'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const REQUIRED = [
-  'NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY',
-  'NEXT_PUBLIC_SITE_URL', 'WHATSAPP_TOKEN', 'WHATSAPP_PHONE_NUMBER_ID', 'WHATSAPP_APP_SECRET',
-  'WHATSAPP_VERIFY_TOKEN', 'NEXT_PUBLIC_BOT_NUMBER', 'SESSION_SECRET', 'CRON_SECRET',
-  'RESEND_API_KEY', 'EMAIL_FROM',
+  'DATABASE_URL', 'DATABASE_READER_URL', 'DATABASE_ADMIN_URL', 'NEXT_PUBLIC_SITE_URL', 'AWS_REGION',
+  'WHATSAPP_PHONE_NUMBER_ID', 'WHATSAPP_OTP_TEMPLATE', 'SNS_TOPIC_ARN', 'NEXT_PUBLIC_BOT_NUMBER',
+  'OTP_ALLOWED_PREFIXES', 'OTP_DAILY_CAP', 'OTP_PEPPER', 'SESSION_SECRET', 'CRON_SECRET', 'RESEND_API_KEY', 'EMAIL_FROM',
 ]
+const SECRETS = ['OTP_PEPPER', 'SESSION_SECRET', 'CRON_SECRET', 'RESEND_API_KEY']
 
 afterEach(() => { vi.unstubAllEnvs(); vi.resetModules() })
 
-describe('fase 0', () => {
-  it('.env.example declara todas las variables y sin valores secretos', () => {
+describe('configuración', () => {
+  it('.env.example declara todas las variables y deja vacíos los secretos', () => {
     const env = readFileSync('.env.example', 'utf8')
     for (const k of REQUIRED) expect(env).toMatch(new RegExp(`^${k}=`, 'm'))
-    for (const k of REQUIRED.filter((k) => !k.startsWith('NEXT_PUBLIC_SITE'))) {
-      expect(env).toMatch(new RegExp(`^${k}=$`, 'm'))
-    }
+    for (const k of SECRETS) expect(env).toMatch(new RegExp(`^${k}=$`, 'm'))
+    expect(env).not.toMatch(/SUPABASE|WHATSAPP_TOKEN|AWS_SECRET_ACCESS_KEY/)
   })
 
-  it('publicClient falla con mensaje claro si falta la URL', async () => {
-    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', '')
-    vi.stubEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY', 'anon')
-    const { publicClient } = await import('@/lib/supabase')
-    expect(() => publicClient()).toThrow(/NEXT_PUBLIC_SUPABASE_URL/)
+  it('reader() falla con mensaje claro si falta DATABASE_READER_URL', async () => {
+    vi.stubEnv('DATABASE_READER_URL', '')
+    const { reader } = await import('@/lib/db')
+    expect(() => reader()).toThrow(/DATABASE_READER_URL/)
   })
 
-  it('serviceClient falla si falta la service role key', async () => {
-    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'http://localhost:54321')
-    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', '')
-    const { serviceClient } = await import('@/lib/supabase-server')
-    expect(() => serviceClient()).toThrow(/SUPABASE_SERVICE_ROLE_KEY/)
+  it('writer() falla con mensaje claro si falta DATABASE_URL', async () => {
+    vi.stubEnv('DATABASE_URL', '')
+    const { writer } = await import('@/lib/db')
+    expect(() => writer()).toThrow(/DATABASE_URL/)
   })
 
-  it('el cliente con service role está protegido con server-only', () => {
-    expect(readFileSync('lib/supabase-server.ts', 'utf8')).toMatch(/^import 'server-only'/m)
-    expect(readFileSync('lib/supabase.ts', 'utf8')).not.toMatch(/SERVICE_ROLE/)
+  it('crea conexiones perezosas cuando las variables existen', async () => {
+    vi.stubEnv('DATABASE_READER_URL', 'postgres://web_reader:x@localhost:1/db')
+    vi.stubEnv('DATABASE_URL', 'postgres://app_writer:x@localhost:1/db')
+    const { reader, writer } = await import('@/lib/db')
+    expect(reader()).toBeTypeOf('function')
+    expect(reader()).toBe(reader())
+    expect(writer()).not.toBe(reader())
   })
 
-  it('crea clientes cuando las variables existen', async () => {
-    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'http://localhost:54321')
-    vi.stubEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY', 'anon')
-    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'service')
-    const { publicClient } = await import('@/lib/supabase')
-    const { serviceClient } = await import('@/lib/supabase-server')
-    expect(publicClient().from).toBeTypeOf('function')
-    expect(serviceClient().from).toBeTypeOf('function')
+  it('el acceso a la base está protegido con server-only', () => {
+    expect(readFileSync('lib/db.ts', 'utf8')).toMatch(/^import 'server-only'/m)
+    expect(readFileSync('lib/doctors.ts', 'utf8')).toMatch(/^import 'server-only'/m)
   })
 
-  it('no usa Tailwind y sí Primer', () => {
+  it('dependencias: Primer y postgres; sin Tailwind ni Supabase', () => {
     const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
     const deps = { ...pkg.dependencies, ...pkg.devDependencies }
     expect(deps.tailwindcss).toBeUndefined()
+    expect(Object.keys(deps).some((d) => d.includes('supabase'))).toBe(false)
+    expect(deps.postgres).toBeDefined()
     expect(deps['@primer/react']).toBeDefined()
-    expect(deps['@primer/primitives']).toBeDefined()
+  })
+
+  it('Next.js genera salida standalone para la EC2', () => {
+    expect(readFileSync('next.config.ts', 'utf8')).toMatch(/output:\s*'standalone'/)
   })
 })
