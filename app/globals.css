@@ -106,3 +106,19 @@ p { margin: 0 0 var(--base-size-8); }
 .success-icon { color: var(--fgColor-success); }
 @media (min-width: 768px) { .only-mobile { display: none; } }
 @media (max-width: 767px) { .only-desk { display: none; } }
+
+/* Account / profile form. */
+.account { max-width: 560px; }
+.account-head { margin-bottom: var(--base-size-16); }
+.profile-form { display: grid; gap: var(--base-size-16); }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--base-size-4) var(--base-size-16); }
+
+/* Admin (Issues style). */
+.admin-title { font-size: var(--text-title-size-medium); margin-bottom: var(--base-size-4); }
+.issue { display: grid; grid-template-columns: auto 1fr; gap: var(--base-size-8); padding: var(--base-size-16) 0; }
+.issue-icon { color: var(--fgColor-open); margin-top: var(--base-size-4); }
+.issue-actions { grid-column: 2; display: flex; gap: var(--base-size-8); }
+@media (min-width: 768px) {
+  .issue { grid-template-columns: auto 1fr auto; align-items: start; }
+  .issue-actions { grid-column: 3; }
+}
