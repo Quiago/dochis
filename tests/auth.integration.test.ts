@@ -65,7 +65,7 @@ describe.skipIf(!db)('login por WhatsApp (OTP inverso)', () => {
 
   it('máximo 5 challenges por número por hora', async () => {
     for (let i = 0; i < 5; i++) expect(await create({ ip: `198.51.100.${i}` })).toHaveProperty('id')
-    expect(await create({ ip: '198.51.100.99' })).toEqual({ error: 'rate_limited_phone' })
+    expect(await create({ ip: '198.51.100.99' })).toEqual({ error: 'rate_limited_identity' })
     expect(await create({ ip: '198.51.100.99', now: at(61) })).toHaveProperty('id')
   })
 
