@@ -26,11 +26,11 @@ p { margin: 0 0 var(--base-size-8); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .site-header { background: var(--bgColor-inset); border-bottom: var(--borderWidth-thin) solid var(--borderColor-default); }
-.site-header-inner { max-width: 1012px; margin: 0 auto; padding: var(--base-size-12) var(--base-size-16);
+.site-header-inner { max-width: 1280px; margin: 0 auto; padding: var(--base-size-12) var(--base-size-16);
   display: flex; align-items: center; justify-content: space-between; gap: var(--base-size-8); }
+.brand-group { display: flex; align-items: center; gap: var(--base-size-8); }
 .brand { font-weight: var(--base-text-weight-semibold); color: var(--fgColor-default); text-decoration: none; }
 
-.hero { padding: var(--base-size-16) 0; }
 .hero-title { font-size: var(--text-title-size-large); margin-bottom: var(--base-size-8); }
 
 .searchbar { position: sticky; top: 0; z-index: 1; background: var(--bgColor-default); padding: var(--base-size-8) 0; }
@@ -52,9 +52,6 @@ p { margin: 0 0 var(--base-size-8); }
 .license { color: var(--fgColor-success); display: inline-flex; align-items: center; gap: var(--base-size-4); }
 .actions { display: flex; gap: var(--base-size-12); flex-wrap: wrap; align-items: center; margin-top: var(--base-size-8); }
 
-.cta { margin-top: var(--base-size-32); padding: var(--base-size-16); border: var(--borderWidth-thin) solid var(--borderColor-default);
-  border-radius: var(--borderRadius-medium); background: var(--bgColor-muted); }
-.cta-title { font-size: var(--text-title-size-small); margin-bottom: var(--base-size-8); }
 
 /* User-profile style. */
 .profile { display: grid; gap: var(--base-size-24); }
@@ -127,3 +124,34 @@ p { margin: 0 0 var(--base-size-8); }
 .issue-icon-muted { color: var(--fgColor-muted); margin-top: var(--base-size-4); }
 .issue-icon-attention { color: var(--fgColor-attention); margin-top: var(--base-size-4); }
 .admin-toolbar { display: flex; flex-wrap: wrap; gap: var(--base-size-8); justify-content: space-between; align-items: center; margin-top: var(--base-size-16); }
+
+/* Home: GitHub dashboard layout (left: explore, center: search + list, right: for doctors). */
+.dashboard { max-width: 1280px; margin: 0 auto; padding: var(--base-size-16); display: grid; gap: var(--base-size-24);
+  grid-template-areas: 'main' 'right' 'left'; }
+.dash-main { grid-area: main; min-width: 0; }
+.dash-left { grid-area: left; }
+.dash-right { grid-area: right; display: grid; gap: var(--base-size-16); align-content: start; }
+.side-section + .side-section { margin-top: var(--base-size-24); }
+.side-heading { font-size: var(--text-body-size-medium); margin-bottom: var(--base-size-8); }
+.side-title { font-size: var(--text-title-size-small); margin-bottom: var(--base-size-8); }
+.side-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--base-size-2); }
+.side-link { display: flex; justify-content: space-between; gap: var(--base-size-8); padding: var(--base-size-4) var(--base-size-8);
+  border-radius: var(--borderRadius-medium); color: var(--fgColor-default); }
+.side-link:hover, .side-link.active { background: var(--bgColor-neutral-muted); text-decoration: none; }
+.side-link.active { font-weight: var(--base-text-weight-semibold); }
+.side-count { color: var(--fgColor-muted); }
+.steps { margin: 0; padding: var(--base-size-12) var(--base-size-16) var(--base-size-12) var(--base-size-32); display: grid; gap: var(--base-size-8); }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); padding: var(--base-size-12); text-align: center; }
+.stats strong { display: block; font-size: var(--text-title-size-medium); }
+@media (min-width: 768px) {
+  .dashboard { grid-template-columns: 1fr 300px; grid-template-areas: 'main right' 'left right'; padding: var(--base-size-24); }
+}
+@media (min-width: 1100px) {
+  .dashboard { grid-template-columns: 240px 1fr 300px; grid-template-areas: 'left main right'; }
+  .dash-left { border-right: var(--borderWidth-thin) solid var(--borderColor-muted); padding-right: var(--base-size-16); }
+}
+
+/* Text pages (about, privacy). */
+.prose { max-width: 720px; }
+.prose h2 { font-size: var(--text-title-size-small); margin: var(--base-size-24) 0 var(--base-size-8); }
+.prose li { margin-bottom: var(--base-size-4); }

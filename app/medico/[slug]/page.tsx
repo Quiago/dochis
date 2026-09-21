@@ -97,7 +97,7 @@ export default async function DoctorPage({ params }: Props) {
                     )
                   })}
                 </ol>
-                <p className="muted small">Cada médico confirma sus datos por WhatsApp cada tres meses.</p>
+                <p className="muted small">Cada médico confirma sus datos cada tres meses.</p>
               </div>
             </div>
           )}

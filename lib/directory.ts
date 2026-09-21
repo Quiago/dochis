@@ -71,7 +71,7 @@ export function freshness(d: PublicDoctor, now = new Date()): Freshness {
   if (d.status === 'stale' || days > STALE_DAYS) {
     return { kind: 'pending', label: 'Pendiente', text: `Pendiente: no confirma sus datos desde ${timeAgo(days).replace('hace ', '')}` }
   }
-  return { kind: 'confirmed', label: 'Confirmado', text: `Confirmado por WhatsApp ${timeAgo(days)}` }
+  return { kind: 'confirmed', label: 'Confirmado', text: `Confirmado ${timeAgo(days)}` }
 }
 
 export const CONTACT_MESSAGE = 'Hola, vi su perfil en el directorio de médicos en español y quisiera pedir una cita.'
@@ -97,6 +97,28 @@ export function facets(docs: PublicDoctor[]) {
     emirato: uniqSorted(docs.map((d) => d.emirate)),
     seguro: uniqSorted(docs.flatMap((d) => d.insurances)),
     idioma: uniqSorted(docs.flatMap((d) => d.languages)),
+  }
+}
+
+// Counts per specialty / emirate for the sidebar, alphabetical on purpose (no ranking, principle 4).
+export function facetCounts(docs: PublicDoctor[]) {
+  const count = (vals: string[]) => {
+    const m = new Map<string, number>()
+    for (const v of vals) m.set(v, (m.get(v) ?? 0) + 1)
+    return [...m].sort(([a], [b]) => a.localeCompare(b, 'es')).map(([value, count]) => ({ value, count }))
+  }
+  return { esp: count(docs.map((d) => d.specialty)), emirato: count(docs.map((d) => d.emirate)) }
+}
+
+// First day of the current quarter (UTC): each confirmation round starts there.
+export const roundStart = (now: Date) => new Date(Date.UTC(now.getUTCFullYear(), Math.floor(now.getUTCMonth() / 3) * 3, 1))
+
+export function directoryStats(docs: PublicDoctor[], now = new Date()) {
+  const start = roundStart(now).getTime()
+  return {
+    doctors: docs.length,
+    specialties: new Set(docs.map((d) => d.specialty)).size,
+    confirmedThisRound: docs.filter((d) => d.last_confirmed_at && new Date(d.last_confirmed_at).getTime() >= start).length,
   }
 }
 

@@ -58,7 +58,7 @@ describe('freshness', () => {
   })
 
   it('describe la frescura con los textos del prototipo', () => {
-    expect(freshness(doc({ last_confirmed_at: daysAgo(12) }), NOW).text).toBe('Confirmado por WhatsApp hace 12 días')
+    expect(freshness(doc({ last_confirmed_at: daysAgo(12) }), NOW).text).toBe('Confirmado hace 12 días')
     expect(freshness(doc({ last_confirmed_at: daysAgo(120) }), NOW).text).toBe('Pendiente: no confirma sus datos desde 4 meses')
     expect(timeAgo(0)).toBe('hoy')
     expect(timeAgo(1)).toBe('hace 1 día')
@@ -113,5 +113,25 @@ describe('filtros en la URL', () => {
     expect(filterHref(f, 'emirato', 'Dubái')).toBe('/?q=ana&esp=Pediatr%C3%ADa&emirato=Dub%C3%A1i')
     expect(filterHref(f, 'esp')).toBe('/?q=ana')
     expect(filterHref({ esp: 'x' }, 'esp')).toBe('/')
+  })
+})
+
+import { directoryStats, facetCounts } from '@/lib/directory'
+
+describe('columna lateral y cifras', () => {
+  it('cuenta médicos por especialidad y emirato en orden alfabético (sin ranking)', () => {
+    const docs = [...DOCS, doc({ id: '4', specialty: 'Cardiología', emirate: 'Dubái' })]
+    const c = facetCounts(docs)
+    expect(c.esp).toEqual([{ value: 'Cardiología', count: 2 }, { value: 'Ginecología', count: 1 }, { value: 'Pediatría', count: 1 }])
+    expect(c.emirato.map((e) => e.value)).toEqual(['Abu Dabi', 'Dubái', 'Sharjah'])
+  })
+
+  it('cifras del directorio: total, especialidades y confirmados en el trimestre', () => {
+    const docs = [
+      doc({ id: '1', last_confirmed_at: daysAgo(10) }),
+      doc({ id: '2', specialty: 'Cardiología', last_confirmed_at: daysAgo(100) }),
+      doc({ id: '3', status: 'unclaimed', last_confirmed_at: null }),
+    ]
+    expect(directoryStats(docs, NOW)).toEqual({ doctors: 3, specialties: 2, confirmedThisRound: 1 })
   })
 })

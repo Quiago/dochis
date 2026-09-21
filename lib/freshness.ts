@@ -1,7 +1,10 @@
 // Phase 4: automatic freshness, community reports and the admin views that support the quarterly round.
 import type postgres from 'postgres'
 import type { Reviewer } from './onboarding'
+import { roundStart } from './directory'
 import { REPORT_REASONS } from './report-reasons'
+
+export { roundStart }
 
 const DAY = 86_400_000
 const STALE_DAYS = 90
@@ -13,8 +16,6 @@ const REPORTS_PER_DAY = 10
 const daysAgo = (now: Date, days: number) => new Date(now.getTime() - days * DAY)
 const scopeOf = (r: Reviewer) => (r.role === 'admin' ? null : r.scope)
 
-// First day of the current quarter (UTC): the admin pastes CONFIRMAR in the group at each round start.
-export const roundStart = (now: Date) => new Date(Date.UTC(now.getUTCFullYear(), Math.floor(now.getUTCMonth() / 3) * 3, 1))
 
 // Daily cron: >90 days without confirming → stale ("pendiente"), >180 → hidden.
 export async function runFreshness(sql: postgres.Sql, now = new Date()) {

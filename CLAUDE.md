@@ -43,7 +43,7 @@ Seguridad: códigos de un solo uso; 5 códigos erróneos invalidan el challenge;
 ## Stack
 - Next.js (App Router, TypeScript 5.9), salida `standalone`. **Sin Tailwind.**
 - UI con el sistema de diseño Primer: `@primer/react` (componentes), `@primer/primitives` (tokens CSS y temas claro/oscuro automáticos vía `data-color-mode="auto"` en `<html>`) y `@primer/octicons-react` (íconos). Sin logos, nombre ni marca de GitHub. Estilos con variables de Primer (`var(--fgColor-muted)`, `var(--base-size-16)`…), nunca valores sueltos.
-- Server Components por defecto; los componentes de Primer que lo necesiten van en componentes pequeños `"use client"`. Los componentes compuestos (`ActionMenu.Button`…) no se pueden usar con punto desde un Server Component: van en un componente cliente que recibe datos serializables.
+- Server Components por defecto; los componentes de Primer que lo necesiten van en componentes pequeños `"use client"`. Los componentes compuestos (`ActionMenu.Button`…) no se pueden usar con punto desde un Server Component: van en un componente cliente que recibe datos serializables. **Tampoco pasar elementos de íconos como props (`leadingVisual={<Icon />}`) desde un Server Component a un componente de Primer que los necesite para funcionar (p. ej. `TextInput`)**: en producción puede fallar con "Element type is invalid". Ese componente va en un archivo `"use client"` que usa `leadingVisual={Icon}`.
 - **AWS (una sola cuenta, plan gratuito con créditos).** App y base de datos en **`eu-north-1` (Estocolmo)**: `me-central-1` (EAU) no ofrece instancias EC2 del free tier. WhatsApp en `me-central-1`. Sin dominio propio.
   - **URL pública: `https://dochis.pages.dev`** (Cloudflare Pages, gratis; `edge/` reenvía a CloudFront).
   - **CloudFront** (capa gratuita permanente): `https://duk8oc8ifzaf.cloudfront.net`, HTTPS con certificado de AWS. Sin caché para páginas y API; caché para `/_next/static/*`.
@@ -82,7 +82,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 `prototype.html` es el prototipo aprobado para **flujos, contenido y textos** (búsqueda, filtros, orden aleatorio, estado de frescura, login por WhatsApp, reportes y alta). **No copiar su estilo visual**: la interfaz sigue el estilo de GitHub con Primer. 
 
 ## Diseño (traducción de GitHub al directorio)
-- Home = página "Explore": búsqueda arriba, filtros como menús desplegables (ActionMenu/SelectPanel) y resultados como lista de repositorios (filas con separadores, no tarjetas).
+- Home = dashboard de GitHub: menú lateral (hamburguesa) en la cabecera; columna izquierda con especialidades y emiratos (con conteo, orden alfabético); centro con buscador, filtros (ActionMenu) y la lista estilo repositorios; columna derecha con "¿Eres médico?" (botón del canal activo), "Cómo funciona" y cifras. Nunca "destacados" ni "recién confirmados" (principio 4). Textos sin canal fijo: "confirma sus datos cada tres meses".
 - Filtros: especialidad, emirato, seguro **e idioma** (principio 7). Viven en la URL (`?q=&esp=&emirato=&seguro=&idioma=`) para render en servidor y enlaces compartibles.
 - Especialidad, idiomas y seguros = Labels tipo "topics".
 - Estado = Label: verde "Confirmado", amarillo "Pendiente", gris "Sin confirmar"; Octicon de verificado junto al regulador.
@@ -106,3 +106,13 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **Descartado (por ahora):** foto de perfil (almacenamiento, moderación y privacidad; el avatar de iniciales basta) y redes sociales (señal comercial, contra el principio 1; moderación).
 - **2026-09-22:** Dirección pública gratis con Cloudflare Pages (`edge/`): una función reenvía todo a CloudFront y manda la IP real en `x-client-ip` con `PROXY_SECRET`. Redirecciones siempre relativas (la app responde bajo varios hosts).
 - **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

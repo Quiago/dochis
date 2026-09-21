@@ -75,13 +75,24 @@ Búsqueda, filtros por especialidad, emirato, seguro e idioma, orden aleatorio, 
 
 ---
 
+## Fase 4.5: Portada estilo dashboard de GitHub ✅ (hecho)
+La portada vendía "Entrar con WhatsApp" aunque WhatsApp no está activo, y los textos decían "confirma por WhatsApp". Se rediseña como el feed principal de GitHub:
+- **Cabecera** con menú lateral (hamburguesa): Directorio, Sobre el proyecto, Privacidad, Mi cuenta o Entrar, Panel de revisión (solo revisores).
+- **Columna izquierda** (como "Top repositories"): especialidades y emiratos con su número de médicos, en orden alfabético (nada de rankings, principio 4). Enlazan al filtro.
+- **Centro**: buscador grande, filtros y la lista de médicos.
+- **Columna derecha** (como el changelog): tarjeta "¿Eres médico?" con el botón del canal que esté activo (correo o WhatsApp), "Cómo funciona" en 3 pasos y cifras del directorio. Sin "recién confirmados": daría más visibilidad a unos que a otros.
+- **Textos sin canal fijo**: "Confirmado hace N días", "confirma sus datos cada tres meses".
+- Páginas **Sobre el proyecto** y **Privacidad** (se adelantan de la Fase 5 porque el menú las enlaza).
+- Móvil: las columnas laterales pasan al menú y debajo de la lista.
+
+---
+
 ## Fase 5: Importar la lista y lanzar (1 a 2 días)
 
 **Tú haces primero:** enseñarle el sitio al admin del grupo, proponerle ser coadministrador y dejar claro que es gratuito y de código abierto. Que lo anuncie él.
 
 **Prompt:**
 > Crea un script de importación desde CSV que cree médicos `unclaimed` mostrando públicamente solo nombre, especialidad y centro, con la etiqueta "Perfil sin confirmar" y el botón para reclamarlo. Si el CSV trae teléfono, guárdalo en `phone_e164` sin publicarlo. Antes de insertar, normaliza especialidades, idiomas, seguros y emiratos con Bedrock (modelo pequeño) y genera un informe de cambios para revisar a mano; el script funciona también sin Bedrock.
-> Crea las páginas de política de privacidad y "Sobre el proyecto" (comunitario, gratuito, código abierto, quién lo mantiene).
 
 **Tú haces:** probar el prompt de limpieza en el playground de Bedrock (cumple la actividad) antes de correr el script.
 
