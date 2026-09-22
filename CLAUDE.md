@@ -72,7 +72,7 @@ Seguridad: códigos de un solo uso; 5 códigos erróneos invalidan el challenge;
 ## Roles
 - **Público:** lee las vistas `public_doctors` y `public_confirmations` a través del rol `web_reader`: perfiles verified/stale (sin phone_e164 ni email; con número de licencia, publicado con consentimiento para poder comprobarlo en el registro oficial) y unclaimed mostrando solo nombre, especialidad, clínica, zona y emirato (el resto vacío). Nunca pending_verification ni hidden. `web_reader` no tiene permiso sobre ninguna tabla.
 - **Médico:** edita solo su perfil.
-- **Revisión automática** (`lib/review.ts`): reglas propias (formato de licencia, licencia repetida, nombre ya publicado) + Amazon Bedrock (`BEDROCK_MODEL_ID`, Nova Micro) para spam, texto ofensivo o especialidades no sanitarias. Limpia → se publica al instante. Marcada → "Marcados para revisar". A un médico ya publicado que edita sin cambiar la licencia nunca se le despublica por un falso positivo. El modelo nunca recibe teléfonos ni correos.
+- **Revisión automática** (`lib/review.ts`): reglas propias (formato de licencia, licencia repetida, nombre ya publicado) + Amazon Bedrock (`BEDROCK_MODEL_ID`, Nova Lite: Nova Micro daba falsos positivos, p. ej. con medicina estética) para spam, texto ofensivo o especialidades no sanitarias. Limpia → se publica al instante. Marcada → "Marcados para revisar". A un médico ya publicado que edita sin cambiar la licencia nunca se le despublica por un falso positivo. El modelo nunca recibe teléfonos ni correos.
 - **Embajador:** resuelve los perfiles marcados de su especialidad.
 - **Admin:** todo, incluida la exportación de no confirmados.
 
