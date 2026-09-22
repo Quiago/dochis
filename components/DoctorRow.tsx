@@ -1,4 +1,5 @@
-import { Button, Link } from '@primer/react'
+import { Button, Label, Link } from '@primer/react'
+import { ShieldCheckIcon } from '@primer/octicons-react'
 import ReportButton from './ReportButton'
 import StatusLabel from './StatusLabel'
 import Topics from './Topics'
@@ -18,6 +19,30 @@ export function Where({ d }: { d: PublicDoctor }) {
   return <>{d.clinic}{d.area ? `, ${d.area}` : ''} ({d.emirate})</>
 }
 
+const MAX_INSURERS = 6
+
+// Declared by the doctor (accent) vs published by the clinic (neutral, sourced): never mixed, so patients know which is which.
+export function InsuranceLabels({ d, all = false }: { d: PublicDoctor; all?: boolean }) {
+  const clinic = (d.clinic_insurers ?? []).filter((i) => !d.insurances.includes(i))
+  const items = [...d.insurances.map((i) => ({ i, own: true })), ...clinic.map((i) => ({ i, own: false }))]
+  if (!items.length) return null
+  const shown = all ? items : items.slice(0, MAX_INSURERS)
+  return (
+    <div className="insurers">
+      <ShieldCheckIcon size={14} className="muted" aria-label="Seguros" />
+      <ul className="topics">
+        {shown.map(({ i, own }) => (
+          <li key={i}><Label variant={own ? 'accent' : 'secondary'} title={own ? 'Declarado por el médico' : 'Según la web de la clínica'}>{i}</Label></li>
+        ))}
+        {items.length > shown.length && <li className="muted small">+{items.length - shown.length} más</li>}
+      </ul>
+      {clinic.length > 0 && d.clinic_insurance_source && (
+        <Link href={d.clinic_insurance_source} target="_blank" rel="noopener nofollow" className="small muted-link">según su clínica</Link>
+      )}
+    </div>
+  )
+}
+
 // Repository-list style row.
 export default function DoctorRow({ d, now }: { d: PublicDoctor; now: Date }) {
   const f = freshness(d, now)
@@ -30,7 +55,8 @@ export default function DoctorRow({ d, now }: { d: PublicDoctor; now: Date }) {
       </div>
       <p className="row-spec">{d.specialty}</p>
       <p className="muted"><Where d={d} /></p>
-      <Topics items={[...d.languages, ...d.insurances]} />
+      <Topics items={d.languages} />
+      <InsuranceLabels d={d} />
       <p className="muted small status">
         {f.text}
         {d.regulator && (

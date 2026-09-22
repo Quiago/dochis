@@ -1,10 +1,11 @@
 import 'server-only'
 import { cache } from 'react'
 import { reader } from './db'
+import { withClinicInsurance } from './clinic-insurance'
 import type { PublicDoctor } from './directory'
 
 type Row = Omit<PublicDoctor, 'last_confirmed_at'> & { last_confirmed_at: Date | null }
-const toDoctor = (r: Row): PublicDoctor => ({ ...r, last_confirmed_at: r.last_confirmed_at?.toISOString() ?? null })
+const toDoctor = (r: Row): PublicDoctor => withClinicInsurance({ ...r, last_confirmed_at: r.last_confirmed_at?.toISOString() ?? null })
 
 // ponytail: loads the whole public directory (~350 rows); paginate in SQL if it grows past a few thousand.
 export async function getPublicDoctors(): Promise<PublicDoctor[]> {

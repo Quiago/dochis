@@ -20,6 +20,9 @@ export type PublicDoctor = {
   last_confirmed_at: string | null
   license_number: string | null
   insurance_url: string | null
+  // Insurers published by the clinic itself (lib/clinic-insurance.ts), kept apart from what the doctor declares.
+  clinic_insurers?: string[]
+  clinic_insurance_source?: string | null
 }
 
 // Official public search per regulator: patients check the declared licence themselves (the registries use CAPTCHAs).
@@ -29,7 +32,7 @@ export const REGISTRY: Record<Regulator, string> = {
   MOHAP: 'https://smartforms.moh.gov.ae:83/ServicesProd/Pages/LicensedMedicalProfessionals.aspx?lang=en',
 }
 
-export type Filters = { q?: string; esp?: string; emirato?: string; seguro?: string; idioma?: string }
+export type Filters = { q?: string; esp?: string; emirato?: string; seguro?: string; idioma?: string; estado?: string }
 
 // Monthly confirmation: "pendiente" after a month plus a few days of grace, hidden after three months.
 export const STALE_DAYS = 35
@@ -38,15 +41,18 @@ const DAY = 86_400_000
 
 export const normalize = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
-export function filterDoctors(docs: PublicDoctor[], f: Filters): PublicDoctor[] {
+const insurersOf = (d: PublicDoctor) => [...d.insurances, ...(d.clinic_insurers ?? [])]
+
+export function filterDoctors(docs: PublicDoctor[], f: Filters, now = new Date()): PublicDoctor[] {
   const q = normalize(f.q?.trim() ?? '')
   return docs.filter(
     (d) =>
       (!q || normalize(`${d.full_name} ${d.specialty} ${d.clinic} ${d.area ?? ''}`).includes(q)) &&
       (!f.esp || d.specialty === f.esp) &&
       (!f.emirato || d.emirate === f.emirato) &&
-      (!f.seguro || d.insurances.includes(f.seguro)) &&
-      (!f.idioma || d.languages.includes(f.idioma)),
+      (!f.seguro || insurersOf(d).includes(f.seguro)) &&
+      (!f.idioma || d.languages.includes(f.idioma)) &&
+      (!f.estado || freshness(d, now).label === f.estado),
   )
 }
 
@@ -102,11 +108,15 @@ export function initials(name: string): string {
 
 const uniqSorted = (vals: string[]) => [...new Set(vals)].sort((a, b) => a.localeCompare(b, 'es'))
 
-export function facets(docs: PublicDoctor[]) {
+const STATES = ['Confirmado', 'Pendiente', 'Sin confirmar']
+
+export function facets(docs: PublicDoctor[], now = new Date()) {
+  const present = new Set(docs.map((d) => freshness(d, now).label))
   return {
+    estado: STATES.filter((s) => present.has(s as Freshness['label'])),
     esp: uniqSorted(docs.map((d) => d.specialty)),
     emirato: uniqSorted(docs.map((d) => d.emirate)),
-    seguro: uniqSorted(docs.flatMap((d) => d.insurances)),
+    seguro: uniqSorted(docs.flatMap(insurersOf)),
     idioma: uniqSorted(docs.flatMap((d) => d.languages)),
   }
 }
@@ -143,7 +153,7 @@ export function confirmationMonths(dates: string[], now = new Date(), months = 1
   })
 }
 
-export const FILTER_KEYS = ['q', 'esp', 'emirato', 'seguro', 'idioma'] as const
+export const FILTER_KEYS = ['q', 'esp', 'emirato', 'seguro', 'idioma', 'estado'] as const
 
 // Reads ?q=&esp=&emirato=&seguro=&idioma= ignoring unknown or repeated params.
 export function parseFilters(params: Record<string, string | string[] | undefined>): Filters {

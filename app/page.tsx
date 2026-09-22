@@ -19,6 +19,7 @@ const MENUS: { key: Exclude<keyof Filters, 'q'>; all: string }[] = [
   { key: 'emirato', all: 'Todos los emiratos' },
   { key: 'seguro', all: 'Cualquier seguro' },
   { key: 'idioma', all: 'Cualquier idioma' },
+  { key: 'estado', all: 'Cualquier estado' },
 ]
 
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {

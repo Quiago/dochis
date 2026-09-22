@@ -135,3 +135,41 @@ describe('columna lateral y cifras', () => {
     expect(directoryStats(docs, NOW)).toEqual({ doctors: 3, specialties: 2, confirmedThisRound: 1 })
   })
 })
+
+import { clinicInsuranceFor, withClinicInsurance, type ClinicInsurance } from '@/lib/clinic-insurance'
+
+describe('filtro por estado', () => {
+  const docs = [
+    doc({ id: 'c', last_confirmed_at: daysAgo(5) }),
+    doc({ id: 'p', last_confirmed_at: daysAgo(50) }),
+    doc({ id: 'u', status: 'unclaimed', last_confirmed_at: null }),
+  ]
+  it('filtra por la etiqueta que se ve (Confirmado, Pendiente, Sin confirmar)', () => {
+    expect(filterDoctors(docs, { estado: 'Confirmado' }, NOW).map((d) => d.id)).toEqual(['c'])
+    expect(filterDoctors(docs, { estado: 'Pendiente' }, NOW).map((d) => d.id)).toEqual(['p'])
+    expect(filterDoctors(docs, { estado: 'Sin confirmar' }, NOW).map((d) => d.id)).toEqual(['u'])
+  })
+  it('las opciones del filtro salen en ese orden fijo y solo las que existen', () => {
+    expect(facets(docs, NOW).estado).toEqual(['Confirmado', 'Pendiente', 'Sin confirmar'])
+    expect(facets([docs[2]], NOW).estado).toEqual(['Sin confirmar'])
+  })
+})
+
+describe('seguros según la web de la clínica', () => {
+  const LIST: ClinicInsurance[] = [
+    { clinic: 'Mediclinic', match: ['mediclinic'], insurers: ['Daman', 'AXA / GIG Gulf', 'Bupa'], networks_note: '', source_url: 'https://www.mediclinic.ae/x', checked: '2026-09-22', confidence: 'high' },
+    { clinic: 'Clínica sin lista', match: ['sin lista'], insurers: [], networks_note: '', source_url: '', checked: '2026-09-22', confidence: 'low' },
+  ]
+  it('encuentra la clínica por palabras clave, sin tildes ni mayúsculas', () => {
+    expect(clinicInsuranceFor('MEDICLINIC Parkview Hospital', LIST)?.clinic).toBe('Mediclinic')
+    expect(clinicInsuranceFor('Otra clínica', LIST)).toBeNull()
+    expect(clinicInsuranceFor('Clínica Sin Lista', LIST)).toBeNull()  // no insurers → nothing to show
+  })
+  it('añade las aseguradoras de la clínica sin mezclarlas con las declaradas, y el filtro usa ambas', () => {
+    const d = withClinicInsurance(doc({ id: 'm', clinic: 'Mediclinic City Hospital', insurances: ['Cigna'] }), LIST)
+    expect(d.insurances).toEqual(['Cigna'])
+    expect(d.clinic_insurers).toEqual(['Daman', 'AXA / GIG Gulf', 'Bupa'])
+    expect(filterDoctors([d], { seguro: 'Bupa' }).map((x) => x.id)).toEqual(['m'])
+    expect(facets([d]).seguro).toEqual(['AXA / GIG Gulf', 'Bupa', 'Cigna', 'Daman'])
+  })
+})

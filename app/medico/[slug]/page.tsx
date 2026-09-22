@@ -5,7 +5,7 @@ import { ArrowLeftIcon, LocationIcon, OrganizationIcon } from '@primer/octicons-
 import ReportButton from '@/components/ReportButton'
 import StatusLabel from '@/components/StatusLabel'
 import Topics from '@/components/Topics'
-import { WhatsAppButton, Where } from '@/components/DoctorRow'
+import { InsuranceLabels, WhatsAppButton, Where } from '@/components/DoctorRow'
 import { getDoctorBySlug } from '@/lib/doctors'
 import { confirmationMonths, freshness, initials, REGISTRY } from '@/lib/directory'
 
@@ -75,11 +75,11 @@ export default async function DoctorPage({ params }: Props) {
             </div>
           </div>
 
-          {(d.insurances.length > 0 || d.insurance_url) && (
+          {(d.insurances.length > 0 || d.insurance_url || (d.clinic_insurers ?? []).length > 0) && (
             <div className="box">
               <div className="box-header">Seguros</div>
               <div className="box-body">
-                <Topics items={d.insurances} />
+                <InsuranceLabels d={d} all />
                 <p className="muted small">
                   La cobertura depende de tu <strong>plan y red</strong>, no solo de la aseguradora: una clínica puede aceptar
                   Daman Enhanced pero no Daman Basic. Mira el nombre de la red en tu tarjeta y compruébalo antes de la cita.
