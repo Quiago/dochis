@@ -42,7 +42,7 @@ export default async function DoctorPage({ params }: Props) {
       <div className="profile">
         <aside className="profile-side">
           <Avatar d={d} size="large" />
-          <Heading as="h1" className="profile-name">{d.full_name}</Heading>
+          <Heading as="h1" className="profile-name">{d.full_name} {f.kind === 'confirmed' && <StatusLabel f={f} size={24} />}</Heading>
           <p className="row-spec">{d.specialty}</p>
           <ul className="facts muted">
             <li><OrganizationIcon /> {d.clinic}</li>

@@ -21,7 +21,7 @@ describe('DoctorRow', () => {
   it('muestra nombre enlazado al perfil, estado, topics y licencia', () => {
     row({})
     expect(screen.getByRole('link', { name: 'Dra. Lucía' }).getAttribute('href')).toBe('/medico/dra-lucia')
-    expect(screen.getByText('Confirmado')).toBeTruthy()
+    expect(screen.getByRole('img', { name: 'Confirmado' })).toBeTruthy()
     expect(screen.getByText('Daman')).toBeTruthy()
     expect(screen.getByText(/Licencia DHA/)).toBeTruthy()
   })

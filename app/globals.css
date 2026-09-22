@@ -44,6 +44,10 @@ p { margin: 0 0 var(--base-size-8); }
 .list { list-style: none; margin: var(--base-size-8) 0 0; padding: 0; border-top: var(--borderWidth-thin) solid var(--borderColor-muted); }
 .list.empty { padding: var(--base-size-40) var(--base-size-16); text-align: center; }
 .row { padding: var(--base-size-24) 0; border-bottom: var(--borderWidth-thin) solid var(--borderColor-muted); }
+/* Photo floats in the empty right side of the row, so the text column keeps its alignment. */
+.row-photo { float: right; margin-left: var(--base-size-16); }
+.row::after { content: ""; display: block; clear: both; }
+.verified-badge { color: var(--fgColor-accent); flex: 0 0 auto; vertical-align: text-bottom; }
 .row-head { display: flex; align-items: center; gap: var(--base-size-8); flex-wrap: wrap; margin-bottom: var(--base-size-4); }
 .row-name { font-size: var(--text-title-size-small); font-weight: var(--base-text-weight-semibold); }
 .row-spec { color: var(--fgColor-default); font-weight: var(--base-text-weight-semibold); }
@@ -165,6 +169,8 @@ p { margin: 0 0 var(--base-size-8); }
 /* Insurers published by the clinic (not declared by the doctor): same colour, dashed border. */
 .from-clinic { border-style: dashed; }
 .avatar.avatar-small { width: 32px; height: 32px; font-size: 12px; }
+.avatar.avatar-row { width: 112px; height: 112px; font-size: 32px; }
+@media (max-width: 767px) { .avatar.avatar-row { width: 64px; height: 64px; font-size: 20px; } }
 .avatar.avatar-medium { width: 64px; height: 64px; font-size: 20px; }
 .photo-input { display: flex; gap: var(--base-size-16); align-items: center; }
 .photo-input input[type=file] { max-width: 100%; font-size: var(--text-body-size-small); }

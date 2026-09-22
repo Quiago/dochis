@@ -54,8 +54,8 @@ export default function DoctorRow({ d, now }: { d: PublicDoctor; now: Date }) {
   const unclaimed = f.kind === 'unclaimed'
   return (
     <li className="row">
+      <Link href={`/medico/${d.slug}`} className="row-photo" tabIndex={-1} aria-hidden="true"><Avatar d={d} size="row" /></Link>
       <div className="row-head">
-        <Avatar d={d} size="small" />
         <Link href={`/medico/${d.slug}`} className="row-name">{d.full_name}</Link>
         <StatusLabel f={f} />
       </div>

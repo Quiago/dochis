@@ -83,10 +83,11 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 `prototype.html` es el prototipo aprobado para **flujos, contenido y textos** (búsqueda, filtros, orden aleatorio, estado de frescura, login por WhatsApp, reportes y alta). **No copiar su estilo visual**: la interfaz sigue el estilo de GitHub con Primer. 
 
 ## Diseño (traducción de GitHub al directorio)
+- En cada fila del listado la foto (o las iniciales) va **grande y a la derecha** (112 px; 64 px en móvil), en el espacio libre del contenedor, sin desplazar el texto.
 - Home = dashboard de GitHub: menú lateral (hamburguesa) en la cabecera; columna izquierda con especialidades y emiratos (con conteo, orden alfabético); centro con buscador, filtros (ActionMenu) y la lista estilo repositorios; columna derecha con "¿Eres médico?" (botón del canal activo), "Cómo funciona" y cifras. Nunca "destacados" ni "recién confirmados" (principio 4). Textos sin canal fijo: "confirma sus datos una vez al mes".
 - Filtros: especialidad, emirato, seguro **e idioma** (principio 7). Viven en la URL (`?q=&esp=&emirato=&seguro=&idioma=`) para render en servidor y enlaces compartibles.
 - Especialidad, idiomas y seguros = Labels tipo "topics".
-- Estado = Label: verde "Confirmado", amarillo "Pendiente", gris "Sin confirmar"; Octicon de verificado junto al regulador.
+- Estado: **confirmado = insignia azul de verificado** (SVG propio en `components/StatusLabel.tsx`, estilo Instagram/Telegram) junto al nombre, con `aria-label` "Confirmado"; "Pendiente" (amarillo) y "Sin confirmar" (gris) siguen siendo Labels, porque son avisos que conviene leer. Octicon de verificado junto al regulador.
 - Estado efectivo: un perfil `verified` con más de 35 días sin confirmar se muestra como "Pendiente" aunque el cron aún no lo haya cambiado.
 - `/medico/[slug]`: layout de perfil de usuario (izquierda avatar de iniciales, datos y "Escribir por WhatsApp"; derecha detalles, seguros y gráfico de confirmaciones, una celda por mes).
 - `/admin`: como Issues/PRs, pestañas "Pendientes de verificar" / "Sin confirmar esta ronda" / "Reportes".
@@ -115,6 +116,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **2026-09-22:** Sin "Guardar contacto" mientras no haya WhatsApp. "Invitar a un colega" con el menú de compartir nativo (WhatsApp o copiar enlace en escritorio); no enviamos correos de invitación. Sin botón de cuenta en la cabecera para visitantes; no hay cuentas de pacientes ni valoraciones (principio 4).
 - **2026-09-22:** Seguros por clínica: la aceptación depende de aseguradora + plan + red y la publica cada clínica. `lib/clinic-insurance-data.ts` guarda lo investigado **solo de fuentes oficiales** (web/PDF de la clínica o página del gobierno) con la URL y la fecha; sin lista oficial → vacío; confianza baja → no se muestra; clínicas de "pago y reembolso" llevan esa etiqueta. En cada fila se ven aparte las aseguradoras declaradas por el médico y las de su clínica ("según su clínica", con enlace). Se actualiza por pull request.
 - **2026-09-22:** Filtro por estado (Confirmado, Pendiente, Sin confirmar).
+- **2026-09-22:** Foto grande a la derecha de cada fila e insignia azul de verificado en lugar de la etiqueta verde "Confirmado". La insignia se dibuja como SVG inline: sigue el tema claro/oscuro y no depende de una imagen con licencia de terceros.
 - **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).
 
 <!-- BEGIN:nextjs-agent-rules -->

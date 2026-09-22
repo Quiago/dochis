@@ -18,3 +18,4 @@ data/
 run/
 run.new/
 run.old/
+.playwright-mcp/
