@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Button, Heading } from '@primer/react'
-import { CheckCircleIcon, DownloadIcon } from '@primer/octicons-react'
+import { CheckCircleIcon } from '@primer/octicons-react'
+import IconBtn from '@/components/IconBtn'
 import InviteColleague from '@/components/InviteColleague'
 import { loginChannels } from '@/lib/session'
 
@@ -23,7 +24,7 @@ export default async function Listo({ searchParams }: { searchParams: Promise<{ 
       {loginChannels().includes('whatsapp') && (
         <div className="auth-box">
           <p><strong>Guarda el contacto del directorio</strong> para recibir los recordatorios. Cada mes te pediremos confirmar tus datos: solo tendrás que responder un mensaje.</p>
-          <Button as="a" href="/contacto.vcf" download leadingVisual={<DownloadIcon />} block>Guardar contacto</Button>
+          <IconBtn as="a" href="/contacto.vcf" download iconName="download" block>Guardar contacto</IconBtn>
         </div>
       )}
       <div className="auth-box">

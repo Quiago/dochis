@@ -59,6 +59,19 @@ describe('configuración', () => {
     expect(config.experimental?.serverActions?.allowedOrigins).toEqual(['dochis.pages.dev'])
   })
 
+  it('ningún Server Component pasa íconos como prop a componentes cliente (rompe en producción)', async () => {
+    const { readdirSync, statSync } = await import('node:fs')
+    const files = (dir: string): string[] => readdirSync(dir).flatMap((f) => {
+      const p = `${dir}/${f}`
+      return statSync(p).isDirectory() ? files(p) : /\.tsx$/.test(f) ? [p] : []
+    })
+    const offenders = [...files('app'), ...files('components')].filter((f) => {
+      const src = readFileSync(f, 'utf8')
+      return !/^['"]use client['"]/.test(src) && /(leading|trailing)Visual=\{</.test(src)
+    })
+    expect(offenders).toEqual([])
+  })
+
   it('Next.js genera salida standalone para la EC2', () => {
     expect(readFileSync('next.config.ts', 'utf8')).toMatch(/output:\s*'standalone'/)
   })

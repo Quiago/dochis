@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Button, Heading, Label, Link } from '@primer/react'
-import { AlertIcon, CheckIcon, ClockIcon, IssueOpenedIcon, LinkExternalIcon, XIcon } from '@primer/octicons-react'
+import { AlertIcon, ClockIcon, IssueOpenedIcon, LinkExternalIcon } from '@primer/octicons-react'
 import AdminTabs from '@/components/AdminTabs'
+import IconBtn from '@/components/IconBtn'
 import CopyButton from '@/components/CopyButton'
 import { REGISTRY, type Regulator } from '@/lib/directory'
 import { listReports, roundStart, unconfirmedThisRound } from '@/lib/freshness'
@@ -116,8 +117,8 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
                 </p>
               </div>
               <div className="issue-actions">
-                <form action={approve}><input type="hidden" name="id" value={r.id} /><Button type="submit" size="small" leadingVisual={<CheckIcon />}>Aprobar</Button></form>
-                <form action={reject}><input type="hidden" name="id" value={r.id} /><Button type="submit" size="small" variant="danger" leadingVisual={<XIcon />}>Rechazar</Button></form>
+                <form action={approve}><input type="hidden" name="id" value={r.id} /><IconBtn type="submit" size="small" iconName="check">Aprobar</IconBtn></form>
+                <form action={reject}><input type="hidden" name="id" value={r.id} /><IconBtn type="submit" size="small" variant="danger" iconName="x">Rechazar</IconBtn></form>
               </div>
             </li>
           ))}

@@ -1,7 +1,8 @@
 import { Button, Flash, Heading, Link } from '@primer/react'
-import { SyncIcon, XIcon } from '@primer/octicons-react'
+import { XIcon } from '@primer/octicons-react'
 import DoctorRow from '@/components/DoctorRow'
 import FilterMenus from '@/components/FilterMenus'
+import IconBtn from '@/components/IconBtn'
 import InviteColleague, { VISITOR_MESSAGE } from '@/components/InviteColleague'
 import SearchForm from '@/components/SearchForm'
 import { getPublicDoctors } from '@/lib/doctors'
@@ -74,7 +75,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         <div className="meta">
           <strong>{results.length === 1 ? '1 médico' : `${results.length} médicos`}</strong>
           {/* Plain reload: the server reshuffles on every request. */}
-          <Button as="a" href={filterHref(filters, 'q', filters.q)} size="small" variant="invisible" leadingVisual={<SyncIcon />}>Mezclar orden</Button>
+          <IconBtn as="a" href={filterHref(filters, 'q', filters.q)} size="small" variant="invisible" iconName="sync">Mezclar orden</IconBtn>
         </div>
         <p className="muted small">El orden es aleatorio en cada visita, para que no se recomiende siempre a los mismos.</p>
 
