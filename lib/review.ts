@@ -18,7 +18,8 @@ const PROMPT = `Eres el revisor automático de un directorio comunitario de méd
 Tu único trabajo es frenar abusos evidentes. Devuelve SOLO un JSON {"problemas": ["..."]} en español.
 Marca un problema SOLO si es evidente sin necesidad de comprobar nada fuera del perfil:
 - el nombre claramente no es de una persona (publicidad, frases, insultos, texto sin sentido);
-- la especialidad claramente no es sanitaria;
+- la especialidad claramente no es sanitaria (son sanitarias, entre otras: cualquier especialidad médica o quirúrgica, medicina
+  estética, odontología, fisioterapia, psicología, nutrición, podología, logopedia, enfermería, optometría y sus combinaciones);
 - hay spam, publicidad o texto ofensivo en cualquier campo;
 - hay enlaces, correos o teléfonos metidos en campos que no son de contacto.
 NO marques nunca: que no puedas comprobar si la persona, la clínica o la licencia existen; nombres o clínicas poco
