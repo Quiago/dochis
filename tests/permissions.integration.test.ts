@@ -75,6 +75,15 @@ describe.skipIf(!db)('permisos de base de datos', () => {
     for (const c of conf) expect(visible.has(c.doctor_id)).toBe(true)
   })
 
+  it('las fotos solo se leen de perfiles publicados', async () => {
+    const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3])
+    await writer`update doctors set photo = ${jpeg}, photo_type = 'image/jpeg', photo_updated_at = now() where slug in ('dra-lucia-marquez-ortega', 'dra-oculta-hidden')`
+    const rows = await reader`select slug, photo_type from public_photos`
+    expect(rows.map((r) => r.slug)).toEqual(['dra-lucia-marquez-ortega'])
+    const [pub] = await reader`select photo_version from public_doctors where slug = 'dra-lucia-marquez-ortega'`
+    expect(Number(pub.photo_version)).toBeGreaterThan(0)
+  })
+
   it('app_writer escribe datos pero no puede cambiar el esquema', async () => {
     expect(await code(writer`insert into reports (doctor_id, reporter_fingerprint, reason) select id, 'fp', 'Otro' from doctors limit 1`)).toBe('ok')
     expect(await code(writer`drop table reports`)).toBe('42501')

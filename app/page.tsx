@@ -9,6 +9,7 @@ import {
   directoryStats, facetCounts, facets, filterDoctors, filterHref, FILTER_KEYS, parseFilters, shuffle,
   type Filters, type PublicDoctor,
 } from '@/lib/directory'
+import { CATEGORY } from '@/lib/categories'
 import { loginChannels } from '@/lib/session'
 
 // Random order on every visit: never cache this page.
@@ -59,6 +60,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             <FilterMenus
               menus={MENUS.map(({ key, all: allLabel }) => ({
                 label: filters[key] ?? allLabel,
+                color: key in CATEGORY ? CATEGORY[key as keyof typeof CATEGORY].color : undefined,
                 items: [
                   { text: allLabel, href: filterHref(filters, key), active: !filters[key] },
                   ...options[key].map((v) => ({ text: v, href: filterHref(filters, key, v), active: filters[key] === v })),

@@ -1,8 +1,10 @@
 import { Button, Label, Link } from '@primer/react'
 import { ShieldCheckIcon } from '@primer/octicons-react'
 import ReportButton from './ReportButton'
+import Avatar from './Avatar'
 import StatusLabel from './StatusLabel'
 import Topics from './Topics'
+import { CATEGORY } from '@/lib/categories'
 import { freshness, REGISTRY, waLink, type PublicDoctor } from '@/lib/directory'
 
 export function WhatsAppButton({ d, block }: { d: PublicDoctor; block?: boolean }) {
@@ -35,7 +37,7 @@ export function InsuranceLabels({ d, all = false }: { d: PublicDoctor; all?: boo
           <li><Label variant="attention" title="La clínica no factura al seguro: pagas y luego reclamas a tu aseguradora">Pago y reembolso</Label></li>
         )}
         {shown.map(({ i, own }) => (
-          <li key={i}><Label variant={own ? 'accent' : 'secondary'} title={own ? 'Declarado por el médico' : 'Según la web de la clínica'}>{i}</Label></li>
+          <li key={i}><Label variant={CATEGORY.seguro.variant} className={own ? undefined : 'from-clinic'} title={own ? 'Declarado por el médico' : 'Según la web de la clínica'}>{i}</Label></li>
         ))}
         {items.length > shown.length && <li className="muted small">+{items.length - shown.length} más</li>}
       </ul>
@@ -53,12 +55,16 @@ export default function DoctorRow({ d, now }: { d: PublicDoctor; now: Date }) {
   return (
     <li className="row">
       <div className="row-head">
+        <Avatar d={d} size="small" />
         <Link href={`/medico/${d.slug}`} className="row-name">{d.full_name}</Link>
         <StatusLabel f={f} />
       </div>
-      <p className="row-spec">{d.specialty}</p>
-      <p className="muted"><Where d={d} /></p>
-      <Topics items={d.languages} />
+      <ul className="topics">
+        <li><Label variant={CATEGORY.esp.variant}>{d.specialty}</Label></li>
+        <li><Label variant={CATEGORY.emirato.variant}>{d.emirate}</Label></li>
+      </ul>
+      <p className="muted">{d.clinic}{d.area ? `, ${d.area}` : ''}</p>
+      <Topics items={d.languages} kind="idioma" />
       <InsuranceLabels d={d} />
       <p className="muted small status">
         {f.text}

@@ -4,14 +4,15 @@ import { reader } from './db'
 import { withClinicInsurance } from './clinic-insurance'
 import type { PublicDoctor } from './directory'
 
-type Row = Omit<PublicDoctor, 'last_confirmed_at'> & { last_confirmed_at: Date | null }
-const toDoctor = (r: Row): PublicDoctor => withClinicInsurance({ ...r, last_confirmed_at: r.last_confirmed_at?.toISOString() ?? null })
+type Row = Omit<PublicDoctor, 'last_confirmed_at' | 'photo_version'> & { last_confirmed_at: Date | null; photo_version: string | null }
+const toDoctor = (r: Row): PublicDoctor =>
+  withClinicInsurance({ ...r, last_confirmed_at: r.last_confirmed_at?.toISOString() ?? null, photo_version: r.photo_version ? Number(r.photo_version) : null })
 
 // ponytail: loads the whole public directory (~350 rows); paginate in SQL if it grows past a few thousand.
 export async function getPublicDoctors(): Promise<PublicDoctor[]> {
   const rows = await reader()<Row[]>`
     select id, slug, full_name, specialty, clinic, area, emirate, languages, insurances,
-           regulator, public_whatsapp, status, last_confirmed_at, license_number, insurance_url
+           regulator, public_whatsapp, status, last_confirmed_at, license_number, insurance_url, photo_version
     from public_doctors`
   return rows.map(toDoctor)
 }
@@ -20,7 +21,7 @@ export async function getPublicDoctors(): Promise<PublicDoctor[]> {
 export const getDoctorBySlug = cache(async (slug: string) => {
   const [row] = await reader()<Row[]>`
     select id, slug, full_name, specialty, clinic, area, emirate, languages, insurances,
-           regulator, public_whatsapp, status, last_confirmed_at, license_number, insurance_url
+           regulator, public_whatsapp, status, last_confirmed_at, license_number, insurance_url, photo_version
     from public_doctors where slug = ${slug}`
   if (!row) return null
   const conf = await reader()<{ confirmed_at: Date }[]>`select confirmed_at from public_confirmations where doctor_id = ${row.id}`

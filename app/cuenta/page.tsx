@@ -45,7 +45,8 @@ export default async function Cuenta({ searchParams }: { searchParams: Promise<{
       {!own && target && <Flash className="auth-flash">Rellenamos lo que teníamos de la lista del grupo. Complétalo y guarda: se publicará como tu perfil.</Flash>}
       {!own && !target && <p className="muted">No encontramos un perfil con tu {session.phone ? 'número' : 'correo'}. Completa tus datos para aparecer en el directorio.</p>}
       <div className="auth-box">
-          <ProfileForm initial={initial} loginPhone={session.phone} submitLabel={own ? 'Guardar perfil' : 'Publicar perfil'} />
+          <ProfileForm initial={initial} loginPhone={session.phone} submitLabel={own ? 'Guardar perfil' : 'Publicar perfil'}
+            photo={own?.photo_updated_at && own.photo ? `/cuenta/foto?v=${new Date(own.photo_updated_at).getTime()}` : undefined} />
       </div>
       {own?.status === 'verified' && <p className="center small"><Link href={`/medico/${own.slug}`}>Ver mi perfil público</Link></p>}
 

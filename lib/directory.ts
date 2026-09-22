@@ -24,6 +24,7 @@ export type PublicDoctor = {
   clinic_insurers?: string[]
   clinic_insurance_source?: string | null
   clinic_reimbursement?: boolean
+  photo_version: number | null
 }
 
 // Official public search per regulator: patients check the declared licence themselves (the registries use CAPTCHAs).

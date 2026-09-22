@@ -3,6 +3,7 @@ import { useActionState } from 'react'
 import { Button, Checkbox, CheckboxGroup, Flash, FormControl, Select, TextInput } from '@primer/react'
 import { saveProfile, type FormState } from '@/app/cuenta/actions'
 import { COMMON_LANGUAGES, EMIRATES, REGULATOR_LABELS, REGULATORS } from '@/lib/profile'
+import PhotoInput from './PhotoInput'
 
 export type Initial = {
   full_name?: string; specialty?: string; clinic?: string; area?: string | null; emirate?: string
@@ -11,7 +12,7 @@ export type Initial = {
   insurance_url?: string | null
 }
 
-export default function ProfileForm({ initial, medico, loginPhone, submitLabel }: { initial: Initial; medico?: string; loginPhone?: string; submitLabel: string }) {
+export default function ProfileForm({ initial, medico, loginPhone, submitLabel, photo }: { initial: Initial; medico?: string; loginPhone?: string; submitLabel: string; photo?: string }) {
   const [state, action, pending] = useActionState<FormState, FormData>(saveProfile, {})
   const err = state.errors ?? {}
   const langs = initial.languages?.length ? initial.languages : ['Español']
@@ -30,6 +31,7 @@ export default function ProfileForm({ initial, medico, loginPhone, submitLabel }
       {medico && <input type="hidden" name="medico" value={medico} />}
       {Object.keys(err).length > 0 && <Flash variant="danger">Revisa los campos marcados.</Flash>}
 
+      <PhotoInput current={photo} error={err.photo} />
       {field('full_name', 'Nombre completo', { required: true, placeholder: 'Dra. Lucía Márquez' })}
       {field('specialty', 'Especialidad', { required: true, placeholder: 'Pediatría' })}
       {field('clinic', 'Clínica o centro', { required: true })}

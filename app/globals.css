@@ -34,7 +34,7 @@ p { margin: 0 0 var(--base-size-8); }
 .hero-title { font-size: var(--text-title-size-large); margin-bottom: var(--base-size-8); }
 
 .searchbar { position: sticky; top: 0; z-index: 1; background: var(--bgColor-default); padding: var(--base-size-8) 0; }
-.filters { display: flex; gap: var(--base-size-8); overflow-x: auto; padding-top: var(--base-size-8); align-items: center; scrollbar-width: none; }
+.filters { display: flex; flex-wrap: wrap; gap: var(--base-size-8); padding-top: var(--base-size-8); align-items: center; scrollbar-width: none; }
 .filters > * { flex: 0 0 auto; }
 .clear { display: inline-flex; align-items: center; gap: var(--base-size-4); font-size: var(--text-body-size-small); }
 
@@ -55,7 +55,7 @@ p { margin: 0 0 var(--base-size-8); }
 
 /* User-profile style. */
 .profile { display: grid; gap: var(--base-size-24); }
-.avatar { width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center; font-size: 40px;
+.avatar { width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center; font-size: 40px; object-fit: cover; flex: 0 0 auto;
   font-weight: var(--base-text-weight-semibold); color: var(--fgColor-accent); background: var(--bgColor-accent-muted);
   border: var(--borderWidth-thin) solid var(--borderColor-default); }
 .profile-name { font-size: var(--text-title-size-medium); margin: var(--base-size-16) 0 var(--base-size-4); }
@@ -161,3 +161,10 @@ p { margin: 0 0 var(--base-size-8); }
 .issues { margin: var(--base-size-4) 0; padding-left: var(--base-size-20); color: var(--fgColor-attention); }
 .insurers { display: flex; flex-wrap: wrap; align-items: center; gap: var(--base-size-4) var(--base-size-8); margin: var(--base-size-4) 0; }
 .insurers .topics { margin: 0; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+/* Insurers published by the clinic (not declared by the doctor): same colour, dashed border. */
+.from-clinic { border-style: dashed; }
+.avatar.avatar-small { width: 32px; height: 32px; font-size: 12px; }
+.avatar.avatar-medium { width: 64px; height: 64px; font-size: 20px; }
+.photo-input { display: flex; gap: var(--base-size-16); align-items: center; }
+.photo-input input[type=file] { max-width: 100%; font-size: var(--text-body-size-small); }

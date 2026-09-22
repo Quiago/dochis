@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { writer } from '@/lib/db'
 import { findDoctorByIdentity, saveOwnProfile, signUp } from '@/lib/onboarding'
 import { parseProfileForm } from '@/lib/profile'
+import { photoIssue, setPhoto, validatePhoto } from '@/lib/photo'
 import { reviewProfile } from '@/lib/review'
 import { getSession } from '@/lib/session'
 
@@ -17,11 +18,32 @@ export async function saveProfile(_prev: FormState, fd: FormData): Promise<FormS
   const { data, errors } = parseProfileForm(fd)
   if (!data) return { errors }
 
+  // Optional photo: validated by its bytes and reviewed before anything is saved.
+  const file = fd.get('photo')
+  let photo: { bytes: Uint8Array; type: 'image/jpeg' | 'image/webp' } | null = null
+  if (file instanceof File && file.size > 0) {
+    const bytes = new Uint8Array(await file.arrayBuffer())
+    const v = validatePhoto(bytes)
+    if ('error' in v) return { errors: { photo: v.error } }
+    const issue = await photoIssue(bytes, v.type)
+    if (issue) return { errors: { photo: `No podemos usar esa foto: ${issue}` } }
+    photo = { bytes, type: v.type }
+  }
+
   const sql = writer()
   const own = await findDoctorByIdentity(sql, identity)
   const review = await reviewProfile(sql, data, { excludeId: own?.id })
-  const estado = own
-    ? await saveOwnProfile(sql, identity, data, review)
-    : (await signUp(sql, identity, data, review)).published ? 'published' : 'pending'
+  let estado: string
+  let doctorId: string
+  if (own) {
+    estado = await saveOwnProfile(sql, identity, data, review)
+    doctorId = own.id
+  } else {
+    const created = await signUp(sql, identity, data, review)
+    estado = created.published ? 'published' : 'pending'
+    doctorId = created.id
+  }
+  if (photo) await setPhoto(sql, doctorId, photo.bytes, photo.type)
+  else if (fd.get('remove_photo')) await setPhoto(sql, doctorId, null, null)
   redirect(`/cuenta/listo?estado=${estado}`)
 }

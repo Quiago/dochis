@@ -2,12 +2,13 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Button, Heading, Link } from '@primer/react'
 import { ArrowLeftIcon, LocationIcon, OrganizationIcon } from '@primer/octicons-react'
+import Avatar from '@/components/Avatar'
 import ReportButton from '@/components/ReportButton'
 import StatusLabel from '@/components/StatusLabel'
 import Topics from '@/components/Topics'
 import { InsuranceLabels, WhatsAppButton, Where } from '@/components/DoctorRow'
 import { getDoctorBySlug } from '@/lib/doctors'
-import { confirmationMonths, freshness, initials, REGISTRY } from '@/lib/directory'
+import { confirmationMonths, freshness, REGISTRY } from '@/lib/directory'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,14 +41,14 @@ export default async function DoctorPage({ params }: Props) {
       <p><Link href="/" className="small"><ArrowLeftIcon /> Volver al directorio</Link></p>
       <div className="profile">
         <aside className="profile-side">
-          <div className="avatar" aria-hidden="true">{initials(d.full_name)}</div>
+          <Avatar d={d} size="large" />
           <Heading as="h1" className="profile-name">{d.full_name}</Heading>
           <p className="row-spec">{d.specialty}</p>
           <ul className="facts muted">
             <li><OrganizationIcon /> {d.clinic}</li>
             <li><LocationIcon /> {d.area ? `${d.area}, ` : ''}{d.emirate}</li>
           </ul>
-          <Topics items={d.languages} />
+          <Topics items={d.languages} kind="idioma" />
           <div className="profile-actions">
             {f.kind === 'unclaimed' ? (
               <Button as="a" href={`/entrar?medico=${d.slug}`} block>¿Eres tú? Reclama tu perfil</Button>
