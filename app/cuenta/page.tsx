@@ -41,6 +41,17 @@ export default async function Cuenta({ searchParams }: { searchParams: Promise<{
         {reviewer && <p className="center small"><Link href="/admin">Panel de revisión</Link></p>}
       </div>
 
+      {reviewer && !own ? (
+        <>
+          <Flash className="auth-flash">Eres {reviewer.role === 'admin' ? 'administrador' : 'embajador'}: no necesitas un perfil de médico. Tu panel está en <Link href="/admin">Panel de revisión</Link>.</Flash>
+          {/* Folded so an admin never republishes themselves by accident. */}
+          <details className="auth-box">
+            <summary>¿También eres médico? Crea tu perfil</summary>
+            <ProfileForm initial={initial} loginPhone={session.phone} submitLabel="Publicar perfil" />
+          </details>
+        </>
+      ) : (
+        <>
       {note && <Flash variant={note.variant} className="auth-flash">{note.text}</Flash>}
       {!own && target && <Flash className="auth-flash">Rellenamos lo que teníamos de la lista del grupo. Complétalo y guarda: se publicará como tu perfil.</Flash>}
       {!own && !target && <p className="muted">No encontramos un perfil con tu {session.phone ? 'número' : 'correo'}. Completa tus datos para aparecer en el directorio.</p>}
@@ -50,6 +61,8 @@ export default async function Cuenta({ searchParams }: { searchParams: Promise<{
       </div>
       {own?.status === 'verified' && <p className="center small"><Link href={`/medico/${own.slug}`}>Ver mi perfil público</Link></p>}
 
+        </>
+      )}
       <div className="auth-box">
         <p><strong>Invita a un colega</strong> que atienda en español.</p>
         <InviteColleague url={`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/entrar`} />
