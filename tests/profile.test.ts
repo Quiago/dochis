@@ -44,6 +44,14 @@ describe('formulario de perfil', () => {
     expect(parseProfileForm(form({ public_whatsapp: '123', show_whatsapp: 'on' })).errors?.public_whatsapp).toBeTruthy()
   })
 
+  it('enlace opcional a la lista de seguros de la clínica: solo https', () => {
+    expect(parseProfileForm(form()).data?.insurance_url).toBeNull()
+    expect(parseProfileForm(form({ insurance_url: ' https://www.mediclinic.ae/redes.pdf ' })).data?.insurance_url).toBe('https://www.mediclinic.ae/redes.pdf')
+    expect(parseProfileForm(form({ insurance_url: 'http://inseguro.com' })).errors?.insurance_url).toMatch(/https/)
+    expect(parseProfileForm(form({ insurance_url: 'javascript:alert(1)' })).errors?.insurance_url).toBeTruthy()
+    expect(parseProfileForm(form({ insurance_url: 'https://x.com/' + 'a'.repeat(400) })).errors?.insurance_url).toBeTruthy()
+  })
+
   it('limita longitudes para evitar abusos', () => {
     expect(parseProfileForm(form({ full_name: 'x'.repeat(200) })).errors?.full_name).toBeTruthy()
     expect(parseProfileForm(form({ insurances: Array.from({ length: 40 }, (_, i) => `Seguro ${i}`).join(',') })).errors?.insurances).toBeTruthy()

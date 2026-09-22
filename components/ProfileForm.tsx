@@ -8,6 +8,7 @@ export type Initial = {
   full_name?: string; specialty?: string; clinic?: string; area?: string | null; emirate?: string
   languages?: string[]; insurances?: string[]; regulator?: string | null; license_number?: string | null
   public_whatsapp?: string | null
+  insurance_url?: string | null
 }
 
 export default function ProfileForm({ initial, medico, loginPhone, submitLabel }: { initial: Initial; medico?: string; loginPhone?: string; submitLabel: string }) {
@@ -62,8 +63,15 @@ export default function ProfileForm({ initial, medico, loginPhone, submitLabel }
       <FormControl>
         <FormControl.Label>Seguros aceptados</FormControl.Label>
         <TextInput name="insurances" defaultValue={initial.insurances?.join(', ') ?? ''} placeholder="Daman, AXA, Thiqa…" block />
-        <FormControl.Caption>Separados por comas.</FormControl.Caption>
+        <FormControl.Caption>Separados por comas. Si sabes la red o el plan, inclúyelo: «Daman Enhanced», «NAS GN».</FormControl.Caption>
         {err.insurances && <FormControl.Validation variant="error">{err.insurances}</FormControl.Validation>}
+      </FormControl>
+
+      <FormControl>
+        <FormControl.Label>Lista de seguros de tu clínica (opcional)</FormControl.Label>
+        <TextInput name="insurance_url" type="url" inputMode="url" defaultValue={initial.insurance_url ?? ''} placeholder="https://…" block />
+        <FormControl.Caption>Muchas clínicas publican qué aseguradoras, planes y redes aceptan. Es la fuente más fiable para los pacientes.</FormControl.Caption>
+        {err.insurance_url && <FormControl.Validation variant="error">{err.insurance_url}</FormControl.Validation>}
       </FormControl>
 
       <FormControl required>

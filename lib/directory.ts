@@ -19,6 +19,7 @@ export type PublicDoctor = {
   status: PublicStatus
   last_confirmed_at: string | null
   license_number: string | null
+  insurance_url: string | null
 }
 
 // Official public search per regulator: patients check the declared licence themselves (the registries use CAPTCHAs).

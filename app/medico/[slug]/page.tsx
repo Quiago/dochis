@@ -75,10 +75,19 @@ export default async function DoctorPage({ params }: Props) {
             </div>
           </div>
 
-          {d.insurances.length > 0 && (
+          {(d.insurances.length > 0 || d.insurance_url) && (
             <div className="box">
-              <div className="box-header">Seguros aceptados</div>
-              <div className="box-body"><Topics items={d.insurances} /></div>
+              <div className="box-header">Seguros</div>
+              <div className="box-body">
+                <Topics items={d.insurances} />
+                <p className="muted small">
+                  La cobertura depende de tu <strong>plan y red</strong>, no solo de la aseguradora: una clínica puede aceptar
+                  Daman Enhanced pero no Daman Basic. Mira el nombre de la red en tu tarjeta y compruébalo antes de la cita.
+                </p>
+                {d.insurance_url && (
+                  <p><Button as="a" href={d.insurance_url} target="_blank" rel="noopener nofollow" size="small">Ver la lista de seguros de la clínica</Button></p>
+                )}
+              </div>
             </div>
           )}
 

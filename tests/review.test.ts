@@ -7,7 +7,7 @@ import { freshDatabase } from './pg'
 
 const data = (over: Partial<ProfileData> = {}): ProfileData => ({
   full_name: 'Dra. Nueva Pérez', specialty: 'Pediatría', clinic: 'Clínica Nueva', area: null, emirate: 'Dubái',
-  languages: ['Español'], insurances: [], regulator: 'DHA', license_number: '12345678', public_whatsapp: null, ...over,
+  languages: ['Español'], insurances: [], regulator: 'DHA', license_number: '12345678', public_whatsapp: null, insurance_url: null, ...over,
 })
 
 describe('formato de licencia', () => {

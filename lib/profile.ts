@@ -17,6 +17,7 @@ export type ProfileData = {
   regulator: (typeof REGULATORS)[number]
   license_number: string
   public_whatsapp: string | null
+  insurance_url: string | null
 }
 
 const MAX_TEXT = 120
@@ -59,8 +60,16 @@ export function parseProfileForm(fd: FormData): { data?: ProfileData; errors?: R
     if (!public_whatsapp) errors.public_whatsapp = 'Escribe el número completo con prefijo.'
   }
 
+  // Link to the clinic's official list of accepted insurers/plans/networks: the only reliable source.
+  let insurance_url: string | null = text(fd, 'insurance_url') || null
+  if (insurance_url) {
+    let ok = false
+    try { ok = new URL(insurance_url).protocol === 'https:' && insurance_url.length <= 300 } catch {}
+    if (!ok) { errors.insurance_url = 'Pega un enlace completo que empiece por https:// (máximo 300 caracteres).'; insurance_url = null }
+  }
+
   if (!fd.get('consent')) errors.consent = 'Para aparecer en el directorio tienes que aceptar que se publiquen tus datos profesionales.'
 
   if (Object.keys(errors).length) return { errors }
-  return { data: { full_name, specialty, clinic, area, emirate, languages, insurances, regulator, license_number, public_whatsapp } }
+  return { data: { full_name, specialty, clinic, area, emirate, languages, insurances, regulator, license_number, public_whatsapp, insurance_url } }
 }
