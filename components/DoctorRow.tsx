@@ -25,18 +25,21 @@ const MAX_INSURERS = 6
 export function InsuranceLabels({ d, all = false }: { d: PublicDoctor; all?: boolean }) {
   const clinic = (d.clinic_insurers ?? []).filter((i) => !d.insurances.includes(i))
   const items = [...d.insurances.map((i) => ({ i, own: true })), ...clinic.map((i) => ({ i, own: false }))]
-  if (!items.length) return null
+  if (!items.length && !d.clinic_reimbursement) return null
   const shown = all ? items : items.slice(0, MAX_INSURERS)
   return (
     <div className="insurers">
       <ShieldCheckIcon size={14} className="muted" aria-label="Seguros" />
       <ul className="topics">
+        {d.clinic_reimbursement && (
+          <li><Label variant="attention" title="La clínica no factura al seguro: pagas y luego reclamas a tu aseguradora">Pago y reembolso</Label></li>
+        )}
         {shown.map(({ i, own }) => (
           <li key={i}><Label variant={own ? 'accent' : 'secondary'} title={own ? 'Declarado por el médico' : 'Según la web de la clínica'}>{i}</Label></li>
         ))}
         {items.length > shown.length && <li className="muted small">+{items.length - shown.length} más</li>}
       </ul>
-      {clinic.length > 0 && d.clinic_insurance_source && (
+      {(clinic.length > 0 || d.clinic_reimbursement) && d.clinic_insurance_source && (
         <Link href={d.clinic_insurance_source} target="_blank" rel="noopener nofollow" className="small muted-link">según su clínica</Link>
       )}
     </div>

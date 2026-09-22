@@ -23,6 +23,7 @@ export type PublicDoctor = {
   // Insurers published by the clinic itself (lib/clinic-insurance.ts), kept apart from what the doctor declares.
   clinic_insurers?: string[]
   clinic_insurance_source?: string | null
+  clinic_reimbursement?: boolean
 }
 
 // Official public search per regulator: patients check the declared licence themselves (the registries use CAPTCHAs).

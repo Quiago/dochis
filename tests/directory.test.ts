@@ -165,10 +165,32 @@ describe('seguros según la web de la clínica', () => {
     expect(clinicInsuranceFor('Otra clínica', LIST)).toBeNull()
     expect(clinicInsuranceFor('Clínica Sin Lista', LIST)).toBeNull()  // no insurers → nothing to show
   })
+  it('compara por palabra completa y nunca muestra investigación de confianza baja', () => {
+    const L: ClinicInsurance[] = [
+      { ...LIST[0], clinic: 'NMC', match: ['nmc'] },
+      { ...LIST[0], clinic: 'Dudosa', match: ['dudosa'], confidence: 'low' },
+    ]
+    expect(clinicInsuranceFor('NMC Royal Khalifa', L)?.clinic).toBe('NMC')
+    expect(clinicInsuranceFor('Hnmcx Clinic', L)).toBeNull()
+    expect(clinicInsuranceFor('Clínica Dudosa', L)).toBeNull()
+  })
+  it('ordena las etiquetas con las aseguradoras más comunes primero', async () => {
+    const { byCommonFirst } = await import('@/lib/clinic-insurance')
+    expect(byCommonFirst(['Aafiya', 'ADNIC', 'Bupa', 'Daman', 'Zeta'])).toEqual(['Daman', 'Bupa', 'ADNIC', 'Aafiya', 'Zeta'])
+  })
+  it('con dos centros gana el primero mencionado; las de reembolso se muestran aunque no tengan lista', () => {
+    const L: ClinicInsurance[] = [
+      { ...LIST[0], clinic: 'Dubai London', match: ['dubai london'] },
+      { ...LIST[0], clinic: 'Harley', match: ['harley street'] },
+      { ...LIST[0], clinic: 'Roze', match: ['roze'], insurers: [], reimbursement_only: true },
+    ]
+    expect(clinicInsuranceFor('Harley Street Medical Center // Dubai London Hospital', L)?.clinic).toBe('Harley')
+    expect(withClinicInsurance(doc({ clinic: 'Dr Roze Biohealth Clinic' }), L)).toMatchObject({ clinic_insurers: [], clinic_reimbursement: true })
+  })
   it('añade las aseguradoras de la clínica sin mezclarlas con las declaradas, y el filtro usa ambas', () => {
     const d = withClinicInsurance(doc({ id: 'm', clinic: 'Mediclinic City Hospital', insurances: ['Cigna'] }), LIST)
     expect(d.insurances).toEqual(['Cigna'])
-    expect(d.clinic_insurers).toEqual(['Daman', 'AXA / GIG Gulf', 'Bupa'])
+    expect(d.clinic_insurers).toEqual(['Daman', 'AXA / GIG Gulf', 'Bupa'])  // common insurers first
     expect(filterDoctors([d], { seguro: 'Bupa' }).map((x) => x.id)).toEqual(['m'])
     expect(facets([d]).seguro).toEqual(['AXA / GIG Gulf', 'Bupa', 'Cigna', 'Daman'])
   })

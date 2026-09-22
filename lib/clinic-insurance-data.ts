@@ -1,4 +1,1970 @@
 import type { ClinicInsurance } from './clinic-insurance.ts'
 
-// Generated from research on official clinic websites (2026-09-22). Edit by pull request with the source URL.
-export const CLINIC_INSURANCE: ClinicInsurance[] = []
+// Researched 2026-09-22 from official sources only (clinic website/PDF or government health page). Entries without an
+// official list keep insurers: [] and are not shown; low-confidence entries are kept for review but never shown.
+// Edit by pull request with the source URL.
+export const CLINIC_INSURANCE: ClinicInsurance[] = [
+  {
+    "clinic": "Mediclinic City Hospital / Mediclinic Welcare Hospital / Mediclinic Dubai Mall",
+    "match": [
+      "mediclinic city hospital",
+      "mediclinic city",
+      "mediclinic welcare",
+      "welcare hospital",
+      "mediclinic dubai mall"
+    ],
+    "insurers": [
+      "Aafiya",
+      "ADNIC",
+      "Aetna",
+      "Al Ain Ahlia",
+      "Al Buhaira",
+      "Al Khazna",
+      "Almadallah",
+      "Amity",
+      "Allianz",
+      "AXA / GIG Gulf",
+      "AXA PPP Healthcare",
+      "Bupa",
+      "Cigna",
+      "Daman",
+      "Thiqa",
+      "Dubai Insurance",
+      "FMC Network",
+      "Globemed",
+      "Health 360",
+      "Inayah",
+      "MaxCare",
+      "MedNet",
+      "MetLife",
+      "NAS",
+      "Neuron",
+      "Enaya",
+      "William Russell",
+      "Emirates Insurance",
+      "Watania",
+      "NextCare",
+      "Saada",
+      "NGI (HealthNet)",
+      "Now Health",
+      "Sukoon (Oman Insurance)",
+      "Pentacare",
+      "Qatar Insurance",
+      "SAICO",
+      "Vidal Health",
+      "WAPMED",
+      "Whealth International",
+      "Mobility Saint Honore / European Benefits"
+    ],
+    "networks_note": "Tier-restricted. Daman: Exclusive 1/2, Comprehensive 1/2, Standard 1/2, Value 2, TC plans, SEHA Prime, ADNOC; Thiqa: NW UAE PVT, C1. AXA: Star Plus, Star, Diamond. NAS: CN, GN. NextCare: GN+, GN, SAADA. Almadallah: GN+, GN. MedNet: Standard, Standard Plus, Gold, Silver Premium. Sukoon: Premier/Premium, Comprehensive Plus, Comprehensive (with Welcare/Mediclinic). DubaiCare: N1/Exclusive N1, N2/Standard Plus N2. Neuron: only specific payer networks (Enaya Platinum, William Russell, Emirates Ins, Watania/Morgan Price, NGI, DEWA, Dubai World, etc.). Now Health: only cards marked 'Out-Patient Direct Billing'. Cigna: outpatient direct billing only for cards showing 'outpatient direct payment %'. Dubai Mall PDF adds: Al Buhaira Standard, AXA Diamond, DubaiCare N2 = inpatient only with GOP; assistance companies (Intl SOS, Europ Assistance, Seven Corners, etc.) only with Guarantee of Payment.",
+    "source_url": "https://www.mediclinic.ae/en/city-hospital/insurance.html ; https://www.mediclinic.ae/en/welcare-hospital/insurance.html ; https://www.mediclinic.ae/content/dam/mc-me-corporate/downloads/insurance/MCME-Dubai-Mall-Networks-Accepted.pdf",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Mediclinic Meadows",
+    "match": [
+      "mediclinic meadows"
+    ],
+    "insurers": [
+      "Aafiya",
+      "ADNIC",
+      "Aetna",
+      "Al Ain Ahlia",
+      "Al Buhaira",
+      "Al Khazna",
+      "Almadallah",
+      "Amity",
+      "Allianz",
+      "AXA / GIG Gulf",
+      "AXA PPP Healthcare",
+      "Bupa",
+      "Cigna",
+      "Daman",
+      "Thiqa",
+      "Dubai Insurance",
+      "E-Net TPA",
+      "FMC Network",
+      "Globemed",
+      "Health 360",
+      "Inayah",
+      "MedNet",
+      "MetLife",
+      "NAS",
+      "Neuron",
+      "Enaya",
+      "William Russell",
+      "Emirates Insurance",
+      "Watania",
+      "NextCare",
+      "Saada",
+      "NGI (HealthNet)",
+      "Now Health",
+      "Sukoon (Oman Insurance)",
+      "Pentacare",
+      "Qatar Insurance",
+      "SAICO",
+      "Vidal Health",
+      "WAPMED",
+      "Whealth International",
+      "Mobility Saint Honore / European Benefits"
+    ],
+    "networks_note": "Same tier rules as Mediclinic City/Welcare, plus: NAS EN, CN, GN; Aafiya Diamond, Elite; FMC Farid GN-1; Neuron also Salama and Zurich (Cigna) Comprehensive; E-Net Platinum/Gold/Diamond. Daman: Exclusive/Comprehensive/Standard 1-2, Value 2, TC plans; Thiqa NW UAE PVT, C1.",
+    "source_url": "https://www.mediclinic.ae/en/meadows/your-visit/insurance.html",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Mediclinic Parkview Hospital",
+    "match": [
+      "mediclinic parkview",
+      "parkview hospital"
+    ],
+    "insurers": [],
+    "networks_note": "Official insurance page says 'most insurance companies' and 'full list listed below' but no list is published on the page (checked HTML). Sister Dubai hospitals (City/Welcare) publish near-identical lists, but not confirmed for Parkview.",
+    "source_url": "https://www.mediclinic.ae/en/parkview-hospital/insurance.html",
+    "checked": "2026-09-22",
+    "confidence": "low"
+  },
+  {
+    "clinic": "Mediclinic Creek Harbour",
+    "match": [
+      "mediclinic creek harbour",
+      "creek harbour"
+    ],
+    "insurers": [],
+    "networks_note": "No facility-specific insurance page found; site links only to the corporate page, which lists no insurers.",
+    "source_url": "https://www.mediclinic.ae/en/corporate/health-insurance.html",
+    "checked": "2026-09-22",
+    "confidence": "low"
+  },
+  {
+    "clinic": "Cleveland Clinic Abu Dhabi",
+    "match": [
+      "cleveland clinic abu dhabi",
+      "cleveland clinic",
+      "ccad"
+    ],
+    "insurers": [
+      "Thiqa",
+      "Daman",
+      "Aafiya",
+      "ADNIC",
+      "Aetna",
+      "AXA / GIG Gulf",
+      "Dubai Insurance",
+      "Damana (SAICO)",
+      "FMC Network",
+      "GMMI",
+      "Inayah",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "Cigna",
+      "Enaya",
+      "Saada",
+      "NextCare",
+      "NGI (HealthNet)",
+      "Sukoon (Oman Insurance)",
+      "Bupa",
+      "Tricare / International SOS",
+      "Whealth International",
+      "Emirates Airline (employer plan)"
+    ],
+    "networks_note": "Thiqa: all UAE nationals covered. Daman: long plan list (Thiqa 1-4, Comprehensive 2/3, Premier, SEHA, Enhanced-type Al Aman etc.), check with Daman. AXA: Star Plus, AXA-1, AXA-2. ADNIC: Platinum, Gold Plus; lower tiers COE only. Dubai Insurance: N1 only; N2-N5 only for Centre-of-Excellence/specialised referrals. NAS: specific insurer contracts (mostly CN/EN). Sukoon/Bupa: Premium, Premium Plus CCAD. NGI: HN Exclusive, HN Premiere. Cigna, Enaya, Saada via Neuron. Routine dental not direct-billed.",
+    "source_url": "https://www.clevelandclinicabudhabi.ae/en/patients-and-visitors/financial-advice-and-planning/our-health-insurance-partners",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "American Hospital Dubai",
+    "match": [
+      "american hospital dubai",
+      "american hospital",
+      "ahdubai"
+    ],
+    "insurers": [
+      "Aafiya",
+      "ADNIC",
+      "Aetna",
+      "Al Buhaira",
+      "Almadallah",
+      "Allianz",
+      "Bupa",
+      "Cigna",
+      "Daman",
+      "Dubai Insurance",
+      "AXA / GIG Gulf",
+      "Globemed",
+      "Health 360",
+      "Inayah",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "NGI (HealthNet)",
+      "Now Health",
+      "AXA PPP Healthcare",
+      "Qatar Insurance",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Vidal Health",
+      "Whealth International",
+      "FMC Network",
+      "Emirates Airline (employer plan)",
+      "International SOS",
+      "Global Benefits Group",
+      "Healix International",
+      "HTH Worldwide / GeoBlue",
+      "Seven Corners",
+      "European Benefits Admin"
+    ],
+    "networks_note": "Site states: now accepting NEXTCARE (General Network/Standard Network), NAS (General Network), NEURON (General Network Plus). Daman detail page lists NW1 card type (plus 'Royal'). Branch-specific acceptance shown per insurer detail page.",
+    "source_url": "https://www.ahdubai.com/insurance-partners",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "King's College Hospital Dubai",
+    "match": [
+      "king's college hospital",
+      "kings college hospital",
+      "king's college",
+      "kch dubai"
+    ],
+    "insurers": [
+      "ADNIC",
+      "Aetna",
+      "Almadallah",
+      "AXA / GIG Gulf",
+      "Daman",
+      "Dubai Insurance",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "NGI (HealthNet)",
+      "Now Health",
+      "Sukoon (Oman Insurance)",
+      "Bupa",
+      "SAICO",
+      "Cigna",
+      "Inayah",
+      "Al Buhaira",
+      "FMC Network",
+      "Globemed"
+    ],
+    "networks_note": "Official page lists insurers only (per-insurer 'View Details' links did not show tiers). Sukoon listed as 'Sukoon / Bupa'; AXA and GIG listed separately. Reimbursement depends on policy terms; call 04 378 9555.",
+    "source_url": "https://kingscollegehospitaldubai.com/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "NMC Healthcare (NMC Royal Hospital Khalifa City; NMC Marina Medical Centre; NMC Royal Medical Centre The Palm)",
+    "match": [
+      "nmc",
+      "nmc royal",
+      "nmc royal hospital",
+      "nmc marina",
+      "nmc royal medical centre"
+    ],
+    "insurers": [
+      "Aafiya",
+      "ADNIC",
+      "Al Buhaira",
+      "Almadallah",
+      "Al Sagr Insurance",
+      "Allianz",
+      "Aspire",
+      "Bupa",
+      "Cigna",
+      "Daman",
+      "Thiqa",
+      "Dubai Insurance",
+      "FMC Network",
+      "AXA / GIG Gulf",
+      "Globemed",
+      "Healix",
+      "Henner",
+      "Inayah",
+      "International SOS",
+      "Lifeline TPA",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "NGI (HealthNet)",
+      "Now Health",
+      "AXA PPP Healthcare",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Emirates Airline (employer plan)",
+      "Vanbreda",
+      "Whealth International"
+    ],
+    "networks_note": "Group-wide list on NMC site; the page has a branch filter but it returned the same list for Khalifa City, Marina and The Palm, so branch-level differences are not verified. No network tiers published. Also lists 'Daman Basic Insurance'.",
+    "source_url": "https://nmc.ae/en/insurance-partners",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Burjeel Hospital Abu Dhabi",
+    "match": [
+      "burjeel hospital abu dhabi",
+      "burjeel hospital",
+      "burjeel abu dhabi"
+    ],
+    "insurers": [
+      "Sukoon (Oman Insurance)",
+      "SAICO",
+      "Al Khazna",
+      "Amity",
+      "Aetna",
+      "MetLife",
+      "ADNIC",
+      "Almadallah",
+      "Daman",
+      "Thiqa",
+      "WAPMED",
+      "NGI (HealthNet)",
+      "MSH International",
+      "Pentacare",
+      "Dubai Insurance",
+      "Globemed",
+      "Inayah",
+      "NextCare",
+      "MedNet",
+      "NAS",
+      "FMC Network",
+      "Neuron",
+      "Whealth International",
+      "Global Net TPA",
+      "Vidal Health",
+      "Aafiya",
+      "MaxCare",
+      "AXA / GIG Gulf",
+      "IRIS TPA",
+      "E-Net TPA"
+    ],
+    "networks_note": "No network tiers published.",
+    "source_url": "https://burjeel.com/abu-dhabi/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Burjeel Medical City",
+    "match": [
+      "burjeel medical city",
+      "bmc abu dhabi"
+    ],
+    "insurers": [
+      "Globemed",
+      "Vidal Health",
+      "Aafiya",
+      "Sukoon (Oman Insurance)",
+      "NextCare",
+      "Neuron",
+      "NAS",
+      "MSH International",
+      "Inayah",
+      "FMC Network",
+      "Dubai Insurance",
+      "Daman",
+      "AXA / GIG Gulf",
+      "ADNIC",
+      "SAICO",
+      "MedNet",
+      "MetLife"
+    ],
+    "networks_note": "Logo wall only (no text list, no tiers). Thiqa not shown as a separate logo, so not listed here.",
+    "source_url": "https://burjeelmedicalcity.com/bmc-insurance/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Burjeel Medical Centre Al Zeina",
+    "match": [
+      "burjeel al zeina",
+      "burjeel medical centre al zeina",
+      "burjeel medical center al zeina",
+      "al zeina"
+    ],
+    "insurers": [
+      "Sukoon (Oman Insurance)",
+      "Aetna",
+      "MetLife",
+      "ADNIC",
+      "Daman",
+      "Thiqa",
+      "WAPMED",
+      "SAICO",
+      "NGI (HealthNet)",
+      "MSH International",
+      "Dubai Insurance",
+      "Globemed",
+      "Inayah",
+      "NextCare",
+      "MedNet",
+      "NAS",
+      "FMC Network",
+      "Neuron",
+      "Vidal Health",
+      "Aafiya",
+      "AXA / GIG Gulf",
+      "IRIS TPA",
+      "E-Net TPA"
+    ],
+    "networks_note": "No network tiers published.",
+    "source_url": "https://burjeel.com/bmcalzeina/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Burjeel Day Surgery Center Al Reem Island",
+    "match": [
+      "burjeel day surgery",
+      "burjeel al reem",
+      "burjeel reem"
+    ],
+    "insurers": [
+      "FMC Network",
+      "Sukoon (Oman Insurance)",
+      "SAICO",
+      "Aetna",
+      "MetLife",
+      "ADNIC",
+      "Daman",
+      "Thiqa",
+      "NGI (HealthNet)",
+      "MSH International",
+      "Dubai Insurance",
+      "Inayah",
+      "NextCare",
+      "MedNet",
+      "NAS",
+      "Neuron",
+      "Aafiya",
+      "MaxCare",
+      "AXA / GIG Gulf",
+      "IRIS TPA",
+      "E-Net TPA"
+    ],
+    "networks_note": "No network tiers published.",
+    "source_url": "https://burjeel.com/burjeeldaysurgery/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Burjeel Medical Center Saadiyat",
+    "match": [
+      "burjeel saadiyat",
+      "burjeel medical center saadiyat",
+      "burjeel by the beach"
+    ],
+    "insurers": [
+      "FMC Network",
+      "Sukoon (Oman Insurance)",
+      "MetLife",
+      "Henner",
+      "GAC",
+      "Best Doctors",
+      "Bupa"
+    ],
+    "networks_note": "Official Saadiyat page lists only these 7. The list looks incomplete (no Daman/Thiqa), so confirm with the centre. No separate 'Saadiyat Surgery Day' page found.",
+    "source_url": "https://burjeel.com/bmcsaadiyat/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "low"
+  },
+  {
+    "clinic": "Burjeel Medical Centre Dubai Silicon Oasis",
+    "match": [
+      "burjeel silicon oasis",
+      "burjeel dso",
+      "burjeel medical centre dubai silicon oasis"
+    ],
+    "insurers": [],
+    "networks_note": "No facility insurance list found; /siliconoasismedicalcenter/insurance/ redirects to the centre homepage.",
+    "source_url": "https://burjeel.com/siliconoasismedicalcenter/",
+    "checked": "2026-09-22",
+    "confidence": "low"
+  },
+  {
+    "clinic": "Saudi German Hospital Dubai",
+    "match": [
+      "saudi german hospital dubai",
+      "saudi german hospital",
+      "saudi german",
+      "sgh dubai"
+    ],
+    "insurers": [
+      "ADNIC",
+      "Aetna",
+      "Aafiya",
+      "Al Buhaira",
+      "Almadallah",
+      "AXA / GIG Gulf",
+      "Daman",
+      "Dubai Insurance",
+      "FMC Network",
+      "Globemed",
+      "Inayah",
+      "IRIS",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "Now Health",
+      "NextCare",
+      "NGI (HealthNet)",
+      "Aspire",
+      "Insurance Al Tameen",
+      "SAICO",
+      "Sehteq",
+      "Whealth International"
+    ],
+    "networks_note": "Logo wall from the 'Dubai' tab (no text list). Site says all listed networks/plans are accepted for both inpatient and outpatient, but tiers are not published. Sukoon/Bupa appears only on the Sharjah, Ajman and clinic tabs, not the Dubai tab.",
+    "source_url": "https://www.saudigerman.com/insurance-partners/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Fakeeh University Hospital Dubai",
+    "match": [
+      "fakeeh university hospital",
+      "fakeeh",
+      "fuh"
+    ],
+    "insurers": [
+      "Aafiya",
+      "AXA / GIG Gulf",
+      "Al Buhaira",
+      "ADNIC",
+      "Almadallah",
+      "Enaya",
+      "Saada",
+      "Aspire",
+      "Bupa",
+      "Cigna",
+      "Daman",
+      "Dubai Insurance",
+      "Emirates Airline (employer plan)",
+      "FMC Network",
+      "Henner",
+      "Inayah",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NGI (HealthNet)",
+      "Now Health",
+      "NextCare",
+      "Sukoon (Oman Insurance)",
+      "SAICO",
+      "RAK Insurance",
+      "Orient",
+      "Watania",
+      "Takaful Emarat",
+      "Union Insurance",
+      "Fidelity United",
+      "Emirates Insurance",
+      "William Russell"
+    ],
+    "networks_note": "Daman: Network 1, Tier 1 (Royal), TC 1, Comprehensive 2, Exclusive 1, Supreme. Thiqa is not listed. AXA: Star Plus (AXA1), Star (AXA2), SEHA (AXA3), AXA4. ADNIC: Platinum only (Gold for one group). NAS: CN, EN, GN. NextCare: GN and GN+ only. Almadallah: GN/GN+ (Enaya Platinum, Gold, GN+). Neuron: Comprehensive and General Plus (Enaya Platinum and Gold). MedNet: Gold, Silver Premium. Sukoon: Premium, Edge, Signature. Bupa Global, Cigna, Henner: check portal. Orient, Watania, Takaful Emarat, Union, Fidelity, Emirates Ins, William Russell and RAK are covered only through the TPAs (NAS/NextCare/Neuron/MedNet/Almadallah). International SOS, Europ Assistance, UTA and similar need a Guarantee of Payment (GOP). Saada/Enaya confirmed in the FUH update post.",
+    "source_url": "https://www.fuh.care/plan-your-visit/insurance-and-billing",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Al Zahra Hospital Dubai",
+    "match": [
+      "al zahra hospital dubai",
+      "al zahra hospital",
+      "al zahra",
+      "azhd"
+    ],
+    "insurers": [
+      "Al Buhaira",
+      "Aetna",
+      "ADNIC",
+      "Aafiya",
+      "Whealth International",
+      "WAPMED",
+      "Vidal Health",
+      "SAICO",
+      "Now Health",
+      "Neuron",
+      "Daman",
+      "NGI (HealthNet)",
+      "NAS",
+      "MSH International",
+      "MedNet",
+      "IRIS",
+      "Inayah",
+      "FMC Network",
+      "Dubai Insurance",
+      "AXA / GIG Gulf",
+      "NextCare",
+      "MetLife",
+      "Almadallah",
+      "Globemed",
+      "Sukoon (Oman Insurance)",
+      "Liva",
+      "Aspire"
+    ],
+    "networks_note": "Logo wall only (some logos identified from the images). No network tiers published.",
+    "source_url": "https://azhd.ae/insurance-partners/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Prime Hospital Dubai",
+    "match": [
+      "prime hospital",
+      "prime hospital dubai",
+      "prime healthcare"
+    ],
+    "insurers": [
+      "Aafiya",
+      "ADNIC",
+      "Al Ain Ahlia",
+      "Aetna",
+      "Al Buhaira",
+      "Almadallah",
+      "Enaya",
+      "Dubai Insurance",
+      "FMC Network",
+      "Fortunecare / Sehteq",
+      "AXA / GIG Gulf",
+      "Globemed",
+      "NGI (HealthNet)",
+      "Inayah",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "Neuron",
+      "Cigna",
+      "Saada",
+      "RAK Insurance",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Whealth International",
+      "Daman",
+      "Thiqa"
+    ],
+    "networks_note": "Filtered to the 'Prime Hospital' branch. Daman: NW1/Network 1, NW2/Network 2. Thiqa: C1. GIG/AXA: Star Plus, Star, Star SEHA, Diamond, AXA 1-4, Privilege. Dubai Insurance: N2, N3. Almadallah: GN, GN Plus. Neuron: Comprehensive, General Plus, Premium, Cigna (Comprehensive/General/GN+), DEWA, RTA, RAK, Saada (Comprehensive), Enaya/Dubai Govt Platinum, Euromed. Sukoon: Comprehensive, Comprehensive Plus/Edge, DHA Plus, Essential, Premium, Restricted. Whealth: Basic, B2. NAS and NextCare are not listed for Prime Hospital.",
+    "source_url": "https://www.primehealth.ae/prime-hospital/insurance-info",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Medcare Hospitals (Dubai)",
+    "match": [
+      "medcare"
+    ],
+    "insurers": [
+      "Aafiya",
+      "ADNIC",
+      "Al Buhaira",
+      "MetLife",
+      "Almadallah",
+      "Enaya",
+      "Daman",
+      "Globemed",
+      "NGI (HealthNet)",
+      "Inayah",
+      "MedNet",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "Now Health",
+      "Sukoon (Oman Insurance)",
+      "Bupa",
+      "Damana",
+      "FMC Network",
+      "Tawuniya",
+      "Henner",
+      "Qatar Insurance (QLM)",
+      "Cigna",
+      "Allianz",
+      "National Life & General",
+      "Health 360",
+      "Aetna",
+      "eCare",
+      "Vidal Health",
+      "International SOS",
+      "MARM Assistance",
+      "Connex",
+      "IGA",
+      "AXA / GIG Gulf",
+      "Aspire"
+    ],
+    "networks_note": "All listed insurers are shown as accepted at Medcare Hospital Al Safa. Not every insurer applies at every branch, so check per branch. Al Safa networks: Daman Network 1, Network 2; NAS EN, CN, GN; Neuron General Plus, Comprehensive, DEWA; NextCare CN, GN+, GN; GIG Privilege Gold/Black, A.1+, A.1-A.4; Sukoon Premium, Edge, Comprehensive, Bupa; MedNet Gold, Silver Premium, Silver Classic; Almadallah Enaya (Platinum+Gold), GN+, GN. Thiqa not listed.",
+    "source_url": "https://www.medcare.ae/en/insurance-partners.html",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Barraquer Dubai",
+    "match": [
+      "barraquer"
+    ],
+    "insurers": [
+      "Cigna",
+      "ADNIC",
+      "Almadallah",
+      "Saada",
+      "CEGA",
+      "Connex Assistance",
+      "Daman",
+      "EgyCross",
+      "GAC",
+      "AXA / GIG Gulf",
+      "Globemed",
+      "Healix International",
+      "Henner",
+      "IGA Assistance",
+      "MARM Assistance",
+      "MedNet",
+      "NextCare",
+      "NAS",
+      "Neuron",
+      "Now Health",
+      "UTA Assistance",
+      "Sukoon (Oman Insurance)",
+      "MSH International"
+    ],
+    "networks_note": "Daman: NW1 and NW2 only. Sukoon: Premium and Edge only. Connex: GOP-based. Page also lists non-insurance schemes (Absher/Tawteen, DEWA, Emirates Airlines Platinum discount card, Esaad discount card, Fazaa) - omitted. NAS Neuron listed as one entity.",
+    "source_url": "https://www.barraquer.com/en-uae/health-insurances",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Moorfields Eye Hospital Dubai",
+    "match": [
+      "moorfields"
+    ],
+    "insurers": [
+      "Aspire",
+      "Globemed",
+      "eExpedise Health",
+      "FMC",
+      "Dubai Insurance",
+      "MSH International",
+      "Takaful Emarat",
+      "SAICO",
+      "Saada",
+      "Sukoon (Oman Insurance)",
+      "Now Health",
+      "NGI (National General Insurance)",
+      "Neuron",
+      "NextCare",
+      "NAS",
+      "MetLife",
+      "MedNet",
+      "Enaya",
+      "Inayah",
+      "GeoBlue",
+      "Daman",
+      "Al Buhaira",
+      "ADNIC",
+      "Aetna",
+      "Almadallah",
+      "AXA / GIG Gulf"
+    ],
+    "networks_note": "Dubai tab only (Abu Dhabi has a separate list). Daman NW1/NW2; Dubai Insurance Network 1, Exclusive N2; FMC Farid GN1+, Firstcare Freedom/Advanced/Protect; NAS EN/CN/GN; NextCare & Now Health GN+/GN; Neuron GN+, Platinum, SAADA, Enaya Platinum; Enaya: Neuron Platinum/Gold; MetLife VIP/Gold; MedNet Silver Premium/Gold; Inayah Platinum/Diamond; NGI HN Exclusive/Premier; Sukoon Premium/Comprehensive Plus/Comprehensive/Standard/Edge; ADNIC Platinum; Al Buhaira Comprehensive Plus/Comprehensive; Aetna Tier 1-3; Almadallah GN+; GIG Gulf Star Plus/Star; Takaful Emarat Platinum Premium/Essential; MSH Comprehensive/Platinum; GlobeMed Platinum/Diamond; SAICO Gold; eExpedise GOP only. Insurer names read from logos on the page.",
+    "source_url": "https://moorfields.ae/insurance-provider/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "SKMC (Sheikh Khalifa Medical City)",
+    "match": [
+      "skmc",
+      "sheikh khalifa medical city"
+    ],
+    "insurers": [
+      "Thiqa",
+      "Daman",
+      "Watania",
+      "ADNIC",
+      "Al Fujairah National Insurance",
+      "Al Ain Ahlia Insurance",
+      "Dubai National Insurance",
+      "Dubai Insurance",
+      "Emirates Insurance",
+      "Fidelity United",
+      "Insurance House",
+      "International SOS",
+      "Al-Ittihad Al-Watani",
+      "Al Sagr Insurance",
+      "Arabia Insurance",
+      "ASCANA Takaful",
+      "AXA / GIG Gulf",
+      "Dar Al Takaful",
+      "Al Buhaira",
+      "AMAN (Dubai Islamic Insurance)",
+      "Aetna",
+      "Connex Assistance",
+      "Alliance Insurance",
+      "Al Dhafra Insurance",
+      "Cigna"
+    ],
+    "networks_note": "No network tiers given. 'Abu Dhabi National Takaful Co' mapped to Watania. Page says verify with insurer; changes occur.",
+    "source_url": "https://skmc.seha.ae/insurance-providers/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Sheikh Shakhbout Medical City (SSMC)",
+    "match": [
+      "shakhbout",
+      "ssmc"
+    ],
+    "insurers": [
+      "Almadallah",
+      "Inayah",
+      "Thiqa",
+      "Daman",
+      "ADNIC",
+      "MetLife",
+      "Cigna",
+      "Dubai Insurance",
+      "Emirates Insurance",
+      "AXA / GIG Gulf",
+      "Global Medical Management",
+      "International SOS",
+      "MedNet",
+      "NAS",
+      "Neuron",
+      "NGI (National General Insurance)",
+      "NLGI (National Life & General)",
+      "Watania",
+      "NextCare",
+      "Orient",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Takaful Emarat",
+      "WAPMED"
+    ],
+    "networks_note": "Thiqa cat 1-4. Daman: High-end, Mid-range, Royal NW, Mubadala, SSMC, Seha networks. ADNIC: Platinum/Gold/Gold+ direct billing; Silver/Bronze/Blue/Hala/Asasi only emergency & centres of excellence. Inayah Platinum/Diamond. Cigna CN & GN+ via NAS Neuron. GIG: AXA1 Plus, AXA1, AXA2, Star Plus. MedNet Gold, Silver Premium, N1, Exclusive N2. NGI HN Exclusive/Premier. NextCare GN+ only. Orient GN+/CN (other networks emergency only). Watania EN/CN/GN (others emergency only). SAICO Gold. Sukoon Premium & Bupa networks. Takaful Emarat EN/CN via NAS. MetLife & Dubai Insurance subject to eligibility.",
+    "source_url": "https://ssmc.ae/insurance-network/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Corniche Hospital Abu Dhabi",
+    "match": [
+      "corniche hospital"
+    ],
+    "insurers": [
+      "Aafiya",
+      "ADNIC",
+      "Almadallah",
+      "AXA / GIG Gulf",
+      "Thiqa",
+      "Daman",
+      "Dubai Insurance",
+      "FMC",
+      "Inayah",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "NGI (National General Insurance)",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Globemed"
+    ],
+    "networks_note": "No network tiers listed.",
+    "source_url": "https://corniche.seha.ae/insurance-providers/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Al Jalila Children's Hospital",
+    "match": [
+      "al jalila",
+      "aljalila"
+    ],
+    "insurers": [
+      "NGI (National General Insurance)",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Aafiya",
+      "Almadallah",
+      "FMC",
+      "MedNet",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "E Care International",
+      "Khat Al Haya",
+      "Now Health",
+      "Emirates Group",
+      "Inayah",
+      "LGA",
+      "Euro Assist",
+      "ADNIC",
+      "Al Buhaira",
+      "AXA / GIG Gulf",
+      "Daman",
+      "Dubai Insurance",
+      "MetLife",
+      "Enaya"
+    ],
+    "networks_note": "Group-level Dubai Health insurance partner list (applies across Dubai Health facilities; not facility- or tier-specific). The hospital's own page aljalilachildrens.ae/accepted-insurance was unreachable. Dubai Health also states it accepts guarantee of payment from all international/travel insurance plans.",
+    "source_url": "https://dubaihealth.ae/our-insurance-partners",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Al Qassimi Hospital Sharjah",
+    "match": [
+      "qassimi",
+      "al qasimi"
+    ],
+    "insurers": [],
+    "networks_note": "No official list found. EHS facility page (ehs.gov.ae) lists no insurers; only aggregator lists exist.",
+    "source_url": "https://www.ehs.gov.ae/en/services/health-care-facilities/al-qassimi-hospital",
+    "checked": "2026-09-22",
+    "confidence": "low"
+  },
+  {
+    "clinic": "Rashid Hospital Dubai",
+    "match": [
+      "rashid hospital"
+    ],
+    "insurers": [
+      "NGI (National General Insurance)",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Aafiya",
+      "Almadallah",
+      "FMC",
+      "MedNet",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "E Care International",
+      "Khat Al Haya",
+      "Now Health",
+      "Emirates Group",
+      "Inayah",
+      "LGA",
+      "Euro Assist",
+      "ADNIC",
+      "Al Buhaira",
+      "AXA / GIG Gulf",
+      "Daman",
+      "Dubai Insurance",
+      "MetLife",
+      "Enaya"
+    ],
+    "networks_note": "Group-level Dubai Health insurance partner list (government operator; not facility- or tier-specific). Dubai Health states acceptance does not guarantee all plans are covered; also accepts GOP from international/travel insurers.",
+    "source_url": "https://dubaihealth.ae/our-insurance-partners",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Dubai Dental Hospital",
+    "match": [
+      "dubai dental hospital"
+    ],
+    "insurers": [
+      "NGI (National General Insurance)",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Aafiya",
+      "Almadallah",
+      "FMC",
+      "MedNet",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "E Care International",
+      "Khat Al Haya",
+      "Now Health",
+      "Emirates Group",
+      "Inayah",
+      "LGA",
+      "Euro Assist",
+      "ADNIC",
+      "Al Buhaira",
+      "AXA / GIG Gulf",
+      "Daman",
+      "Dubai Insurance",
+      "MetLife",
+      "Enaya"
+    ],
+    "networks_note": "Group-level Dubai Health list (Dubai Health describes DDH as part of its network). Hospital's own page dubaidentalhospital.ae/en/Insurance.aspx was unreachable (SSL error). Dental cover depends heavily on plan - verify.",
+    "source_url": "https://dubaihealth.ae/our-insurance-partners",
+    "checked": "2026-09-22",
+    "confidence": "low"
+  },
+  {
+    "clinic": "RAK Hospital",
+    "match": [
+      "rak hospital"
+    ],
+    "insurers": [
+      "Aafiya",
+      "ADNIC",
+      "Aetna",
+      "Al Buhaira",
+      "Almadallah",
+      "AXA / GIG Gulf",
+      "Daman",
+      "Dubai Insurance",
+      "FMC",
+      "GlobalNet",
+      "Globemed",
+      "NGI (National General Insurance)",
+      "Inayah",
+      "Iris Healthcare",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "NLGI (National Life & General)",
+      "Now Health",
+      "Sukoon (Oman Insurance)",
+      "SAICO",
+      "Takaful Emarat",
+      "Thiqa",
+      "Cigna"
+    ],
+    "networks_note": "Aafiya/ADNIC/Aetna: APN networks. Daman Exclusive 1, Comprehensive 1-4, Premier, NW5. AXA: Star, Star Plus, Diamond, Crystal. Dubai Insurance N1-N3. GlobalNet IP only. Iris, Takaful Emarat, Cigna (Vanbreda): inpatient on GOP basis only. MedNet EBP/Watania Basic IP only. Thiqa: 'Daman Thiqa NW UAE'. Healthnet = NGI.",
+    "source_url": "https://rakhospital.com/insurance-partners/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Emirates Specialty Hospital DHCC",
+    "match": [
+      "emirates specialty",
+      "emirates speciality",
+      "emirates hospitals"
+    ],
+    "insurers": [
+      "Aafiya",
+      "ADNIC",
+      "Al Buhaira",
+      "Almadallah",
+      "AQA Assistance",
+      "Daman",
+      "Thiqa",
+      "Emirates Airlines",
+      "FMC",
+      "GMA Global Assistance",
+      "AXA / GIG Gulf",
+      "Inayah",
+      "International Citizens Insurance",
+      "LGA Assistance",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "NGI (National General Insurance)",
+      "Now Health",
+      "SAICO",
+      "Sukoon (Oman Insurance)"
+    ],
+    "networks_note": "Emirates Hospitals Group list; page has a facility filter (JS) so exact per-facility/tier mapping for the DHCC hospital could not be confirmed. Many tiers listed (incl. Enaya Gold/Platinum/Silver via network names).",
+    "source_url": "https://emirateshospitals.ae/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Dubai London Hospital / Dubai London Clinic",
+    "match": [
+      "dubai london"
+    ],
+    "insurers": [
+      "MetLife",
+      "AXA / GIG Gulf",
+      "FMC",
+      "MSH International",
+      "Neuron",
+      "NAS",
+      "ADNIC",
+      "Now Health",
+      "Almadallah",
+      "NGI (National General Insurance)",
+      "Globemed",
+      "MedNet",
+      "Inayah",
+      "NextCare",
+      "Enaya",
+      "Dubai Insurance",
+      "Allianz",
+      "Aetna",
+      "Cigna",
+      "Bupa",
+      "Al Buhaira",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Henner",
+      "Daman",
+      "Aspire",
+      "ACE",
+      "Interglobal",
+      "HTH Worldwide",
+      "WHealth International",
+      "Health 360",
+      "LGA Assistance",
+      "AXA Assistance"
+    ],
+    "networks_note": "Cigna: all cards but NO direct billing (reimbursement). HTH: prior GOP. Daman NW1, NW2, Royal, Supreme, Grand. NAS EN/CN/GN. NextCare Enaya Platinum/Gold, GN+, GN, CN, SN. Almadallah GN+/GN. Neuron CN & GN+. Dubai Insurance N1, Exclusive N1. MedNet Gold, Silver Premium, N1, N2. Bupa Gold/Classic/Individual. Allianz Silver, Comprehensive, Standard. ADNIC Platinum/Gold. Now Health: cards with OP direct billing, Simplecare Tier 1.",
+    "source_url": "https://dubailondonhospital.com/insurances/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Gargash Hospital Dubai (now Trellis Hospital)",
+    "match": [
+      "gargash",
+      "trellis"
+    ],
+    "insurers": [
+      "ADNIC",
+      "Al Buhaira",
+      "Almadallah",
+      "Aspire",
+      "Daman",
+      "MSH International",
+      "NAS",
+      "AXA / GIG Gulf",
+      "Neuron",
+      "MedNet",
+      "MetLife",
+      "NGI (National General Insurance)",
+      "Now Health",
+      "NextCare",
+      "Sukoon (Oman Insurance)",
+      "SAICO",
+      "Inayah",
+      "FMC"
+    ],
+    "networks_note": "Gargash Hospital rebranded as Trellis Hospital (gargashhospital.com redirects). No tiers listed.",
+    "source_url": "https://trellishospital.com/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Reem Hospital Abu Dhabi",
+    "match": [
+      "reem hospital"
+    ],
+    "insurers": [
+      "Almadallah",
+      "NLGI (National Life & General)",
+      "NGI (National General Insurance)",
+      "Thiqa",
+      "Daman",
+      "ADNIC",
+      "NAS",
+      "Sukoon (Oman Insurance)",
+      "NextCare",
+      "Neuron",
+      "AXA / GIG Gulf",
+      "SAICO",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "FMC",
+      "Aafiya",
+      "Globemed",
+      "Vidal Health",
+      "Eurocentre",
+      "Health 360",
+      "Dubai Insurance"
+    ],
+    "networks_note": "Daman: Thiqa, Enhanced, Basic, ABM. ADNIC Gold/Platinum/Silver(+)/Bronze(+). NAS EN/CN/GN/RN+/RN. NextCare GN+/GN/CN/SN. Neuron CN/GN+/GN. GIG AXA1-3. Sukoon Edge/Premium only. Almadallah RN2-4, RN, GN, GN+. Globemed A. Dubai Insurance N1, Exclusive N1.",
+    "source_url": "https://www.reemhospital.com/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Tarmeem Orthopedic Hospital Abu Dhabi",
+    "match": [
+      "tarmeem"
+    ],
+    "insurers": [
+      "Thiqa",
+      "Daman",
+      "NextCare",
+      "ADNIC",
+      "NAS",
+      "Neuron",
+      "Almadallah",
+      "AXA / GIG Gulf"
+    ],
+    "networks_note": "From 'Insurance Partner' logo strip on official homepage; no dedicated page or tiers.",
+    "source_url": "https://tarmeem.com/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Healthpoint Hospital Abu Dhabi",
+    "match": [
+      "healthpoint",
+      "health point"
+    ],
+    "insurers": [
+      "ADNIC",
+      "Al Dhafra Insurance",
+      "Almadallah",
+      "AXA / GIG Gulf",
+      "Daman",
+      "Health 360",
+      "Iris Healthcare",
+      "MedNet",
+      "MSH International",
+      "NAS",
+      "NextCare",
+      "Neuron",
+      "Sukoon (Oman Insurance)",
+      "Thiqa",
+      "WAPMED"
+    ],
+    "networks_note": "ADNIC Platinum only. AXA: AXA1, Star Plus, VVIP. MSH: Platinum cards. NAS CN/Enhanced. NextCare GN+ & VVIP (incl. Orient, Allianz programs). MedNet Gold (incl. Orient). Thiqa cat 1-4. Many Daman tiers (Premier, Enhanced Platinum/Gold/Silver, Comprehensive 2-3 WW, etc.). Sukoon incl. OIC/Bupa.",
+    "source_url": "https://healthpoint.ae/patients-visitors/insurance-partners/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "HealthBay Polyclinic Dubai",
+    "match": [
+      "healthbay",
+      "health bay"
+    ],
+    "insurers": [
+      "Al Buhaira",
+      "Al Sagr Insurance",
+      "Almadallah",
+      "AXA / GIG Gulf",
+      "Cigna",
+      "Daman",
+      "Euro-Center",
+      "FMC",
+      "GeoBlue",
+      "Healix",
+      "Inayah",
+      "International SOS",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "NGI (National General Insurance)",
+      "Now Health",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Takaful Emarat",
+      "Emirates Group",
+      "Enaya",
+      "Saada"
+    ],
+    "networks_note": "Sukoon, Takaful Emarat, Emirates Group: GOP basis only. Enaya & SAADA: Comprehensive & Platinum networks. Coverage varies by branch (some NGI networks Motor City only). Insurer names from logos; tier-to-insurer mapping on page is unclear.",
+    "source_url": "https://healthbayclinic.com/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Adam Vital Hospital Dubai",
+    "match": [
+      "adam vital"
+    ],
+    "insurers": [
+      "ADNIC",
+      "Daman",
+      "Dubai Insurance",
+      "Al Sagr Insurance",
+      "Al Buhaira",
+      "AXA / GIG Gulf",
+      "Sukoon (Oman Insurance)",
+      "NLGI (National Life & General)",
+      "MetLife",
+      "NAS",
+      "Neuron",
+      "Aafiya",
+      "MedNet",
+      "Almadallah",
+      "NextCare",
+      "NGI (National General Insurance)",
+      "Now Health",
+      "Emirates Airlines",
+      "Globemed",
+      "WHealth International",
+      "MSH International",
+      "SAICO"
+    ],
+    "networks_note": "ADNIC Platinum/Gold. Daman Enhanced (NW1, NW2, NW5, top-up). Dubai Insurance N1-N3. Sukoon Edge/Premium/Comprehensive/Signature. MetLife VIP/Executive/Standard. NGI HN Exclusive/Premier. Now Health Comprehensive. GIG A.1 Plus-A.4. NAS partners (incl. Orient, Emirates Insurance, Fidelity United) CN/EN/GN.",
+    "source_url": "https://www.adamvitalhospital.com/acceptedhealthcards.php",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Clemenceau Medical Center Dubai",
+    "match": [
+      "clemenceau",
+      "cmc dubai"
+    ],
+    "insurers": [
+      "ADNIC",
+      "Al Buhaira",
+      "Almadallah",
+      "AXA / GIG Gulf",
+      "Daman",
+      "Dubai Insurance",
+      "Inayah",
+      "International SOS",
+      "MedNet",
+      "MetLife",
+      "MSH International",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "NGI (National General Insurance)",
+      "Now Health",
+      "Sukoon (Oman Insurance)"
+    ],
+    "networks_note": "Direct settlement partners; no tiers listed. Sukoon shown as 'Sukoon Bupa'.",
+    "source_url": "https://cmcdubai.ae/insurance-providers/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "German Medical Center DHCC Dubai",
+    "match": [
+      "german medical center",
+      "gmc dhcc"
+    ],
+    "insurers": [
+      "NextCare",
+      "NAS",
+      "Almadallah",
+      "Daman",
+      "Neuron",
+      "Aetna",
+      "Sukoon (Oman Insurance)",
+      "ADNIC",
+      "Al Buhaira",
+      "Now Health",
+      "MetLife",
+      "SAICO",
+      "MedNet",
+      "Inayah",
+      "MSH International",
+      "Prestige International",
+      "AXA / GIG Gulf",
+      "Iris Healthcare",
+      "Enaya"
+    ],
+    "networks_note": "Daman NW1 & NW2. NAS EN/CN/GN. NextCare GN/GN+. Almadallah GN+, GN & Enaya. Neuron Comprehensive/Comprehensive Plus & Enaya. Aetna Tier 1-3. Oman/Sukoon Premium only. ADNIC Platinum. AXA 1 only. MetLife VIP/Gold. MedNet Gold/Silver Premium. Now Health Worldcare/Simplecare.",
+    "source_url": "https://gmcdhcc.com/health-insurance-partners/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Ain Al Khaleej Hospital Al Ain",
+    "match": [
+      "ain al khaleej"
+    ],
+    "insurers": [
+      "NAS",
+      "Dubai Insurance",
+      "NGI (National General Insurance)",
+      "AXA / GIG Gulf",
+      "Sukoon (Oman Insurance)",
+      "ADNIC",
+      "Thiqa",
+      "Daman"
+    ],
+    "networks_note": "No tiers listed.",
+    "source_url": "https://www.ak-hospital.com/our-insurances",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Al Das Medical Clinic",
+    "match": [
+      "al das medical",
+      "al das clinic",
+      "aldas"
+    ],
+    "insurers": [
+      "Emirates Airline",
+      "Daman",
+      "AXA / GIG Gulf",
+      "Sukoon (Oman Insurance)",
+      "MetLife",
+      "Cigna",
+      "ADNIC",
+      "Allianz",
+      "Bupa",
+      "MSH International",
+      "Orient",
+      "Dubai Insurance",
+      "Neuron",
+      "NextCare",
+      "MedNet",
+      "Globemed",
+      "SAICO",
+      "Al Khazna",
+      "Now Health",
+      "Inayah",
+      "Vanbreda",
+      "Healix International"
+    ],
+    "networks_note": "Official list of 'Insurance Providers We Work With'. Direct billing where applicable, otherwise pay-and-claim; coverage depends on plan/tier. Neuron listed as 'Neuron (NAS)'; Allianz as 'Allianz Care'; Bupa as 'Bupa Global'.",
+    "source_url": "https://aldasclinic.com/insurance",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Dr Roze Biohealth Clinic",
+    "match": [
+      "roze biohealth",
+      "dr roze",
+      "dr. roze",
+      "roze biodental"
+    ],
+    "insurers": [],
+    "networks_note": "No direct billing: official site says 'We operate on a pay-and-claim basis' (pay in full, clinic provides claim form + invoice for reimbursement). No insurer list published.",
+    "source_url": "https://drroze.com/new-patients/",
+    "checked": "2026-09-22",
+    "confidence": "high",
+    "reimbursement_only": true
+  },
+  {
+    "clinic": "ART Fertility Clinics",
+    "match": [
+      "art fertility"
+    ],
+    "insurers": [],
+    "networks_note": "No official insurer list found (UAE clinic pages and 'IVF cost, offers, financing & insurance' page only say coverage depends on policy; financial counselling offered).",
+    "source_url": "https://www.artfertilityclinics.com/uae/en/ivf-cost-offers-financing-insurance-uae",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "IVF International",
+    "match": [
+      "ivf international"
+    ],
+    "insurers": [],
+    "networks_note": "No insurance information found on official site ivfint.com.",
+    "source_url": "https://ivfint.com/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "First IVF",
+    "match": [
+      "first ivf"
+    ],
+    "insurers": [
+      "Daman",
+      "Allianz",
+      "Aetna",
+      "SAICO",
+      "Globemed",
+      "ADNIC",
+      "Almadallah",
+      "Now Health",
+      "Amity",
+      "MSH",
+      "Sukoon (Oman Insurance)",
+      "AXA / GIG Gulf",
+      "Interglobal"
+    ],
+    "networks_note": "firstivf.ae now redirects to fakihivf.com (Fakih IVF Dubai); list taken from Fakih IVF Dubai network table. Fakih IVF Dubai network table: Daman Premier (non-Emiratis), Allianz General comprehensive network, Aetna Elite = infertility covered (direct billing per tariff); SAICO Blue/Gold, Globemed, ADNIC GN/GN+/GRN/Shifa, Almadallah GN+/VIP, Now Health GN/Comprehensive, Amity Comprehensive+GN, MSH Comprehensive/Gold = NO infertility coverage (other treatments in/outpatient only); Oman Insurance (Bupa/Premium), AXA Star/Star Plus, Interglobal MHD/Gold = no infertility coverage, outpatient only. Table image dated 2021. Most listed insurers do not cover fertility treatment: hidden to avoid misleading patients.",
+    "source_url": "https://fakihivf.com/medical-insurance/",
+    "checked": "2026-09-22",
+    "confidence": "low"
+  },
+  {
+    "clinic": "Fakih IVF (Abu Dhabi)",
+    "match": [
+      "fakih ivf",
+      "fakih"
+    ],
+    "insurers": [
+      "Thiqa",
+      "Daman",
+      "Aetna"
+    ],
+    "networks_note": "Abu Dhabi network table: Thiqa Abu Dhabi = 100% infertility coverage (3 IVF cycles/yr, zero co-pay on stimulation); Thiqa outside AD = 90%; Daman Premier (non-Emiratis) = direct billing/reimbursement, plan may or may not include IVF; Aetna Elite (International Healthcare Plan) = direct billing per tariff. Table image dated 2021. Dubai branch has a separate, longer list.",
+    "source_url": "https://fakihivf.com/medical-insurance/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Best Life Fertility Center",
+    "match": [
+      "best life fertility",
+      "best life clinic",
+      "bestivf"
+    ],
+    "insurers": [],
+    "networks_note": "No insurer list on official site; FAQ says most basic UAE plans exclude IVF, some premium/corporate policies offer partial coverage; payment plans available.",
+    "source_url": "https://bestivf.ae/faq/cost-and-success-rates/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Al Ain Fertility Center",
+    "match": [
+      "al ain fertility",
+      "aafc"
+    ],
+    "insurers": [],
+    "networks_note": "No insurer list on official site (only asks patients to bring insurance card).",
+    "source_url": "https://aafc.ae/patients-corner-learn-and-share/first-consultation/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Advanced Cure",
+    "match": [
+      "advanced cure",
+      "advance cure",
+      "cure diagnostic"
+    ],
+    "insurers": [
+      "Daman",
+      "Thiqa",
+      "ADNIC",
+      "MetLife",
+      "Almadallah",
+      "AXA / GIG Gulf",
+      "Dubai Insurance",
+      "Globemed",
+      "FMC Network",
+      "MedNet",
+      "MSH",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "National General Insurance (NGI)",
+      "Sukoon (Oman Insurance)",
+      "SAICO",
+      "Inayah",
+      "Aafiya"
+    ],
+    "networks_note": "Logos on official 'Insurance Provider' page (direct partners). MetLife shown as 'Alico'; Sukoon shown as old 'Oman Insurance' logo. No tier info.",
+    "source_url": "https://cure.ae/insurance-provider/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Dental Studio (Beach Road)",
+    "match": [
+      "dental studio"
+    ],
+    "insurers": [
+      "AXA / GIG Gulf",
+      "Daman"
+    ],
+    "networks_note": "Official 'Insurance Accepted' banner: AXA and Daman, applies to all branches except Tecom.",
+    "source_url": "https://www.thedentalstudio.ae/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Invisalign Center",
+    "match": [
+      "invisalign center"
+    ],
+    "insurers": [],
+    "networks_note": "No insurance information found on official site.",
+    "source_url": "https://invisaligncenter.ae/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Lifespan Clinic",
+    "match": [
+      "lifespan clinic",
+      "lifespan sports"
+    ],
+    "insurers": [],
+    "networks_note": "No insurance information found on official site.",
+    "source_url": "https://lifespansportsmed.com/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Potentia Clinics",
+    "match": [
+      "potentia"
+    ],
+    "insurers": [],
+    "networks_note": "No insurance information found on official site.",
+    "source_url": "https://potentiaclinics.com/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Thrive Wellbeing Centre",
+    "match": [
+      "thrive wellbeing"
+    ],
+    "insurers": [],
+    "networks_note": "No insurance information found on official site.",
+    "source_url": "https://www.thrive.ae/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Maison Santé",
+    "match": [
+      "maison sante",
+      "maison santé"
+    ],
+    "insurers": [],
+    "networks_note": "Reimbursement only: official site says 'the clinic accepts insurance on a reimbursement basis' (pay and claim). No insurer list.",
+    "source_url": "https://maisonsante.ae/annual-health-checkup-dubai-july/",
+    "checked": "2026-09-22",
+    "confidence": "medium",
+    "reimbursement_only": true
+  },
+  {
+    "clinic": "Medicentres",
+    "match": [
+      "medicentres",
+      "medi centres",
+      "fakeeh medicentres"
+    ],
+    "insurers": [
+      "Daman",
+      "Almadallah",
+      "NextCare",
+      "Now Health",
+      "MSH",
+      "National General Insurance (NGI)",
+      "Inayah",
+      "Dubai Insurance",
+      "NAS",
+      "Neuron",
+      "MedNet",
+      "MetLife",
+      "SAICO"
+    ],
+    "networks_note": "Now 'Fakeeh Medicentres'. Direct billing with most major insurers (pre-auth for planned treatment). Insurance page lists Now Health, NGI, Inayah, MSH, Daman, Almadallah, NextCare, Dubai Insurance; homepage partner strip adds NAS, Neuron, MedNet, MetLife, SAICO.",
+    "source_url": "https://medicentres.fakeeh.health/insurance-and-billing",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Circle Care Clinic",
+    "match": [
+      "circle care"
+    ],
+    "insurers": [
+      "Daman",
+      "AXA / GIG Gulf",
+      "Cigna",
+      "Allianz",
+      "Now Health",
+      "Dubai Insurance",
+      "ADNIC",
+      "Sukoon (Oman Insurance)",
+      "Orient",
+      "Union Insurance",
+      "Emirates Insurance",
+      "National General Insurance (NGI)",
+      "Arabia Insurance",
+      "Fidelity United",
+      "Alliance Insurance",
+      "Dubai National Insurance",
+      "Takaful Emarat",
+      "Watania",
+      "Noor Takaful",
+      "Salama Islamic Insurance",
+      "NAS",
+      "NextCare",
+      "MedNet",
+      "Globemed",
+      "Neuron"
+    ],
+    "networks_note": "Pay-and-claim (reimbursement) only, no direct billing: 'We operate on a pay-and-claim basis with all the major insurers'. Listed insurers are those whose reimbursements they support.",
+    "source_url": "https://www.circlecareclinic.com/insurance/",
+    "checked": "2026-09-22",
+    "confidence": "high",
+    "reimbursement_only": true
+  },
+  {
+    "clinic": "Cooper Health Clinic",
+    "match": [
+      "cooper health"
+    ],
+    "insurers": [
+      "Aetna",
+      "Almadallah",
+      "Emirates Insurance",
+      "Euro-Center",
+      "Inayah",
+      "Neuron",
+      "NextCare",
+      "National General Insurance (NGI)",
+      "Now Health",
+      "Sukoon (Oman Insurance)",
+      "Whealth International",
+      "Blue Cross Blue Shield Global Solutions"
+    ],
+    "networks_note": "Official 'Insurance Partners' page (logos). No tier info; call front desk for coverage.",
+    "source_url": "https://cooperhealthclinics.com/insurance",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Kinesis clinic",
+    "match": [
+      "kinesis"
+    ],
+    "insurers": [],
+    "networks_note": "No insurer list on official site (FAQ: most plans cover physiotherapy, check with provider).",
+    "source_url": "https://kinesisclinic.ae/services/physiotherapy-dubai/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Osteopathic Health Centre",
+    "match": [
+      "osteopathic health cent"
+    ],
+    "insurers": [],
+    "networks_note": "No insurance information found on official site.",
+    "source_url": "https://osteopathydubai.com/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Up and Running Sport Medical Center",
+    "match": [
+      "upandrunning",
+      "up and running"
+    ],
+    "insurers": [
+      "Cigna",
+      "Sukoon (Oman Insurance)",
+      "MedNet",
+      "Daman",
+      "Allianz"
+    ],
+    "networks_note": "Official homepage: 'Direct billing available with our partner insurers' followed by these logos.",
+    "source_url": "https://upandrunningdubai.com/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Snö Dental Clinics",
+    "match": [
+      "sno clinic",
+      "snö clinic",
+      "sno dental",
+      "snö dental"
+    ],
+    "insurers": [
+      "Thiqa",
+      "AXA / GIG Gulf",
+      "MSH",
+      "NextCare"
+    ],
+    "networks_note": "Official insurance page: direct billing with major insurers; logos shown: Thiqa, GIG, MSH, NextCare. Coverage and pre-approval depend on plan.",
+    "source_url": "https://snoclinics.com/insurance-3/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Trio Dental Clinic",
+    "match": [
+      "trio dental"
+    ],
+    "insurers": [],
+    "networks_note": "No insurer list on official site.",
+    "source_url": "https://triodentalcenter.com/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Dr Joy Dental Clinic",
+    "match": [
+      "dr joy dental",
+      "dr. joy dental",
+      "drjoy"
+    ],
+    "insurers": [
+      "Almadallah",
+      "AXA / GIG Gulf",
+      "NextCare",
+      "MedNet",
+      "Sukoon (Oman Insurance)",
+      "SAICO",
+      "NAS",
+      "Neuron",
+      "National General Insurance (NGI)",
+      "MSH",
+      "ADNIC"
+    ],
+    "networks_note": "Logos from official New Patients page, read via Wayback Machine snapshot of 13 Oct 2025 (live site unreachable on check date). NAS and Neuron shown in one combined logo.",
+    "source_url": "https://drjoydentalclinic.com/new-patients/",
+    "checked": "2026-09-22",
+    "confidence": "low"
+  },
+  {
+    "clinic": "New York Clinic",
+    "match": [
+      "new york clinic",
+      "new york dental"
+    ],
+    "insurers": [],
+    "networks_note": "Assumed to be New York Dental Clinic (Jumeirah Beach Road, nydcdubai.com); official homepage has no insurance information. Identity of 'New York Clinic' not confirmed.",
+    "source_url": "https://nydcdubai.com/",
+    "checked": "2026-09-22",
+    "confidence": "low"
+  },
+  {
+    "clinic": "Quirónsalud Dubai",
+    "match": [
+      "quironsalud",
+      "quirónsalud",
+      "quiron"
+    ],
+    "insurers": [
+      "Daman",
+      "NextCare",
+      "Almadallah",
+      "Neuron",
+      "NAS",
+      "MSH",
+      "MedNet",
+      "MetLife",
+      "AXA / GIG Gulf",
+      "ADNIC"
+    ],
+    "networks_note": "Logos in 'Insurance' section of official UAE homepage. No tier info.",
+    "source_url": "https://quironhospitals.ae/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Zia Medical Center",
+    "match": [
+      "zia medical"
+    ],
+    "insurers": [],
+    "networks_note": "Official 'Insurance Partners' page says 'we accept most insurances' and direct settlement or reimbursement help, but the insurer list does not render (broken widget). No list could be verified.",
+    "source_url": "https://ziamedicalcenter.com/insurance-partners/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  },
+  {
+    "clinic": "Harley Street Medical Centre (Abu Dhabi)",
+    "match": [
+      "harley street medical"
+    ],
+    "insurers": [
+      "ADNIC",
+      "Al Ain Ahlia",
+      "Al Khazna",
+      "AXA / GIG Gulf",
+      "Daman",
+      "Thiqa",
+      "Dubai Insurance",
+      "MetLife",
+      "SAICO",
+      "Sukoon (Oman Insurance)",
+      "Aetna",
+      "Amity",
+      "FMC Network",
+      "Inayah",
+      "MedNet",
+      "MSH",
+      "NAS",
+      "Neuron",
+      "NextCare",
+      "Wapmed",
+      "Whealth International",
+      "National General Insurance (NGI)"
+    ],
+    "networks_note": "Networks accepted: ADNIC Gold/Platinum; Al Ain Ahlia Tier 1-3; Al Khazna Premium/Premium Plus/General; GIG Gulf A.1-A.3; Daman Enhanced High/Mid/Low end + NW5 (Daman Basic not listed); Thiqa 1 & 2; Dubai Insurance N1; MetLife Gold/VIP; SAICO Gold/Amber+/Amber; Oman (Sukoon) Premium/Edge/Comprehensive; Aetna Int'l Care/Gold/Pearl/Silver; Amity General/Comprehensive; FMC Farid GN1; Inayah Platinum/Diamond; MedNet Gold; MSH Comprehensive/Platinum; NAS EN/CN/GN/RN; Neuron Comprehensive/General Plus/General; NextCare CN/GN+/GN/SN/RN/RN2; Wapmed Comprehensive Plus; Whealth Arro Signature/Elite. NGI appears as logo only. Subject to eligibility check on day of visit.",
+    "source_url": "https://www.hsmc.ae/insurance-providers/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Stanford Medical Center (Abu Dhabi)",
+    "match": [
+      "stanford medical"
+    ],
+    "insurers": [
+      "Daman",
+      "Thiqa",
+      "FMC Network",
+      "SAICO",
+      "NAS",
+      "Neuron",
+      "Inayah",
+      "Almadallah",
+      "ADNIC",
+      "MetLife",
+      "National General Insurance (NGI)",
+      "MSH",
+      "NextCare",
+      "MedNet",
+      "Sukoon (Oman Insurance)"
+    ],
+    "networks_note": "Networks: Daman Basic (Abu Dhabi Basic Network 3) and Daman Enhanced High/Mid/Low-end/NW5; Thiqa; FMC Gold/Premium/Firstcare networks/Farid GN1-4; SAICO Gold/Amber/Amber+/Bronze/Bronze+/Emerald/Jane; NAS all (EN/CN/GN/RN+/RN/SRN); Neuron Comprehensive/General Plus/General/Restricted; Inayah Sapphire/Chrome/Bronze/Silver/Premier/Gold; Almadallah GN+/GN/RN-RN4; ADNIC Platinum/Gold/Silver/Bronze; MetLife VIP/Gold/Silver/Green/Blue; NGI HN Exclusive..HN Basic; MSH Essential..Platinum; NextCare GN+/CN/Standard/GN/RN/RN2/RN3/PCP; MedNet; Sukoon.",
+    "source_url": "https://stanfordmedical.ae/en/insurance-partners/",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "International Knee and Joint Centre",
+    "match": [
+      "knee and joint",
+      "knee & joint",
+      "ikjc"
+    ],
+    "insurers": [],
+    "networks_note": "Official site only says 'We accept most insurance plans' and to contact them; no insurer list published.",
+    "source_url": "https://www.knee.ae/insurance-info-knee-surgery-abu-dhabi-uae.html",
+    "checked": "2026-09-22",
+    "confidence": "high"
+  },
+  {
+    "clinic": "Bedaya Policlinic",
+    "match": [
+      "bedaya"
+    ],
+    "insurers": [],
+    "networks_note": "Official site is a 'coming soon' placeholder; no insurance information.",
+    "source_url": "https://www.bedayaclinic.ae/",
+    "checked": "2026-09-22",
+    "confidence": "medium"
+  }
+]

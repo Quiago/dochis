@@ -97,7 +97,15 @@ La portada vendía "Entrar con WhatsApp" aunque WhatsApp no está activo, y los 
 
 ---
 
-## Fase 5: Importar la lista y lanzar (pospuesta: primero la demo con el médico encargado)
+## Fase 4.7: Seguros por clínica y filtro por estado ✅ (hecho)
+- Investigación de 71 centros de la lista en sus webs oficiales: 46 con lista publicada se muestran (≈53 % de los médicos). Datos en `lib/clinic-insurance-data.ts` con fuente y fecha.
+- Etiquetas en cada fila: declaradas por el médico (azul) y "según su clínica" (gris, con enlace a la fuente); "Pago y reembolso" cuando la clínica no factura al seguro.
+- Filtro "Cualquier estado": Confirmado, Pendiente, Sin confirmar.
+- Revisar cada 6 meses o cuando un médico avise de un cambio.
+
+---
+
+## Fase 5: Importar la lista y lanzar (importada ✅; correo de invitación listo, esperando el anuncio del médico encargado)
 - `node --env-file=.env.local scripts/import-csv.ts "<archivo.csv>" [--dry-run]` → perfiles `unclaimed` (público: nombre, especialidad y centro) + informe en `data/import-report.md`. Idempotente.
 - Normalización con reglas deterministas y revisables (`lib/import.ts`): 97 variantes de especialidad → 46; emiratos con erratas; webs quitadas del centro.
 - Teléfono de acceso: **solo móviles de EAU** (las centralitas y fijos no se guardan, y cada número tiene un solo dueño). Correo: privado, sirve para reclamar el perfil entrando con él.
