@@ -67,9 +67,9 @@ describe('formulario de perfil', () => {
 
 describe('contacto del directorio (.vcf)', () => {
   it('genera una vCard con nombre, WhatsApp y correo', () => {
-    const v = vcard({ name: 'Directorio Médicos en español', phone: '971500000000', email: 'dochispanic@gmail.com', url: 'https://x.test' })
+    const v = vcard({ name: 'Directorio Sanitarios en español', phone: '971500000000', email: 'dochispanic@gmail.com', url: 'https://x.test' })
     expect(v).toMatch(/^BEGIN:VCARD\r\nVERSION:3.0\r\n/)
-    expect(v).toContain('FN:Directorio Médicos en español')
+    expect(v).toContain('FN:Directorio Sanitarios en español')
     expect(v).toContain('TEL;TYPE=CELL:+971500000000')
     expect(v).toContain('EMAIL:dochispanic@gmail.com')
     expect(v.endsWith('END:VCARD\r\n')).toBe(true)

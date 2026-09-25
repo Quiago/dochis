@@ -7,20 +7,20 @@ export default function Privacidad() {
   return (
     <main className="container prose">
       <Heading as="h1">Privacidad</Heading>
-      <p>Tratamos los datos siguiendo la ley de protección de datos de los Emiratos (PDPL) y un principio simple: guardar lo mínimo y publicar solo lo que el médico acepta.</p>
+      <p>Tratamos los datos siguiendo la ley de protección de datos de los Emiratos (PDPL) y un principio simple: guardar lo mínimo y publicar solo lo que el profesional acepta.</p>
       <h2>Qué es público</h2>
       <ul>
         <li>Nombre, especialidad, clínica, zona, emirato, idiomas, seguros aceptados, autoridad y número de licencia (para poder comprobarla en el registro oficial) y fecha de la última confirmación.</li>
-        <li>El WhatsApp del médico, <strong>solo</strong> si marcó la casilla para mostrarlo a los pacientes.</li>
-        <li>Los perfiles importados de la lista anterior del grupo muestran solo nombre, especialidad y centro hasta que el médico los reclama.</li>
+        <li>El WhatsApp del profesional, <strong>solo</strong> si marcó la casilla para mostrarlo a los pacientes.</li>
+        <li>Los perfiles importados de la lista anterior del grupo muestran solo nombre, especialidad y centro hasta que el profesional los reclama.</li>
       </ul>
       <h2>Qué no se publica nunca</h2>
       <ul>
-        <li>El teléfono o correo con el que el médico entra.</li>
+        <li>El teléfono o correo con el que el profesional entra.</li>
               </ul>
       <h2>Para qué usamos los datos</h2>
       <ul>
-        <li>Identificar al médico al entrar (le enviamos un código de un solo uso).</li>
+        <li>Identificar al profesional al entrar (le enviamos un código de un solo uso).</li>
         <li>Pedirle que confirme sus datos una vez al mes.</li>
         <li>Revisar automáticamente cada perfil nuevo (licencias repetidas, spam). Esa revisión puede usar un modelo de IA de Amazon Bedrock que solo recibe los datos profesionales del formulario, nunca el teléfono ni el correo.</li>
         <li>Evitar abusos: los reportes &quot;Ya no está aquí&quot; se guardan con una huella anónima, sin la dirección IP.</li>

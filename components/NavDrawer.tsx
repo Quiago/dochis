@@ -15,7 +15,7 @@ export default function NavDrawer({ items }: { items: NavItem[] }) {
     <>
       <IconButton icon={ThreeBarsIcon} aria-label="Abrir menú" variant="invisible" onClick={() => setOpen(true)} />
       {open && (
-        <Dialog title="Médicos en español" position="left" onClose={() => setOpen(false)} width="small">
+        <Dialog title="Sanitarios en español" position="left" onClose={() => setOpen(false)} width="small">
           <NavList aria-label="Navegación principal">
             {items.map(({ href, label, icon }) => {
               const Icon = ICONS[icon]

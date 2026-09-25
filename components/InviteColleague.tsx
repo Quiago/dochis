@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import { Button } from '@primer/react'
 import { CheckIcon, CopyIcon, ShareAndroidIcon } from '@primer/octicons-react'
 
-const DOCTOR_MESSAGE = 'Estoy en el directorio gratuito de médicos que atienden en español en los Emiratos. Crear tu perfil lleva 2 minutos:'
-export const VISITOR_MESSAGE = 'Directorio gratuito de médicos que atienden en español en los Emiratos. Si eres médico, crear tu perfil lleva 2 minutos:'
+const DOCTOR_MESSAGE = 'Estoy en el directorio gratuito de sanitarios que atienden en español en los Emiratos. Crear tu perfil lleva 2 minutos:'
+export const VISITOR_MESSAGE = 'Directorio gratuito de sanitarios que atienden en español en los Emiratos. Si trabajas en salud, crear tu perfil lleva 2 minutos:'
 
 // Native share sheet on phones (WhatsApp, mail…); WhatsApp link + copy on desktop. No emails sent by us.
 export default function InviteColleague({ url, message = DOCTOR_MESSAGE }: { url: string; message?: string }) {
@@ -13,7 +13,7 @@ export default function InviteColleague({ url, message = DOCTOR_MESSAGE }: { url
   useEffect(() => setCanShare(typeof navigator !== 'undefined' && !!navigator.share), [])
   if (canShare) {
     return (
-      <Button block leadingVisual={ShareAndroidIcon} onClick={() => navigator.share({ title: 'Médicos en español · Emiratos', text: message, url }).catch(() => {})}>
+      <Button block leadingVisual={ShareAndroidIcon} onClick={() => navigator.share({ title: 'Sanitarios en español · Emiratos', text: message, url }).catch(() => {})}>
         Invitar a un colega
       </Button>
     )

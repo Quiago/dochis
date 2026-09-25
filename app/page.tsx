@@ -52,8 +52,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       </aside>
 
       <main className="dash-main">
-        <Heading as="h1" className="hero-title">Médicos que te atienden en español</Heading>
-        <p className="muted">Cada médico mantiene su propio perfil y confirma sus datos una vez al mes. Si pasa más de un mes sin confirmar, aparece como pendiente; a los tres meses se oculta.</p>
+        <Heading as="h1" className="hero-title">Profesionales de la salud que te atienden en español</Heading>
+        <p className="muted">Cada profesional mantiene su propio perfil y confirma sus datos una vez al mes. Si pasa más de un mes sin confirmar, aparece como pendiente; a los tres meses se oculta.</p>
 
         <div className="searchbar">
           <SearchForm q={filters.q} hidden={MENUS.flatMap(({ key }) => (filters[key] ? [[key, filters[key]] as [string, string]] : []))} />
@@ -73,7 +73,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         </div>
 
         <div className="meta">
-          <strong>{results.length === 1 ? '1 médico' : `${results.length} médicos`}</strong>
+          <strong>{results.length === 1 ? '1 profesional' : `${results.length} profesionales`}</strong>
           {/* Plain reload: the server reshuffles on every request. */}
           <IconBtn as="a" href={filterHref(filters, 'q', filters.q)} size="small" variant="invisible" iconName="sync">Mezclar orden</IconBtn>
         </div>
@@ -85,16 +85,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
           <ul className="list">{results.map((d) => <DoctorRow key={d.id} d={d} now={now} />)}</ul>
         ) : (
           <div className="list empty muted">
-            {all.length ? 'No hay médicos con esos filtros. Prueba con otro emirato o seguro.' : 'El directorio se está llenando. Si eres médico y hablas español, sé de los primeros en aparecer.'}
+            {all.length ? 'No hay profesionales con esos filtros. Prueba con otro emirato o seguro.' : 'El directorio se está llenando. Si trabajas en salud y hablas español, sé de los primeros en aparecer.'}
           </div>
         )}
       </main>
 
       {/* Right column: like GitHub's changelog panel. */}
-      <aside className="dash-right" aria-label="Para médicos">
+      <aside className="dash-right" aria-label="Para profesionales de la salud">
         <section className="box">
           <div className="box-body">
-            <Heading as="h2" className="side-title">¿Eres médico y hablas español?</Heading>
+            <Heading as="h2" className="side-title">¿Trabajas en salud y hablas español?</Heading>
             <p className="muted small">Crea o reclama tu perfil. Sin contraseñas: te enviamos un código. Verificamos tu licencia con la DHA, DOH o MOHAP.</p>
             {channels.length ? (
               <Button as="a" href="/entrar" variant="primary" block>{cta}</Button>
@@ -102,7 +102,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
               <p className="muted small">El acceso está en mantenimiento.</p>
             )}
             <div className="invite-home">
-              <p className="muted small">¿Conoces a un médico que atienda en español?</p>
+              <p className="muted small">¿Conoces a alguien que atienda en español?</p>
               <InviteColleague url={`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/entrar`} message={VISITOR_MESSAGE} />
             </div>
           </div>
@@ -112,13 +112,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
           <div className="box-header">Cómo funciona</div>
           <ol className="steps small">
             <li><strong>Buscas</strong> por especialidad, emirato, seguro o idioma.</li>
-            <li><strong>Escribes</strong> al médico por WhatsApp o contactas su clínica.</li>
-            <li><strong>Cada médico confirma</strong> sus datos una vez al mes; si no, se marca como pendiente.</li>
+            <li><strong>Escribes</strong> al profesional por WhatsApp o contactas su clínica.</li>
+            <li><strong>Cada profesional confirma</strong> sus datos una vez al mes; si no, se marca como pendiente.</li>
           </ol>
         </section>
 
         <section className="box stats">
-          <div><strong>{stats.doctors}</strong><span className="muted small">médicos</span></div>
+          <div><strong>{stats.doctors}</strong><span className="muted small">profesionales</span></div>
           <div><strong>{stats.specialties}</strong><span className="muted small">especialidades</span></div>
           <div><strong>{stats.confirmedThisRound}</strong><span className="muted small">confirmados este mes</span></div>
         </section>

@@ -28,7 +28,7 @@ export default async function Listo({ searchParams }: { searchParams: Promise<{ 
         </div>
       )}
       <div className="auth-box">
-        <p><strong>¿Conoces a otro médico que atienda en español?</strong> Invítalo: cuantos más estemos, más útil es el directorio.</p>
+        <p><strong>¿Conoces a otro profesional que atienda en español?</strong> Invítalo: cuantos más estemos, más útil es el directorio.</p>
         <InviteColleague url={`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/entrar`} />
       </div>
       <Button as="a" href="/cuenta" variant="primary" block>Listo</Button>

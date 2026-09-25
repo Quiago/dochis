@@ -37,7 +37,7 @@ export function InsuranceLabels({ d, all = false }: { d: PublicDoctor; all?: boo
           <li><Label variant="attention" title="La clínica no factura al seguro: pagas y luego reclamas a tu aseguradora">Pago y reembolso</Label></li>
         )}
         {shown.map(({ i, own }) => (
-          <li key={i}><Label variant={CATEGORY.seguro.variant} className={own ? undefined : 'from-clinic'} title={own ? 'Declarado por el médico' : 'Según la web de la clínica'}>{i}</Label></li>
+          <li key={i}><Label variant={CATEGORY.seguro.variant} className={own ? undefined : 'from-clinic'} title={own ? 'Declarado por el profesional' : 'Según la web de la clínica'}>{i}</Label></li>
         ))}
         {items.length > shown.length && <li className="muted small">+{items.length - shown.length} más</li>}
       </ul>

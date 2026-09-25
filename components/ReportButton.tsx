@@ -37,7 +37,7 @@ export default function ReportButton({ slug, name }: { slug: string; name: strin
             <Flash variant={result.ok ? 'success' : 'danger'}>{result.text}</Flash>
           ) : (
             <>
-              <p className="muted">Si dos personas lo reportan, el perfil pasa a &quot;pendiente&quot; hasta que el médico confirme sus datos. Nadie tiene que borrarlo a mano.</p>
+              <p className="muted">Si dos personas lo reportan, el perfil pasa a &quot;pendiente&quot; hasta que el profesional confirme sus datos. Nadie tiene que borrarlo a mano.</p>
               <FormControl>
                 <FormControl.Label>Motivo</FormControl.Label>
                 <Select value={reason} onChange={(e) => setReason(e.target.value)} block>

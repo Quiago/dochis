@@ -93,7 +93,7 @@ export function freshness(d: PublicDoctor, now = new Date()): Freshness {
   return { kind: 'confirmed', label: 'Confirmado', text: `Confirmado ${timeAgo(days)}` }
 }
 
-export const CONTACT_MESSAGE = 'Hola, vi su perfil en el directorio de médicos en español y quisiera pedir una cita.'
+export const CONTACT_MESSAGE = 'Hola, vi su perfil en el directorio de sanitarios en español y quisiera pedir una cita.'
 
 export function waLink(d: Pick<PublicDoctor, 'public_whatsapp'>): string | null {
   if (!d.public_whatsapp) return null

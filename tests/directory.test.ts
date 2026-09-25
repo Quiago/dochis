@@ -71,7 +71,7 @@ describe('waLink', () => {
     expect(waLink(doc({ public_whatsapp: null }))).toBeNull()
     const link = waLink(doc({ public_whatsapp: '+971 50 123 4567' }))!
     expect(link.startsWith('https://wa.me/971501234567?text=')).toBe(true)
-    expect(decodeURIComponent(link.split('text=')[1])).toMatch(/^Hola, vi su perfil en el directorio de médicos en español/)
+    expect(decodeURIComponent(link.split('text=')[1])).toMatch(/^Hola, vi su perfil en el directorio de sanitarios en español/)
   })
 })
 

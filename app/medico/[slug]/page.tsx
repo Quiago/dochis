@@ -114,7 +114,7 @@ export default async function DoctorPage({ params }: Props) {
                     )
                   })}
                 </ol>
-                <p className="muted small">Cada médico confirma sus datos una vez al mes.</p>
+                <p className="muted small">Cada profesional confirma sus datos una vez al mes.</p>
               </div>
             </div>
           )}

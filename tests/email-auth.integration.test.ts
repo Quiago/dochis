@@ -87,7 +87,7 @@ describe.skipIf(!db)('login por código de correo', () => {
 describe.skipIf(!mailpitUp)('envío por SMTP', () => {
   it('manda el código al destinatario con asunto y texto en español', async () => {
     vi.stubEnv('SMTP_URL', 'smtp://localhost:1025')
-    vi.stubEnv('EMAIL_FROM', 'Médicos en español <directorio@example.com>')
+    vi.stubEnv('EMAIL_FROM', 'Sanitarios en español <directorio@example.com>')
     await fetch(`${MAILPIT}/api/v1/messages`, { method: 'DELETE' })
     await sendLoginCode('dra.lucia@example.com', '482913')
     const list = await fetch(`${MAILPIT}/api/v1/messages`).then((r) => r.json())

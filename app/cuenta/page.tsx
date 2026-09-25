@@ -43,10 +43,10 @@ export default async function Cuenta({ searchParams }: { searchParams: Promise<{
 
       {reviewer && !own ? (
         <>
-          <Flash className="auth-flash">Eres {reviewer.role === 'admin' ? 'administrador' : 'embajador'}: no necesitas un perfil de médico. Tu panel está en <Link href="/admin">Panel de revisión</Link>.</Flash>
+          <Flash className="auth-flash">Eres {reviewer.role === 'admin' ? 'administrador' : 'embajador'}: no necesitas un perfil de profesional. Tu panel está en <Link href="/admin">Panel de revisión</Link>.</Flash>
           {/* Folded so an admin never republishes themselves by accident. */}
           <details className="auth-box">
-            <summary>¿También eres médico? Crea tu perfil</summary>
+            <summary>¿También atiendes pacientes? Crea tu perfil</summary>
             <ProfileForm initial={initial} loginPhone={session.phone} submitLabel="Publicar perfil" />
           </details>
         </>
