@@ -14,7 +14,7 @@ export function licenseFormatIssue(license: string): string | null {
   return ok ? null : 'El número de licencia no tiene un formato reconocible.'
 }
 
-const PROMPT = `Eres el revisor automático de un directorio comunitario de médicos que atienden en español en los Emiratos Árabes Unidos.
+const PROMPT = `Eres el revisor automático de un directorio comunitario de profesionales de la salud que atienden en español en los Emiratos Árabes Unidos.
 Tu único trabajo es frenar abusos evidentes. Devuelve SOLO un JSON {"problemas": ["..."]} en español.
 Marca un problema SOLO si es evidente sin necesidad de comprobar nada fuera del perfil:
 - el nombre claramente no es de una persona (publicidad, frases, insultos, texto sin sentido);
@@ -23,7 +23,8 @@ Marca un problema SOLO si es evidente sin necesidad de comprobar nada fuera del 
 - hay spam, publicidad o texto ofensivo en cualquier campo;
 - hay enlaces, correos o teléfonos metidos en campos que no son de contacto.
 NO marques nunca: que no puedas comprobar si la persona, la clínica o la licencia existen; nombres o clínicas poco
-conocidos; tildes, mayúsculas, abreviaturas o idiomas; que se muestre el número de licencia (es público a propósito).
+conocidos; tildes, mayúsculas, abreviaturas o idiomas; que el número de licencia no se pueda verificar (el profesional puede
+elegir no publicarlo, y aun publicado no es tu trabajo comprobarlo).
 En la duda, no marques. Si todo está bien: {"problemas": []}.
 
 Perfil:

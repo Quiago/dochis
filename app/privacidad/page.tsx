@@ -15,13 +15,14 @@ export default function Privacidad() {
         <li>El correo de contacto y los enlaces, solo si el profesional los escribió en su perfil.</li>
         <li>El horario de atención, si lo publicó.</li>
         <li>El número de licencia, solo si marcó la casilla de publicarlo. Si no, se indica únicamente la autoridad en la que está registrado.</li>
-        <li>Los perfiles importados de la lista anterior del grupo muestran solo nombre, especialidad y centro hasta que el profesional los reclama.</li>
+        <li>La foto o el icono del profesional, solo si la subió.</li>
+        <li>Los perfiles importados de la lista anterior del grupo muestran solo nombre, especialidad, clínica, zona y emirato hasta que el profesional los reclama.</li>
       </ul>
       <h2>Qué no se publica nunca</h2>
       <ul>
         <li>El teléfono con el que el profesional entra.</li>
         <li>El correo con el que entra, que es distinto del correo de contacto y nunca se publica.</li>
-              </ul>
+      </ul>
       <h2>Para qué usamos los datos</h2>
       <ul>
         <li>Identificar al profesional al entrar (le enviamos un código de un solo uso).</li>

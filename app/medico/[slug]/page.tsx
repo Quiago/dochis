@@ -54,9 +54,9 @@ export default async function DoctorPage({ params }: Props) {
               <Button as="a" href={`/entrar?medico=${d.slug}`} block>¿Eres tú? Reclama tu perfil</Button>
             ) : d.public_whatsapp ? (
               <WhatsAppButton d={d} block />
-            ) : (
+            ) : !d.public_email && d.links.length === 0 ? (
               <p className="muted small">Contacto a través de su clínica</p>
-            )}
+            ) : null}
           </div>
           {(d.public_email || d.links.length > 0) && (
             <ul className="facts muted">
@@ -85,8 +85,11 @@ export default async function DoctorPage({ params }: Props) {
               )}
               {(d.hours_weekday_open || d.hours_weekend_open) && (
                 <p className="small">
-                  <ClockIcon /> Entre semana {formatHours(d.hours_weekday_open, d.hours_weekday_close)}
-                  {' · '}Fin de semana {formatHours(d.hours_weekend_open, d.hours_weekend_close)}
+                  <ClockIcon />{' '}
+                  {[
+                    d.hours_weekday_open && `Entre semana ${formatHours(d.hours_weekday_open, d.hours_weekday_close)}`,
+                    d.hours_weekend_open && `Fin de semana ${formatHours(d.hours_weekend_open, d.hours_weekend_close)}`,
+                  ].filter(Boolean).join(' · ')}
                   <br /><span className="muted small">Según el profesional; puede cambiar.</span>
                 </p>
               )}

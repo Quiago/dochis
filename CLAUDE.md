@@ -61,7 +61,7 @@ Seguridad: códigos de un solo uso; 5 códigos erróneos invalidan el challenge;
 - Correo por **SMTP genérico** (`nodemailer`, `SMTP_URL`): hoy Gmail con contraseña de aplicación (sin dominio; 500 destinatarios/día); con dominio, Resend o SES por SMTP sin cambiar código. En desarrollo, Mailpit en Docker.
 
 ## Modelo de datos
-- `doctors`: id, slug (único, para `/medico/[slug]`), full_name, specialty, clinic, area, emirate, languages text[], insurances text[], regulator (DHA|DOH|MOHAP), license_number, show_license (booleano, licencia siempre obligatoria pero se publica solo si está marcado), phone_e164 (único, login), public_whatsapp (nullable, solo con consentimiento), email (nullable), public_email (nullable, correo de contacto, distinto del de login), links (nullable, hasta cinco enlaces de la lista blanca), hours_weekday_open, hours_weekday_close, hours_weekend_open, hours_weekend_close (nullable, horario de atención), status (unclaimed|pending_verification|verified|stale|hidden), consent_at, last_confirmed_at, created_at
+- `doctors`: id, slug (único, para `/medico/[slug]`), full_name, specialty, clinic, area, emirate, languages text[], insurances text[], regulator (DHA|DOH|MOHAP), license_number, show_license (booleano, licencia siempre obligatoria pero se publica solo si está marcado), phone_e164 (único, login), public_whatsapp (nullable, solo con consentimiento), email (nullable), public_email (nullable, correo de contacto, distinto del de login), links (text[] not null, default '{}', hasta cinco enlaces de la lista blanca), hours_weekday_open, hours_weekday_close, hours_weekend_open, hours_weekend_close (nullable, horario de atención), status (unclaimed|pending_verification|verified|stale|hidden), consent_at, last_confirmed_at, created_at
 - `confirmations`: id, doctor_id, confirmed_at (historial para el gráfico de confirmaciones; se agrega una fila cada vez que el médico confirma)
 - `login_challenges`: id, phone_e164, code_hash, status (pending|verified|expired), attempts, expires_at, verified_at, created_at, ip
 - `bot_sessions`: phone_e164, state (idle|awaiting_confirm_choice), updated_at (estado de la conversación del bot)
@@ -90,7 +90,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - Especialidad, idiomas y seguros = Labels tipo "topics".
 - Estado: **confirmado = insignia azul de verificado** (SVG propio en `components/StatusLabel.tsx`, estilo Instagram/Telegram) junto al nombre, con `aria-label` "Confirmado"; "Pendiente" (amarillo) y "Sin confirmar" (gris) siguen siendo Labels, porque son avisos que conviene leer. Octicon de verificado junto al regulador.
 - Estado efectivo: un perfil `verified` con más de 35 días sin confirmar se muestra como "Pendiente" aunque el cron aún no lo haya cambiado.
-- `/medico/[slug]`: layout de perfil de usuario (izquierda avatar de iniciales, datos y "Escribir por WhatsApp"; derecha detalles, seguros y gráfico de confirmaciones, una celda por mes).
+- `/medico/[slug]`: layout de perfil de usuario (izquierda avatar de iniciales, datos y "Escribir por WhatsApp"; derecha detalles, seguros y gráfico de confirmaciones, una celda por mes). Muestra el correo público, los enlaces y el horario de atención cuando el profesional los publicó.
 - `/admin`: como Issues/PRs, pestañas "Pendientes de verificar" / "Sin confirmar esta ronda" / "Reportes".
 - Login por WhatsApp: flujo de pasos estilo pantalla de sign-in (número → enviar código por WhatsApp → listo).
 - Mobile first.
