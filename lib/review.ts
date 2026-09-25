@@ -44,7 +44,8 @@ const bedrock: Invoke = async (prompt) => {
 export async function llmIssues(data: ProfileData, invoke?: Invoke): Promise<string[]> {
   if (!invoke && !process.env.BEDROCK_MODEL_ID) return []
   try {
-    const { public_whatsapp: _phone, ...professional } = data  // the model never sees phone numbers
+    // El modelo nunca ve datos de contacto: ni teléfono, ni correo, ni enlaces (la lista blanca ya filtra los enlaces).
+    const { public_whatsapp: _phone, public_email: _email, links: _links, ...professional } = data
     const text = await (invoke ?? bedrock)(PROMPT + JSON.stringify(professional, null, 2))
     const json = text.match(/\{[\s\S]*\}/)?.[0]
     const problems = json ? JSON.parse(json).problemas : []

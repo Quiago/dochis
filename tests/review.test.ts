@@ -26,10 +26,13 @@ describe('revisión con Bedrock (simulada)', () => {
     expect(await llmIssues(data({ specialty: 'Venta de coches' }), invoke)).toEqual(['La especialidad no es sanitaria'])
     expect(invoke.mock.calls[0][0]).toContain('Venta de coches')
   })
-  it('nunca envía el teléfono al modelo', async () => {
+  it('nunca envía al modelo el teléfono, el correo ni los enlaces', async () => {
     const invoke = vi.fn().mockResolvedValue('{"problemas": []}')
-    await llmIssues(data({ public_whatsapp: '+971501234567' }), invoke)
-    expect(invoke.mock.calls[0][0]).not.toContain('971501234567')
+    await llmIssues(data({ public_whatsapp: '+971501234567', public_email: 'lucia@clinica.ae', links: ['https://instagram.com/lucia'] }), invoke)
+    const prompt = invoke.mock.calls[0][0]
+    expect(prompt).not.toContain('+971501234567')
+    expect(prompt).not.toContain('lucia@clinica.ae')
+    expect(prompt).not.toContain('instagram.com/lucia')
   })
 
   it('tolera texto alrededor del JSON y respuestas vacías', async () => {
