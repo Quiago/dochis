@@ -67,7 +67,11 @@ export default async function DoctorPage({ params }: Props) {
               <p><StatusLabel f={f} /> <span className="muted small">{f.text}</span></p>
               {d.regulator && (
                 <>
-                  <p>Licencia <strong>{d.regulator} {d.license_number}</strong> <span className="muted small">(declarada por el médico)</span></p>
+                  <p>
+                    {d.license_number
+                      ? <>Licencia <strong>{d.regulator} {d.license_number}</strong> <span className="muted small">(declarada por el profesional)</span></>
+                      : <>Registrado en <strong>{d.regulator}</strong> <span className="muted small">(prefiere no publicar el número)</span></>}
+                  </p>
                   <p><Button as="a" href={REGISTRY[d.regulator]} target="_blank" rel="noopener" size="small">Comprobar en el registro oficial</Button></p>
                 </>
               )}

@@ -69,7 +69,12 @@ export default function DoctorRow({ d, now }: { d: PublicDoctor; now: Date }) {
       <p className="muted small status">
         {f.text}
         {d.regulator && (
-          <span> · Licencia {d.regulator} {d.license_number} · <Link href={REGISTRY[d.regulator]} target="_blank" rel="noopener">Comprobar</Link></span>
+          <span>
+            {' · '}
+            {d.license_number ? `Licencia ${d.regulator} ${d.license_number}` : `Registrado en ${d.regulator}`}
+            {' · '}
+            <Link href={REGISTRY[d.regulator]} target="_blank" rel="noopener">Comprobar</Link>
+          </span>
         )}
       </p>
       <div className="actions">

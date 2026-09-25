@@ -41,6 +41,13 @@ describe('DoctorRow', () => {
     expect(screen.getByRole('link', { name: /Reclama tu perfil/ }).getAttribute('href')).toBe('/entrar?medico=dra-lucia')
     expect(screen.queryByText(/Licencia/)).toBeNull()
   })
+
+  it('sin número de licencia publicado, muestra solo la autoridad y el enlace para comprobar', () => {
+    row({ license_number: null })
+    expect(screen.getByText(/Registrado en DHA/)).toBeTruthy()
+    expect(screen.queryByText(/Licencia DHA/)).toBeNull()
+    expect(screen.getByRole('link', { name: 'Comprobar' })).toBeTruthy()
+  })
 })
 
 describe('layout', () => {
