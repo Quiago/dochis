@@ -83,7 +83,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 `prototype.html` es el prototipo aprobado para **flujos, contenido y textos** (búsqueda, filtros, orden aleatorio, estado de frescura, login por WhatsApp, reportes y alta). **No copiar su estilo visual**: la interfaz sigue el estilo de GitHub con Primer. 
 
 ## Diseño (traducción de GitHub al directorio)
-- Nombre del sitio: "Sanitarios en español · Emiratos" (`app/layout.tsx`, `components/NavDrawer.tsx`, `components/InviteColleague.tsx`, `app/contacto.vcf/route.ts`).
+- Nombre del sitio: "Sanitarios en español · Emiratos" completo en el título, la cabecera y el menú de compartir (`app/layout.tsx`, `components/InviteColleague.tsx`); el menú lateral usa la forma corta "Sanitarios en español" (`components/NavDrawer.tsx`); la tarjeta de contacto se llama "Directorio Sanitarios en español" (`app/contacto.vcf/route.ts`).
 - En cada fila del listado la foto (o las iniciales) va **grande y a la derecha** (112 px; 64 px en móvil), en el espacio libre del contenedor, sin desplazar el texto.
 - Home = dashboard de GitHub: menú lateral (hamburguesa) en la cabecera; columna izquierda con especialidades y emiratos (con conteo, orden alfabético); centro con buscador, filtros (ActionMenu) y la lista estilo repositorios; columna derecha con "¿Eres médico?" (botón del canal activo), "Cómo funciona" y cifras. Nunca "destacados" ni "recién confirmados" (principio 4). Textos sin canal fijo: "confirma sus datos una vez al mes".
 - Filtros: especialidad, emirato, seguro **e idioma** (principio 7). Viven en la URL (`?q=&esp=&emirato=&seguro=&idioma=`) para render en servidor y enlaces compartibles.
