@@ -10,7 +10,8 @@ const daysAgo = (d: number) => new Date(NOW.getTime() - d * 86_400_000).toISOStr
 const doc = (over: Partial<PublicDoctor>): PublicDoctor => ({
   id: 'x', slug: 'x', full_name: 'Dr. X', specialty: 'Pediatría', clinic: 'Clínica', area: 'Jumeirah',
   emirate: 'Dubái', languages: ['Español'], insurances: ['Daman'], regulator: 'DHA',
-  public_whatsapp: null, status: 'verified', last_confirmed_at: daysAgo(10), license_number: 'DHA-1', insurance_url: null, photo_version: null, ...over,
+  public_whatsapp: null, status: 'verified', last_confirmed_at: daysAgo(10), license_number: 'DHA-1', insurance_url: null, photo_version: null,
+  public_email: null, links: [], hours_weekday_open: null, hours_weekday_close: null, hours_weekend_open: null, hours_weekend_close: null, ...over,
 })
 
 const DOCS = [

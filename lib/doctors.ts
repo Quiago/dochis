@@ -12,7 +12,8 @@ const toDoctor = (r: Row): PublicDoctor =>
 export async function getPublicDoctors(): Promise<PublicDoctor[]> {
   const rows = await reader()<Row[]>`
     select id, slug, full_name, specialty, clinic, area, emirate, languages, insurances,
-           regulator, public_whatsapp, status, last_confirmed_at, license_number, insurance_url, photo_version
+           regulator, public_whatsapp, status, last_confirmed_at, license_number, insurance_url, photo_version,
+           public_email, links, hours_weekday_open, hours_weekday_close, hours_weekend_open, hours_weekend_close
     from public_doctors`
   return rows.map(toDoctor)
 }
@@ -21,7 +22,8 @@ export async function getPublicDoctors(): Promise<PublicDoctor[]> {
 export const getDoctorBySlug = cache(async (slug: string) => {
   const [row] = await reader()<Row[]>`
     select id, slug, full_name, specialty, clinic, area, emirate, languages, insurances,
-           regulator, public_whatsapp, status, last_confirmed_at, license_number, insurance_url, photo_version
+           regulator, public_whatsapp, status, last_confirmed_at, license_number, insurance_url, photo_version,
+           public_email, links, hours_weekday_open, hours_weekday_close, hours_weekend_open, hours_weekend_close
     from public_doctors where slug = ${slug}`
   if (!row) return null
   const conf = await reader()<{ confirmed_at: Date }[]>`select confirmed_at from public_confirmations where doctor_id = ${row.id}`

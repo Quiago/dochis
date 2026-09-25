@@ -61,6 +61,26 @@ describe.skipIf(!db)('alta con revisión automática', () => {
     const b = await signUp(sql, '+971501110002', data({ full_name: 'Dr. Repetido' }), FLAG)
     expect([a.slug, b.slug]).toEqual(['dr-repetido', 'dr-repetido-2'])
   })
+
+  it('correo público, enlaces y horario se guardan al alta y se ven en la vista pública', async () => {
+    const contacto = {
+      full_name: 'Dra. Contacto Completo', license_number: '66660001', public_email: 'contacto@clinica.ae',
+      links: ['https://instagram.com/contacto'], hours_weekday_open: '09:00', hours_weekday_close: '17:00',
+      hours_weekend_open: '10:00', hours_weekend_close: '14:00',
+    }
+    const r = await signUp(sql, 'contacto-completo@example.com', data(contacto), OK)
+    expect(r.published).toBe(true)
+    expect(await doctorBySlug(r.slug)).toMatchObject({
+      public_email: 'contacto@clinica.ae', links: ['https://instagram.com/contacto'],
+      hours_weekday_open: '09:00:00', hours_weekday_close: '17:00:00',
+      hours_weekend_open: '10:00:00', hours_weekend_close: '14:00:00',
+    })
+    expect(await publicRow(r.slug)).toMatchObject({
+      public_email: 'contacto@clinica.ae', links: ['https://instagram.com/contacto'],
+      hours_weekday_open: '09:00', hours_weekday_close: '17:00',
+      hours_weekend_open: '10:00', hours_weekend_close: '14:00',
+    })
+  })
 })
 
 describe.skipIf(!db)('edición del propio perfil', () => {
@@ -90,6 +110,26 @@ describe.skipIf(!db)('edición del propio perfil', () => {
     expect(paula.status).toBe('unclaimed')
     expect(await saveOwnProfile(sql, paula.phone_e164, data({ full_name: paula.full_name, specialty: 'Neurología', license_number: '55555555' }), OK)).toBe('saved')
     expect((await publicRow('dra-paula-echeverri')).status).toBe('verified')
+  })
+
+  it('correo público, enlaces y horario se guardan al editar y se ven en la vista pública', async () => {
+    const lucia = await doctorBySlug('dra-lucia-marquez-ortega')
+    const edicion = {
+      full_name: lucia.full_name, license_number: lucia.license_number, public_email: 'lucia.edit@clinica.ae',
+      links: ['https://linkedin.com/in/lucia-edit'], hours_weekday_open: '08:30', hours_weekday_close: '16:30',
+      hours_weekend_open: null, hours_weekend_close: null,
+    }
+    expect(await saveOwnProfile(sql, lucia.phone_e164, data(edicion), OK)).toBe('saved')
+    expect(await doctorBySlug('dra-lucia-marquez-ortega')).toMatchObject({
+      public_email: 'lucia.edit@clinica.ae', links: ['https://linkedin.com/in/lucia-edit'],
+      hours_weekday_open: '08:30:00', hours_weekday_close: '16:30:00',
+      hours_weekend_open: null, hours_weekend_close: null,
+    })
+    expect(await publicRow('dra-lucia-marquez-ortega')).toMatchObject({
+      public_email: 'lucia.edit@clinica.ae', links: ['https://linkedin.com/in/lucia-edit'],
+      hours_weekday_open: '08:30', hours_weekday_close: '16:30',
+      hours_weekend_open: null, hours_weekend_close: null,
+    })
   })
 
   it('ocultar el número de licencia no despublica un perfil ya verificado', async () => {

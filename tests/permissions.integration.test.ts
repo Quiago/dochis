@@ -71,6 +71,15 @@ describe.skipIf(!db)('permisos de base de datos', () => {
     expect(rows.every((r) => r.license_number === null)).toBe(true)
   })
 
+  it('publica correo, enlaces y horario solo de perfiles reclamados', async () => {
+    const rows = await reader`select status, public_email, links, hours_weekday_open from public_doctors`
+    for (const r of rows.filter((x) => x.status === 'unclaimed')) {
+      expect(r.public_email).toBeNull()
+      expect(r.links).toEqual([])
+      expect(r.hours_weekday_open).toBeNull()
+    }
+  })
+
   it('web_reader no puede leer tablas internas ni escribir', async () => {
     for (const t of ['login_challenges', 'bot_sessions', 'reports', 'verification_requests', 'admins', 'confirmations']) {
       expect(await code(reader`select * from ${reader(t)}`), t).toBe('42501')

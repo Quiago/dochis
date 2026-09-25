@@ -20,6 +20,12 @@ export type PublicDoctor = {
   last_confirmed_at: string | null
   license_number: string | null
   insurance_url: string | null
+  public_email: string | null
+  links: string[]
+  hours_weekday_open: string | null
+  hours_weekday_close: string | null
+  hours_weekend_open: string | null
+  hours_weekend_close: string | null
   // Insurers published by the clinic itself (lib/clinic-insurance.ts), kept apart from what the doctor declares.
   clinic_insurers?: string[]
   clinic_insurance_source?: string | null

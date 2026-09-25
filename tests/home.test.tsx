@@ -13,6 +13,7 @@ const base: PublicDoctor = {
   id: '1', slug: 'dra-lucia', full_name: 'Dra. Lucía', specialty: 'Pediatría', clinic: 'Palmera Kids', area: 'Jumeirah',
   emirate: 'Dubái', languages: ['Español'], insurances: ['Daman'], regulator: 'DHA', public_whatsapp: '+971500000001',
   status: 'verified', last_confirmed_at: '2026-09-09T12:00:00Z', license_number: '12345678', insurance_url: null, photo_version: null,
+  public_email: null, links: [], hours_weekday_open: null, hours_weekday_close: null, hours_weekend_open: null, hours_weekend_close: null,
 }
 const row = (d: Partial<PublicDoctor>) =>
   render(<Providers><ul><DoctorRow d={{ ...base, ...d }} now={NOW} /></ul></Providers>)
