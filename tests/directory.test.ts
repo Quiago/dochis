@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  confirmationMonths, facets, filterDoctors, freshness, initials, shuffle, slugify, timeAgo, waLink,
+  confirmationMonths, facets, filterDoctors, formatHours, freshness, initials, shuffle, slugify, timeAgo, waLink,
   type PublicDoctor,
 } from '@/lib/directory'
 
@@ -194,5 +194,12 @@ describe('seguros según la web de la clínica', () => {
     expect(d.clinic_insurers).toEqual(['Daman', 'AXA / GIG Gulf', 'Bupa'])  // common insurers first
     expect(filterDoctors([d], { seguro: 'Bupa' }).map((x) => x.id)).toEqual(['m'])
     expect(facets([d]).seguro).toEqual(['AXA / GIG Gulf', 'Bupa', 'Cigna', 'Daman'])
+  })
+})
+
+describe('horario', () => {
+  it('describe la franja o dice que no atiende', () => {
+    expect(formatHours('09:00', '17:00')).toBe('9:00–17:00')
+    expect(formatHours(null, null)).toBe('Sin horario publicado')
   })
 })

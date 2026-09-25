@@ -99,6 +99,13 @@ export function freshness(d: PublicDoctor, now = new Date()): Freshness {
   return { kind: 'confirmed', label: 'Confirmado', text: `Confirmado ${timeAgo(days)}` }
 }
 
+// "09:00" se lee mejor como "9:00"; sin las dos horas no hay franja que enseñar.
+export function formatHours(open: string | null, close: string | null): string {
+  if (!open || !close) return 'Sin horario publicado'
+  const trim = (h: string) => h.replace(/^0/, '')
+  return `${trim(open)}–${trim(close)}`
+}
+
 export const CONTACT_MESSAGE = 'Hola, vi su perfil en el directorio de sanitarios en español y quisiera pedir una cita.'
 
 export function waLink(d: Pick<PublicDoctor, 'public_whatsapp'>): string | null {
