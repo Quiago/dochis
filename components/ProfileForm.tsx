@@ -8,6 +8,7 @@ import PhotoInput from './PhotoInput'
 export type Initial = {
   full_name?: string; specialty?: string; clinic?: string; area?: string | null; emirate?: string
   languages?: string[]; insurances?: string[]; regulator?: string | null; license_number?: string | null
+  show_license?: boolean
   public_whatsapp?: string | null
   insurance_url?: string | null
 }
@@ -83,7 +84,12 @@ export default function ProfileForm({ initial, medico, loginPhone, submitLabel, 
         </Select>
         {err.regulator && <FormControl.Validation variant="error">{err.regulator}</FormControl.Validation>}
       </FormControl>
-      {field('license_number', 'Número de licencia', { required: true, caption: 'Se publica junto a un enlace al registro oficial, para que cualquiera pueda comprobarla.' })}
+      {field('license_number', 'Número de licencia', { required: true, caption: 'La pedimos siempre: evita perfiles duplicados y suplantaciones.' })}
+      <FormControl>
+        <Checkbox name="show_license" defaultChecked={initial.show_license ?? true} />
+        <FormControl.Label>Publicar mi número de licencia</FormControl.Label>
+        <FormControl.Caption>Si lo dejas sin marcar, tu perfil dirá solo en qué autoridad estás registrado, con el enlace al registro oficial.</FormControl.Caption>
+      </FormControl>
 
       <FormControl>
         <Checkbox name="show_whatsapp" defaultChecked={!!initial.public_whatsapp} />
@@ -98,7 +104,7 @@ export default function ProfileForm({ initial, medico, loginPhone, submitLabel, 
 
       <FormControl required>
         <Checkbox name="consent" />
-        <FormControl.Label>Acepto que se publiquen mis datos profesionales, incluido mi número de licencia, en el directorio.</FormControl.Label>
+        <FormControl.Label>Acepto que se publiquen en el directorio los datos profesionales que he rellenado.</FormControl.Label>
         {err.consent && <FormControl.Validation variant="error">{err.consent}</FormControl.Validation>}
       </FormControl>
 
