@@ -42,6 +42,7 @@ export function parseLinks(raw: string): { links?: string[]; error?: string } {
   if (lines.length > MAX_LINKS) return { error: `Como mucho cinco enlaces.` }
   let free = 0
   for (const l of lines) {
+    if (l.length > 300) return { error: 'Cada enlace puede tener como mucho 300 caracteres.' }
     let host: string
     try {
       if (new URL(l).protocol !== 'https:') return { error: 'Los enlaces tienen que empezar por https://' }
@@ -69,6 +70,60 @@ const MAX_ITEMS = 20
 const text = (fd: FormData, k: string) => String(fd.get(k) ?? '').trim()
 const list = (...values: string[]) =>
   [...new Set(values.flatMap((v) => v.split(',')).map((v) => v.trim()).filter(Boolean))]
+
+// What the visitor typed, kept as plain serializable values (React 19 resets an uncontrolled form after the
+// action runs, so on a validation error we hand these back as the new defaultValue/defaultChecked).
+export type FormValues = {
+  full_name: string
+  specialty: string
+  clinic: string
+  area: string
+  emirate: string
+  languages: string[]
+  other_languages: string
+  insurances: string
+  regulator: string
+  license_number: string
+  show_license: boolean
+  show_whatsapp: boolean
+  public_whatsapp: string
+  insurance_url: string
+  public_email: string
+  links: string
+  hours_weekday_open: string
+  hours_weekday_close: string
+  hours_weekend_open: string
+  hours_weekend_close: string
+  consent: boolean
+}
+
+const raw = (fd: FormData, k: string) => String(fd.get(k) ?? '')
+
+export function formValues(fd: FormData): FormValues {
+  return {
+    full_name: raw(fd, 'full_name'),
+    specialty: raw(fd, 'specialty'),
+    clinic: raw(fd, 'clinic'),
+    area: raw(fd, 'area'),
+    emirate: raw(fd, 'emirate'),
+    languages: fd.getAll('languages').map(String),
+    other_languages: raw(fd, 'other_languages'),
+    insurances: raw(fd, 'insurances'),
+    regulator: raw(fd, 'regulator'),
+    license_number: raw(fd, 'license_number'),
+    show_license: !!fd.get('show_license'),
+    show_whatsapp: !!fd.get('show_whatsapp'),
+    public_whatsapp: raw(fd, 'public_whatsapp'),
+    insurance_url: raw(fd, 'insurance_url'),
+    public_email: raw(fd, 'public_email'),
+    links: raw(fd, 'links'),
+    hours_weekday_open: raw(fd, 'hours_weekday_open'),
+    hours_weekday_close: raw(fd, 'hours_weekday_close'),
+    hours_weekend_open: raw(fd, 'hours_weekend_open'),
+    hours_weekend_close: raw(fd, 'hours_weekend_close'),
+    consent: !!fd.get('consent'),
+  }
+}
 
 export function parseProfileForm(fd: FormData): { data?: ProfileData; errors?: Record<string, string> } {
   const errors: Record<string, string> = {}

@@ -2,12 +2,12 @@
 import { redirect } from 'next/navigation'
 import { writer } from '@/lib/db'
 import { findDoctorByIdentity, saveOwnProfile, signUp } from '@/lib/onboarding'
-import { parseProfileForm } from '@/lib/profile'
+import { formValues, parseProfileForm, type FormValues } from '@/lib/profile'
 import { photoIssue, setPhoto, validatePhoto } from '@/lib/photo'
 import { reviewProfile } from '@/lib/review'
 import { getSession } from '@/lib/session'
 
-export type FormState = { errors?: Record<string, string> }
+export type FormState = { errors?: Record<string, string>; values?: FormValues }
 
 // Own profile (matched by the session's phone/email) or a new one. The automatic review decides whether it is
 // published at once or waits in "Marcados para revisar". Never trust the client for which case applies.
@@ -16,7 +16,10 @@ export async function saveProfile(_prev: FormState, fd: FormData): Promise<FormS
   if (!session) redirect('/entrar')
   const identity = session.phone ?? session.email
   const { data, errors } = parseProfileForm(fd)
-  if (!data) return { errors }
+  // React 19 resets an uncontrolled form after the action runs, so an error return carries back what was
+  // typed (the photo file input excepted: browsers never let a script refill it).
+  const values = formValues(fd)
+  if (!data) return { errors, values }
 
   // Optional photo: validated by its bytes and reviewed before anything is saved.
   const file = fd.get('photo')
@@ -24,9 +27,9 @@ export async function saveProfile(_prev: FormState, fd: FormData): Promise<FormS
   if (file instanceof File && file.size > 0) {
     const bytes = new Uint8Array(await file.arrayBuffer())
     const v = validatePhoto(bytes)
-    if ('error' in v) return { errors: { photo: v.error } }
+    if ('error' in v) return { errors: { photo: v.error }, values }
     const issue = await photoIssue(bytes, v.type)
-    if (issue) return { errors: { photo: `No podemos usar esa foto: ${issue}` } }
+    if (issue) return { errors: { photo: `No podemos usar esa foto: ${issue}` }, values }
     photo = { bytes, type: v.type }
   }
 
