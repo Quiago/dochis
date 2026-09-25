@@ -16,6 +16,7 @@ export type ProfileData = {
   insurances: string[]
   regulator: (typeof REGULATORS)[number]
   license_number: string
+  show_license: boolean
   public_whatsapp: string | null
   insurance_url: string | null
 }
@@ -54,6 +55,8 @@ export function parseProfileForm(fd: FormData): { data?: ProfileData; errors?: R
     if (items.length > MAX_ITEMS || items.some((i) => i.length > 40)) errors[k] = `Máximo ${MAX_ITEMS} elementos de 40 caracteres.`
   }
 
+  const show_license = !!fd.get('show_license')
+
   let public_whatsapp: string | null = null
   if (fd.get('show_whatsapp')) {
     public_whatsapp = toE164(text(fd, 'public_whatsapp'))
@@ -71,5 +74,5 @@ export function parseProfileForm(fd: FormData): { data?: ProfileData; errors?: R
   if (!fd.get('consent')) errors.consent = 'Para aparecer en el directorio tienes que aceptar que se publiquen tus datos profesionales.'
 
   if (Object.keys(errors).length) return { errors }
-  return { data: { full_name, specialty, clinic, area, emirate, languages, insurances, regulator, license_number, public_whatsapp, insurance_url } }
+  return { data: { full_name, specialty, clinic, area, emirate, languages, insurances, regulator, license_number, show_license, public_whatsapp, insurance_url } }
 }

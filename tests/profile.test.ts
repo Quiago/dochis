@@ -56,6 +56,13 @@ describe('formulario de perfil', () => {
     expect(parseProfileForm(form({ full_name: 'x'.repeat(200) })).errors?.full_name).toBeTruthy()
     expect(parseProfileForm(form({ insurances: Array.from({ length: 40 }, (_, i) => `Seguro ${i}`).join(',') })).errors?.insurances).toBeTruthy()
   })
+
+  it('publica la licencia por defecto y la oculta si se desmarca la casilla', () => {
+    expect(parseProfileForm(form({ show_license: 'on' })).data?.show_license).toBe(true)
+    const fd = form(); fd.delete('show_license')
+    expect(parseProfileForm(fd).data?.show_license).toBe(false)
+    expect(parseProfileForm(fd).errors).toBeUndefined()  // ocultarla no es un error: la licencia sigue siendo obligatoria
+  })
 })
 
 describe('contacto del directorio (.vcf)', () => {

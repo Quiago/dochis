@@ -16,7 +16,7 @@ const OK: Review = { ok: true, issues: [] }
 const FLAG: Review = { ok: false, issues: ['Esa licencia ya está en otro perfil del directorio.'] }
 const data = (over: Partial<ProfileData> = {}): ProfileData => ({
   full_name: 'Dra. Nueva Pérez', specialty: 'Pediatría', clinic: 'Clínica Nueva', area: 'Al Barsha', emirate: 'Dubái',
-  languages: ['Español'], insurances: ['Daman'], regulator: 'DHA', license_number: '77777777', public_whatsapp: null, insurance_url: null, ...over,
+  languages: ['Español'], insurances: ['Daman'], regulator: 'DHA', license_number: '77777777', show_license: true, public_whatsapp: null, insurance_url: null, ...over,
 })
 const doctorBySlug = async (slug: string) => (await sql`select * from doctors where slug = ${slug}`)[0]
 const publicRow = async (slug: string) => (await reader`select * from public_doctors where slug = ${slug}`)[0]
