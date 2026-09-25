@@ -19,3 +19,5 @@ run/
 run.new/
 run.old/
 .playwright-mcp/
+.claude/worktrees/
+.superpowers/
