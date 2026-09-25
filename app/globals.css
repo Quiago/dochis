@@ -174,3 +174,6 @@ p { margin: 0 0 var(--base-size-8); }
 .avatar.avatar-medium { width: 64px; height: 64px; font-size: 20px; }
 .photo-input { display: flex; gap: var(--base-size-16); align-items: center; }
 .photo-input input[type=file] { max-width: 100%; font-size: var(--text-body-size-small); }
+.hours { border: var(--borderWidth-thin) solid var(--borderColor-default); border-radius: var(--borderRadius-medium); padding: var(--base-size-16); margin: var(--base-size-16) 0; }
+.hours legend { padding: 0 var(--base-size-8); font-weight: var(--base-text-weight-semibold); }
+.hours-row { display: flex; gap: var(--base-size-8); align-items: center; }

@@ -1,6 +1,6 @@
 'use client'
 import { useActionState } from 'react'
-import { Button, Checkbox, CheckboxGroup, Flash, FormControl, Select, TextInput } from '@primer/react'
+import { Button, Checkbox, CheckboxGroup, Flash, FormControl, Select, Textarea, TextInput } from '@primer/react'
 import { saveProfile, type FormState } from '@/app/cuenta/actions'
 import { COMMON_LANGUAGES, EMIRATES, REGULATOR_LABELS, REGULATORS } from '@/lib/profile'
 import PhotoInput from './PhotoInput'
@@ -11,6 +11,10 @@ export type Initial = {
   show_license?: boolean
   public_whatsapp?: string | null
   insurance_url?: string | null
+  public_email?: string | null
+  links?: string[]
+  hours_weekday_open?: string | null; hours_weekday_close?: string | null
+  hours_weekend_open?: string | null; hours_weekend_close?: string | null
 }
 
 export default function ProfileForm({ initial, medico, loginPhone, submitLabel, photo }: { initial: Initial; medico?: string; loginPhone?: string; submitLabel: string; photo?: string }) {
@@ -101,6 +105,41 @@ export default function ProfileForm({ initial, medico, loginPhone, submitLabel, 
         <FormControl.Caption>Solo se publica si marcas la casilla de arriba.</FormControl.Caption>
         {err.public_whatsapp && <FormControl.Validation variant="error">{err.public_whatsapp}</FormControl.Validation>}
       </FormControl>
+
+      <FormControl>
+        <FormControl.Label>Correo para pacientes (opcional)</FormControl.Label>
+        <TextInput name="public_email" type="email" inputMode="email" defaultValue={initial.public_email ?? ''} block />
+        <FormControl.Caption>Se publica tal cual. No es el correo con el que entras: ese no se publica nunca.</FormControl.Caption>
+        {err.public_email && <FormControl.Validation variant="error">{err.public_email}</FormControl.Validation>}
+      </FormControl>
+
+      <FormControl>
+        <FormControl.Label>Enlaces (opcional)</FormControl.Label>
+        <Textarea name="links" defaultValue={(initial.links ?? []).join('\n')} rows={3} block placeholder={'https://instagram.com/tu-cuenta\nhttps://tuclinica.ae'} />
+        <FormControl.Caption>Uno por línea, hasta cinco: Instagram, LinkedIn, TikTok, X, Facebook, YouTube y una página web.</FormControl.Caption>
+        {err.links && <FormControl.Validation variant="error">{err.links}</FormControl.Validation>}
+      </FormControl>
+
+      <fieldset className="hours">
+        <legend>Horario de atención (opcional)</legend>
+        <FormControl>
+          <FormControl.Label>Entre semana</FormControl.Label>
+          <div className="hours-row">
+            <TextInput name="hours_weekday_open" type="time" defaultValue={initial.hours_weekday_open?.slice(0, 5) ?? ''} />
+            <TextInput name="hours_weekday_close" type="time" defaultValue={initial.hours_weekday_close?.slice(0, 5) ?? ''} />
+          </div>
+          {err.hours_weekday && <FormControl.Validation variant="error">{err.hours_weekday}</FormControl.Validation>}
+        </FormControl>
+        <FormControl>
+          <FormControl.Label>Fin de semana</FormControl.Label>
+          <div className="hours-row">
+            <TextInput name="hours_weekend_open" type="time" defaultValue={initial.hours_weekend_open?.slice(0, 5) ?? ''} />
+            <TextInput name="hours_weekend_close" type="time" defaultValue={initial.hours_weekend_close?.slice(0, 5) ?? ''} />
+          </div>
+          {err.hours_weekend && <FormControl.Validation variant="error">{err.hours_weekend}</FormControl.Validation>}
+        </FormControl>
+        <p className="muted small">Déjalo vacío si prefieres no publicarlo. Lo revisas cada mes al guardar tu perfil.</p>
+      </fieldset>
 
       <FormControl required>
         <Checkbox name="consent" />
