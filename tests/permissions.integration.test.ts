@@ -60,6 +60,17 @@ describe.skipIf(!db)('permisos de base de datos', () => {
     expect(r.public_whatsapp).toBeNull()
   })
 
+  it('la licencia no se publica si el profesional pidió ocultarla, pero sí el regulador', async () => {
+    const [r] = await reader`select regulator, license_number from public_doctors where slug = 'dr-sebastian-rojas'`
+    expect(r.regulator).toBe('DHA')
+    expect(r.license_number).toBeNull()
+  })
+
+  it('un perfil sin reclamar nunca filtra la licencia aunque show_license sea el valor por defecto', async () => {
+    const rows = await reader`select license_number from public_doctors where status = 'unclaimed'`
+    expect(rows.every((r) => r.license_number === null)).toBe(true)
+  })
+
   it('web_reader no puede leer tablas internas ni escribir', async () => {
     for (const t of ['login_challenges', 'bot_sessions', 'reports', 'verification_requests', 'admins', 'confirmations']) {
       expect(await code(reader`select * from ${reader(t)}`), t).toBe('42501')

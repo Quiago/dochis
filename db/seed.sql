@@ -31,3 +31,6 @@ insert into confirmations (doctor_id, confirmed_at)
 select d.id, d.last_confirmed_at - make_interval(days => 91 * n)
 from doctors d, generate_series(0, 3) n
 where d.last_confirmed_at is not null;
+
+-- Un perfil que registró su licencia pero pidió no publicar el número.
+update doctors set show_license = false where slug = 'dr-sebastian-rojas';
