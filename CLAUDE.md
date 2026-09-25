@@ -61,7 +61,7 @@ Seguridad: códigos de un solo uso; 5 códigos erróneos invalidan el challenge;
 - Correo por **SMTP genérico** (`nodemailer`, `SMTP_URL`): hoy Gmail con contraseña de aplicación (sin dominio; 500 destinatarios/día); con dominio, Resend o SES por SMTP sin cambiar código. En desarrollo, Mailpit en Docker.
 
 ## Modelo de datos
-- `doctors`: id, slug (único, para `/medico/[slug]`), full_name, specialty, clinic, area, emirate, languages text[], insurances text[], regulator (DHA|DOH|MOHAP), license_number, phone_e164 (único, login), public_whatsapp (nullable, solo con consentimiento), email (nullable), status (unclaimed|pending_verification|verified|stale|hidden), consent_at, last_confirmed_at, created_at
+- `doctors`: id, slug (único, para `/medico/[slug]`), full_name, specialty, clinic, area, emirate, languages text[], insurances text[], regulator (DHA|DOH|MOHAP), license_number, show_license (booleano, licencia siempre obligatoria pero se publica solo si está marcado), phone_e164 (único, login), public_whatsapp (nullable, solo con consentimiento), email (nullable), public_email (nullable, correo de contacto, distinto del de login), links (nullable, hasta cinco enlaces de la lista blanca), hours_weekday_open, hours_weekday_close, hours_weekend_open, hours_weekend_close (nullable, horario de atención), status (unclaimed|pending_verification|verified|stale|hidden), consent_at, last_confirmed_at, created_at
 - `confirmations`: id, doctor_id, confirmed_at (historial para el gráfico de confirmaciones; se agrega una fila cada vez que el médico confirma)
 - `login_challenges`: id, phone_e164, code_hash, status (pending|verified|expired), attempts, expires_at, verified_at, created_at, ip
 - `bot_sessions`: phone_e164, state (idle|awaiting_confirm_choice), updated_at (estado de la conversación del bot)
@@ -70,7 +70,7 @@ Seguridad: códigos de un solo uso; 5 códigos erróneos invalidan el challenge;
 - `admins`: phone_e164, role (admin|ambassador), scope (nacionalidad o especialidad, nullable)
 
 ## Roles
-- **Público:** lee las vistas `public_doctors` y `public_confirmations` a través del rol `web_reader`: perfiles verified/stale (sin phone_e164 ni email; con número de licencia, publicado con consentimiento para poder comprobarlo en el registro oficial) y unclaimed mostrando solo nombre, especialidad, clínica, zona y emirato (el resto vacío). Nunca pending_verification ni hidden. `web_reader` no tiene permiso sobre ninguna tabla.
+- **Público:** lee las vistas `public_doctors` y `public_confirmations` a través del rol `web_reader`: perfiles verified/stale (sin phone_e164 ni email; con número de licencia solo si `show_license` está marcado, y si no solo el regulador, para poder comprobarlo en el registro oficial) y unclaimed mostrando solo nombre, especialidad, clínica, zona y emirato (el resto vacío). Nunca pending_verification ni hidden. `web_reader` no tiene permiso sobre ninguna tabla.
 - **Médico:** edita solo su perfil.
 - **Revisión automática** (`lib/review.ts`): reglas propias (formato de licencia, licencia repetida, nombre ya publicado) + Amazon Bedrock (`BEDROCK_MODEL_ID`, Nova Lite: Nova Micro daba falsos positivos, p. ej. con medicina estética) para spam, texto ofensivo o especialidades no sanitarias. Limpia → se publica al instante. Marcada → "Marcados para revisar". A un médico ya publicado que edita sin cambiar la licencia nunca se le despublica por un falso positivo. El modelo nunca recibe teléfonos ni correos.
 - **Embajador:** resuelve los perfiles marcados de su especialidad.
@@ -83,6 +83,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 `prototype.html` es el prototipo aprobado para **flujos, contenido y textos** (búsqueda, filtros, orden aleatorio, estado de frescura, login por WhatsApp, reportes y alta). **No copiar su estilo visual**: la interfaz sigue el estilo de GitHub con Primer. 
 
 ## Diseño (traducción de GitHub al directorio)
+- Nombre del sitio: "Sanitarios en español · Emiratos" (`app/layout.tsx`, `components/NavDrawer.tsx`, `components/InviteColleague.tsx`, `app/contacto.vcf/route.ts`).
 - En cada fila del listado la foto (o las iniciales) va **grande y a la derecha** (112 px; 64 px en móvil), en el espacio libre del contenedor, sin desplazar el texto.
 - Home = dashboard de GitHub: menú lateral (hamburguesa) en la cabecera; columna izquierda con especialidades y emiratos (con conteo, orden alfabético); centro con buscador, filtros (ActionMenu) y la lista estilo repositorios; columna derecha con "¿Eres médico?" (botón del canal activo), "Cómo funciona" y cifras. Nunca "destacados" ni "recién confirmados" (principio 4). Textos sin canal fijo: "confirma sus datos una vez al mes".
 - Filtros: especialidad, emirato, seguro **e idioma** (principio 7). Viven en la URL (`?q=&esp=&emirato=&seguro=&idioma=`) para render en servidor y enlaces compartibles.
@@ -105,7 +106,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **2026-09-21:** Se vuelve al "OTP inverso" con la Cloud API de Meta directa: End User Messaging Social no estaba activo en la cuenta, y Meta da un número de prueba al instante. Sin plantillas: el bot solo responde.
 - **2026-09-21:** Login también por código de correo vía SMTP (Gmail). Resend descartado por ahora: sin dominio verificado solo envía a la dirección del dueño de la cuenta.
 - **2026-09-21:** Onboarding mínimo: un solo formulario para alta, reclamo y edición. Los reclamos guardan los datos propuestos en `verification_requests.payload` y no tocan el perfil hasta que un embajador aprueba. `admins.identity` acepta teléfono o correo.
-- **Descartado (por ahora):** redes sociales (señal comercial, contra el principio 1; moderación).
+- **Descartado (por ahora):** redes sociales (señal comercial, contra el principio 1; moderación). Revertido el 2026-09-25 (ver abajo).
 - **2026-09-22:** Foto o icono del médico (antes descartado): se recorta a 256×256 JPEG en el navegador (sin EXIF), se valida por sus bytes (JPEG/WebP, ≤200 KB), se revisa con Bedrock Nova Lite (`PHOTO_MODEL_ID`) y se guarda en Postgres (`doctors.photo`); se sirve desde `/medico/<slug>/foto` solo para perfiles publicados (vista `public_photos`).
 - **2026-09-22:** Colores por categoría como GitHub (`lib/categories.ts`): especialidad azul, idioma morado, seguro rosa (discontinuo si lo publica la clínica), emirato naranja; el mismo color en el punto del botón de filtro.
 - **2026-09-22:** Dirección pública gratis con Cloudflare Pages (`edge/`): una función reenvía todo a CloudFront y manda la IP real en `x-client-ip` con `PROXY_SECRET`. Redirecciones siempre relativas (la app responde bajo varios hosts).
@@ -117,6 +118,7 @@ Interfaz en español neutro. Mensajes del bot en español, breves. Código en in
 - **2026-09-22:** Seguros por clínica: la aceptación depende de aseguradora + plan + red y la publica cada clínica. `lib/clinic-insurance-data.ts` guarda lo investigado **solo de fuentes oficiales** (web/PDF de la clínica o página del gobierno) con la URL y la fecha; sin lista oficial → vacío; confianza baja → no se muestra; clínicas de "pago y reembolso" llevan esa etiqueta. En cada fila se ven aparte las aseguradoras declaradas por el médico y las de su clínica ("según su clínica", con enlace). Se actualiza por pull request.
 - **2026-09-22:** Filtro por estado (Confirmado, Pendiente, Sin confirmar).
 - **2026-09-22:** Foto grande a la derecha de cada fila e insignia azul de verificado en lugar de la etiqueta verde "Confirmado". La insignia se dibuja como SVG inline: sigue el tema claro/oscuro y no depende de una imagen con licencia de terceros.
+- **2026-09-25:** Correo de contacto, enlaces (lista blanca de seis redes más una web, sin acortadores) y horario de atención, todo opcional; la licencia se pide siempre pero se publica solo si el profesional lo marca (si no, se muestra el regulador). Textos de "médicos" a "sanitarios / profesionales de la salud": fisios, psicólogos y enfermeros ya estaban en el directorio y el lenguaje los dejaba fuera. Revierte la decisión de descartar redes sociales: la lista blanca y el tope de cinco enlaces evitan la moderación a mano.
 - **Descartado:** SMS (en EAU exige registrar un sender ID ante TDRA con licencia comercial, y ese registro está pausado en AWS a la espera de nuevos requisitos de TDRA; las rutas sin registrar se bloquean).
 
 <!-- BEGIN:nextjs-agent-rules -->

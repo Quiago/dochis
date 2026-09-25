@@ -10,13 +10,17 @@ export default function Privacidad() {
       <p>Tratamos los datos siguiendo la ley de protección de datos de los Emiratos (PDPL) y un principio simple: guardar lo mínimo y publicar solo lo que el profesional acepta.</p>
       <h2>Qué es público</h2>
       <ul>
-        <li>Nombre, especialidad, clínica, zona, emirato, idiomas, seguros aceptados, autoridad y número de licencia (para poder comprobarla en el registro oficial) y fecha de la última confirmación.</li>
+        <li>Nombre, especialidad, clínica, zona, emirato, idiomas, seguros aceptados, autoridad y fecha de la última confirmación.</li>
         <li>El WhatsApp del profesional, <strong>solo</strong> si marcó la casilla para mostrarlo a los pacientes.</li>
+        <li>El correo de contacto y los enlaces, solo si el profesional los escribió en su perfil.</li>
+        <li>El horario de atención, si lo publicó.</li>
+        <li>El número de licencia, solo si marcó la casilla de publicarlo. Si no, se indica únicamente la autoridad en la que está registrado.</li>
         <li>Los perfiles importados de la lista anterior del grupo muestran solo nombre, especialidad y centro hasta que el profesional los reclama.</li>
       </ul>
       <h2>Qué no se publica nunca</h2>
       <ul>
-        <li>El teléfono o correo con el que el profesional entra.</li>
+        <li>El teléfono con el que el profesional entra.</li>
+        <li>El correo con el que entra, que es distinto del correo de contacto y nunca se publica.</li>
               </ul>
       <h2>Para qué usamos los datos</h2>
       <ul>

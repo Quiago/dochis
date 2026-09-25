@@ -14,7 +14,7 @@ export default function Sobre() {
         <li><strong>Frescura visible.</strong> Cada profesional confirma sus datos una vez al mes y su perfil muestra cuándo lo hizo. Si pasa más de un mes sin confirmar, aparece como &quot;pendiente&quot;; a los tres meses se oculta.</li>
         <li><strong>Justicia en la visibilidad.</strong> El orden es aleatorio en cada visita. No hay rankings ni perfiles destacados.</li>
         <li><strong>Filtramos por idioma, no por nacionalidad.</strong></li>
-        <li><strong>Licencias comprobables.</strong> Cada profesional declara su número de licencia y lo mostramos con un enlace al registro oficial de la DHA, DOH o MOHAP, para que cualquiera pueda comprobarlo. Una revisión automática detecta licencias repetidas y perfiles sospechosos, y la comunidad puede reportar con &quot;Ya no está aquí&quot;.</li>
+        <li><strong>Licencias comprobables.</strong> Cada profesional declara su número de licencia al registrarse, y decide si se publica. En cualquier caso mostramos un enlace al registro oficial de la DHA, DOH o MOHAP para que cualquiera pueda comprobarlo. Una revisión automática detecta licencias repetidas y perfiles sospechosos, y la comunidad puede reportar con &quot;Ya no está aquí&quot;.</li>
       </ul>
       <h2>Gratis, siempre</h2>
       <p>Es un proyecto pro-bono: gratis para profesionales y pacientes, sin anuncios, sin perfiles pagados y sin venta de datos. El código es abierto (licencia GPL-3.0) y está en <Link href="https://github.com/Quiago/dochis">GitHub</Link>.</p>
