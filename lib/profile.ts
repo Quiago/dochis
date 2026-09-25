@@ -19,6 +19,48 @@ export type ProfileData = {
   show_license: boolean
   public_whatsapp: string | null
   insurance_url: string | null
+  public_email: string | null
+  links: string[]
+  hours_weekday_open: string | null
+  hours_weekday_close: string | null
+  hours_weekend_open: string | null
+  hours_weekend_close: string | null
+}
+
+// Redes admitidas. La comprobación es por host exacto o subdominio ("instagram.com" o "www.instagram.com"),
+// nunca "contiene": "instagram.com.evil.io" no es Instagram.
+export const SOCIAL_HOSTS = ['instagram.com', 'linkedin.com', 'tiktok.com', 'x.com', 'facebook.com', 'youtube.com'] as const
+// Los acortadores esconden el destino y anularían la lista blanca.
+const SHORTENERS = ['bit.ly', 'linktr.ee', 'tinyurl.com', 't.co', 'lnk.bio', 'beacons.ai']
+const MAX_LINKS = 5
+
+const hostOf = (url: string) => new URL(url).hostname.replace(/^www\./, '')
+const isOn = (host: string, list: readonly string[]) => list.some((d) => host === d || host.endsWith(`.${d}`))
+
+export function parseLinks(raw: string): { links?: string[]; error?: string } {
+  const lines = [...new Set(raw.split('\n').map((l) => l.trim()).filter(Boolean))]
+  if (lines.length > MAX_LINKS) return { error: `Como mucho cinco enlaces.` }
+  let free = 0
+  for (const l of lines) {
+    let host: string
+    try {
+      if (new URL(l).protocol !== 'https:') return { error: 'Los enlaces tienen que empezar por https://' }
+      host = hostOf(l)
+    } catch { return { error: `Ese enlace no es válido: ${l}` } }
+    if (isOn(host, SHORTENERS)) return { error: 'No admitimos acortadores de enlaces: pega la dirección completa.' }
+    if (isOn(host, SOCIAL_HOSTS)) continue
+    if (++free > 1) return { error: 'Solo puedes añadir una página web, además de tus redes.' }
+  }
+  return { links: lines }
+}
+
+const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/
+export function parseHours(open: string, close: string): { open: string | null; close: string | null; error?: string } {
+  if (!open && !close) return { open: null, close: null }
+  if (!open || !close) return { open: null, close: null, error: 'Escribe las dos horas, la de apertura y la de cierre.' }
+  if (!HHMM.test(open) || !HHMM.test(close)) return { open: null, close: null, error: 'Usa el formato 09:00.' }
+  if (open >= close) return { open: null, close: null, error: 'La hora de apertura tiene que ser antes que la de cierre. Si cierras pasada la medianoche, pon la hora de cierre real del día.' }
+  return { open, close }
 }
 
 const MAX_TEXT = 120
@@ -71,8 +113,30 @@ export function parseProfileForm(fd: FormData): { data?: ProfileData; errors?: R
     if (!ok) { errors.insurance_url = 'Pega un enlace completo que empiece por https:// (máximo 300 caracteres).'; insurance_url = null }
   }
 
+  let public_email: string | null = text(fd, 'public_email').replace(/^mailto:/i, '').trim().toLowerCase() || null
+  if (public_email && (!/^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(public_email) || public_email.length > MAX_TEXT)) {
+    errors.public_email = 'Escribe un correo válido, o déjalo vacío.'
+    public_email = null
+  }
+
+  const parsedLinks = parseLinks(text(fd, 'links'))
+  if (parsedLinks.error) errors.links = parsedLinks.error
+  const links = parsedLinks.links ?? []
+
+  const weekday = parseHours(text(fd, 'hours_weekday_open'), text(fd, 'hours_weekday_close'))
+  if (weekday.error) errors.hours_weekday = weekday.error
+  const weekend = parseHours(text(fd, 'hours_weekend_open'), text(fd, 'hours_weekend_close'))
+  if (weekend.error) errors.hours_weekend = weekend.error
+
   if (!fd.get('consent')) errors.consent = 'Para aparecer en el directorio tienes que aceptar que se publiquen tus datos profesionales.'
 
   if (Object.keys(errors).length) return { errors }
-  return { data: { full_name, specialty, clinic, area, emirate, languages, insurances, regulator, license_number, show_license, public_whatsapp, insurance_url } }
+  return {
+    data: {
+      full_name, specialty, clinic, area, emirate, languages, insurances, regulator, license_number, show_license, public_whatsapp, insurance_url,
+      public_email, links,
+      hours_weekday_open: weekday.open, hours_weekday_close: weekday.close,
+      hours_weekend_open: weekend.open, hours_weekend_close: weekend.close,
+    },
+  }
 }

@@ -8,6 +8,13 @@ import type { Review } from './review.ts'
 export type Reviewer = { identity: string; role: 'admin' | 'ambassador'; scope: string | null }
 type Sql = postgres.Sql | postgres.TransactionSql
 
+// ProfileData ya trae public_email/links/hours_*, pero la tarea 9 todavía no ha añadido esas columnas a `doctors`.
+// Se excluyen de los inserts/updates hasta entonces para no romper la escritura en base de datos.
+function dbFields(data: ProfileData) {
+  const { public_email, links, hours_weekday_open, hours_weekday_close, hours_weekend_open, hours_weekend_close, ...rest } = data
+  return rest
+}
+
 const isEmail = (identity: string) => identity.includes('@')
 const norm = (identity: string) => (isEmail(identity) ? identity.toLowerCase() : identity)
 
@@ -59,7 +66,7 @@ export async function signUp(sql: postgres.Sql, identity: string, data: ProfileD
     const slug = await uniqueSlug(tx, data.full_name)
     const [d] = await tx`
       insert into doctors ${tx({
-        ...data, slug, status: review.ok ? 'verified' : 'pending_verification', consent_at: now,
+        ...dbFields(data), slug, status: review.ok ? 'verified' : 'pending_verification', consent_at: now,
         last_confirmed_at: review.ok ? now : null, phone_e164: isEmail(id) ? null : id, email: isEmail(id) ? id : null,
       })}
       returning id, slug`
@@ -84,7 +91,7 @@ export async function saveOwnProfile(sql: postgres.Sql, identity: string, data: 
     const live = d.status === 'verified' || d.status === 'stale'
     // Solo el número o la autoridad obligan a revisar de nuevo. Ocultar la licencia (show_license) no es un cambio de licencia.
     const licenseChanged = d.license_number !== data.license_number || d.regulator !== data.regulator
-    const fields = { ...data, consent_at: d.consent_at ?? now }
+    const fields = { ...dbFields(data), consent_at: d.consent_at ?? now }
 
     if (review.ok || (live && !licenseChanged)) {
       await tx`update doctors set ${tx({ ...fields, status: 'verified', last_confirmed_at: now })} where id = ${d.id}`

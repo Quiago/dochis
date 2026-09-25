@@ -63,6 +63,38 @@ describe('formulario de perfil', () => {
     expect(parseProfileForm(fd).data?.show_license).toBe(false)
     expect(parseProfileForm(fd).errors).toBeUndefined()  // ocultarla no es un error: la licencia sigue siendo obligatoria
   })
+
+  it('acepta las redes de la lista y una sola web propia', () => {
+    const links = ['https://instagram.com/dra.lucia', 'https://www.linkedin.com/in/lucia', 'https://clinicapalmera.ae'].join('\n')
+    expect(parseProfileForm(form({ links })).data?.links).toHaveLength(3)
+  })
+
+  it('rechaza dominios que imitan a los de la lista', () => {
+    for (const bad of ['https://instagram.com.evil.io/x', 'https://notinstagram.com/x', 'https://bit.ly/x', 'https://linktr.ee/x']) {
+      const r = parseProfileForm(form({ links: ['https://clinicapalmera.ae', bad].join('\n') }))
+      expect(r.errors?.links, bad).toBeTruthy()
+    }
+  })
+
+  it('solo admite una web libre, y como mucho cinco enlaces', () => {
+    const dos = ['https://clinicapalmera.ae', 'https://otraclinica.ae'].join('\n')
+    expect(parseProfileForm(form({ links: dos })).errors?.links).toMatch(/una página web/)
+    const seis = Array.from({ length: 6 }, (_, i) => `https://instagram.com/c${i}`).join('\n')
+    expect(parseProfileForm(form({ links: seis })).errors?.links).toMatch(/cinco/)
+  })
+
+  it('limpia el correo público y rechaza el que no lo es', () => {
+    expect(parseProfileForm(form({ public_email: '  MAILTO:Lucia@Clinica.AE ' })).data?.public_email).toBe('lucia@clinica.ae')
+    expect(parseProfileForm(form({ public_email: 'lucia arroba clinica' })).errors?.public_email).toBeTruthy()
+  })
+
+  it('exige las dos horas de cada franja y que la apertura sea antes que el cierre', () => {
+    const ok = parseProfileForm(form({ hours_weekday_open: '09:00', hours_weekday_close: '17:00' }))
+    expect(ok.errors).toBeUndefined()
+    expect(ok.data?.hours_weekday_open).toBe('09:00')
+    expect(parseProfileForm(form({ hours_weekday_open: '09:00' })).errors?.hours_weekday).toMatch(/las dos horas/)
+    expect(parseProfileForm(form({ hours_weekday_open: '22:00', hours_weekday_close: '02:00' })).errors?.hours_weekday).toMatch(/antes/)
+  })
 })
 
 describe('contacto del directorio (.vcf)', () => {
