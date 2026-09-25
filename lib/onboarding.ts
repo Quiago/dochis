@@ -82,6 +82,7 @@ export async function saveOwnProfile(sql: postgres.Sql, identity: string, data: 
     const d = await findDoctorByIdentity(tx, id)
     if (!d) throw new Error('No hay un perfil asociado a esta cuenta')
     const live = d.status === 'verified' || d.status === 'stale'
+    // Solo el número o la autoridad obligan a revisar de nuevo. Ocultar la licencia (show_license) no es un cambio de licencia.
     const licenseChanged = d.license_number !== data.license_number || d.regulator !== data.regulator
     const fields = { ...data, consent_at: d.consent_at ?? now }
 

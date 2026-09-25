@@ -90,6 +90,17 @@ describe.skipIf(!db)('edición del propio perfil', () => {
     expect(await saveOwnProfile(sql, paula.phone_e164, data({ full_name: paula.full_name, specialty: 'Neurología', license_number: '55555555' }), OK)).toBe('saved')
     expect((await publicRow('dra-paula-echeverri')).status).toBe('verified')
   })
+
+  it('ocultar el número de licencia no despublica un perfil ya verificado', async () => {
+    const perfil = { full_name: 'Dra. Oculta Licencia', license_number: '88881111' }
+    const r = await signUp(sql, 'oculta@example.com', data(perfil), OK)
+    expect(r.published).toBe(true)
+
+    const saved = await saveOwnProfile(sql, 'oculta@example.com', data({ ...perfil, show_license: false }), OK)
+    expect(saved).toBe('saved')
+    expect(await doctorBySlug(r.slug)).toMatchObject({ status: 'verified', show_license: false })
+    expect((await publicRow(r.slug)).license_number).toBeNull()
+  })
 })
 
 describe.skipIf(!db)('revisión de marcados', () => {
